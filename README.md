@@ -27,6 +27,7 @@
 
 - Link to Assignment 1 - video: [**Video**](https://drive.google.com/file/d/1K1qJyKUbno3wWS6EiBesS6-KDJvlFuiO/view?usp=sharing) <!-- Replace with actual URL -->
 - Link to Assignment 1 - summary: [**Summary**](https://docs.google.com/document/d/1tRaBfkgQQZ3AP3Ky8ZORd5JskpcZToXQ/edit?usp=sharing&ouid=102678437933651756213&rtpof=true&sd=true)
+- Link to Assignment 2 - user personas: [**User personas**](https://docs.google.com/document/d/1KgkgQ_pyACqMcQQcMs-ivyDziDvGW4fj/edit?usp=sharing&ouid=109310263606415648341&rtpof=true&sd=true)
 - Link to Assignment 2 - information architecture & sitemap: [**Information architecture & Sitemap**](https://docs.google.com/document/d/11c7YFMLCirB43WUeXSiQw21DccNiqjXzJvQ6nUUotjM/edit?usp=sharing)
 <!-- Add more assignments as necessary -->
 
