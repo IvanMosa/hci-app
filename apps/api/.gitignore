@@ -58,5 +58,3 @@ pnpm-lock.yaml
 /generated/prisma
 
 /dist
-
-.turbo
