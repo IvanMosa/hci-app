@@ -1,7 +1,18 @@
-import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { FreelancerProfileService } from './freelancer-profile.service';
 import { UpdateFreelancerProfileDto } from './dto/update-freelancer-profile.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { UserGuard } from 'src/auth/user.guard';
+import { FreelancerGuard } from 'src/auth/freelancer.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @ApiTags('Freelancer Profile')
 @Controller('freelancer-profile')
@@ -21,11 +32,13 @@ export class FreelancerProfileController {
   }
 
   @Get(':id')
+  @UseGuards(UserGuard)
   findOne(@Param('id') id: string) {
     return this.freelancerProfileService.findOne(id);
   }
 
   @Patch(':id')
+  @UseGuards(FreelancerGuard)
   update(
     @Param('id') id: string,
     @Body() updateFreelancerProfileDto: UpdateFreelancerProfileDto,
@@ -34,6 +47,7 @@ export class FreelancerProfileController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminGuard)
   remove(@Param('id') id: string) {
     return this.freelancerProfileService.remove(id);
   }

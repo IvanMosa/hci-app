@@ -8,6 +8,7 @@ import { FreelancerSkillModule } from './freelancer-skill/freelancer-skill.modul
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { JobModule } from './job/job.module';
 import { ApplicationModule } from './application/application.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ApplicationModule } from './application/application.module';
     PortfolioModule,
     JobModule,
     ApplicationModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
