@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserType } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsEmail,
@@ -9,7 +10,6 @@ import {
   IsEnum,
   IsDate,
 } from 'class-validator';
-import { UserType } from 'generated/prisma/enums';
 
 type JwtPayload = {
   id: number;
