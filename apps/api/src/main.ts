@@ -16,7 +16,10 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
   app.setGlobalPrefix('api').enableCors({
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://web-production-d12e1.up.railway.app',
+    ],
     credentials: true,
   });
 
