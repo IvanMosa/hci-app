@@ -72,7 +72,7 @@ export class RegistrationDto {
   })
   type: UserType;
 
-  @Transform(({ value }) => new Date(value))
+  @Transform(({ value }: { value: string | number | Date }) => new Date(value))
   @IsDate()
   @ApiProperty({ example: '1990-01-01' })
   dateOfBirth: Date;

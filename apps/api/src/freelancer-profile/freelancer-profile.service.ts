@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFreelancerProfileDto } from './dto/create-freelancer-profile.dto';
 import { UpdateFreelancerProfileDto } from './dto/update-freelancer-profile.dto';
+import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class FreelancerProfileService {
-  create(createFreelancerProfileDto: CreateFreelancerProfileDto) {
-    return 'This action adds a new freelancerProfile';
-  }
+  constructor(private readonly prisma: PrismaService) {}
+  // create(createFreelancerProfileDto: CreateFreelancerProfileDto) {
+  //   return 'This action adds a new freelancerProfile';
+  // }
 
   findAll() {
-    return `This action returns all freelancerProfile`;
+    return this.prisma.freelancerProfile.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} freelancerProfile`;
+  findOne(id: string) {
+    return this.prisma.freelancerProfile.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateFreelancerProfileDto: UpdateFreelancerProfileDto) {
-    return `This action updates a #${id} freelancerProfile`;
+  update(id: string, updateFreelancerProfileDto: UpdateFreelancerProfileDto) {
+    return this.prisma.freelancerProfile.update({
+      where: { id: id },
+      data: updateFreelancerProfileDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} freelancerProfile`;
+  remove(id: string) {
+    return this.prisma.freelancerProfile.delete({
+      where: { id },
+    });
   }
 }
