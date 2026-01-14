@@ -31,6 +31,7 @@
 - Link to Assignment 2 - information architecture & sitemap: [**Information architecture & Sitemap**](https://docs.google.com/document/d/11c7YFMLCirB43WUeXSiQw21DccNiqjXzJvQ6nUUotjM/edit?usp=sharing)
 - Link to Assignment 3 - deploying application: [**Next.js - Deploying application**](https://hci-app-three.vercel.app/)
 - Link to Assignment 4 - [LOFI](https://drive.google.com/file/d/1R17PwNApk85xVNkPugHDpe65uDE-6ZJp/view?usp=sharing)
+- Link to Assignment 6 - [HIFI](https://www.figma.com/design/k6CAv5JMG1gl0j35499VXf/Freelanica?m=auto&t=tgStQdr0bOfCjeVb-1)
 <!-- Add more assignments as necessary -->
 
 ## Project Requirements
