@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class PortfolioService {
