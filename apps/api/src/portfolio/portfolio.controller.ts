@@ -1,7 +1,9 @@
 import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Portfolio')
 @Controller('portfolio')
 export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}

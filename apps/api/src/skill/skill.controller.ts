@@ -1,7 +1,9 @@
 import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SkillService } from './skill.service';
 import { UpdateSkillDto } from './dto/update-skill.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Skill')
 @Controller('skill')
 export class SkillController {
   constructor(private readonly skillService: SkillService) {}

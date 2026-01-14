@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Delete } from '@nestjs/common';
 import { ApplicationService } from './application.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Application')
 @Controller('application')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}

@@ -1,7 +1,9 @@
 import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { FreelancerProfileService } from './freelancer-profile.service';
 import { UpdateFreelancerProfileDto } from './dto/update-freelancer-profile.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Freelancer Profile')
 @Controller('freelancer-profile')
 export class FreelancerProfileController {
   constructor(
