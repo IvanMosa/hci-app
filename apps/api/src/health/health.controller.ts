@@ -5,7 +5,6 @@ import {
   HealthCheckService,
   HttpHealthIndicator,
   MemoryHealthIndicator,
-  PrismaHealthIndicator,
 } from '@nestjs/terminus';
 import { PrismaService } from 'src/prisma.service';
 
