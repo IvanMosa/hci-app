@@ -1,12 +1,4 @@
-"use client";
-
-import { useGetAllUsers } from "./api/index";
-
 export default function Home() {
-  const { data } = useGetAllUsers();
-
-  console.log(data);
-
   return (
     <main className="min-h-screen flex flex-col items-center justify-center text-center p-8">
       <h1 className="text-5xl font-bold mb-4">Freelancia</h1>
