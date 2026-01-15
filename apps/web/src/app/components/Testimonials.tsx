@@ -13,9 +13,9 @@ export const Testimonials = () => {
 
       <div className="max-w-4xl mx-auto mb-16 px-4">
         <p className="text-gray-300 text-xl md:text-3xl font-light italic leading-relaxed">
-          "Freelancia helped me find consistent work within the first week. The
-          clients here actually value quality, and the platform makes everything
-          simple."
+          &quot;Freelancia helped me find consistent work within the first week.
+          The clients here actually value quality, and the platform makes
+          everything simple.&quot;
         </p>
       </div>
 

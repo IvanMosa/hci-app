@@ -12,6 +12,14 @@ export type JwtResponse = {
   accessToken: string;
 };
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 const loginUser = async (loginData: LoginType) => {
   return api.post<LoginType, JwtResponse>("/auth/login", loginData);
 };
@@ -31,8 +39,9 @@ export const useLogin = (onSuccessCallback?: () => void) => {
         onSuccessCallback();
       }
     },
-    onError(error: any) {
-      toast.error(error?.response?.data?.message || "Error logging in");
+    onError(error: unknown) {
+      const apiError = error as ApiError;
+      toast.error(apiError?.response?.data?.message || "Error logging in");
     },
   });
 };
