@@ -1,8 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 import {
+  DiskHealthIndicator,
   HealthCheck,
   HealthCheckService,
-  PrismaHealthIndicator,
+  HttpHealthIndicator,
+  MemoryHealthIndicator,
 } from '@nestjs/terminus';
 import { PrismaService } from 'src/prisma.service';
 
@@ -11,6 +13,9 @@ export class HealthController {
   constructor(
     private health: HealthCheckService,
     private prisma: PrismaService,
+    private memory: MemoryHealthIndicator,
+    private disk: DiskHealthIndicator,
+    private network: HttpHealthIndicator,
   ) {}
 
   @Get()
@@ -29,6 +34,16 @@ export class HealthController {
           throw new Error('Database connection failed');
         }
       },
+
+      () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
+
+      () =>
+        this.disk.checkStorage('storage', {
+          path: '/',
+          thresholdPercent: 0.9,
+        }),
+
+      () => this.network.pingCheck('internet', 'https://google.com'),
     ]);
   }
 }
