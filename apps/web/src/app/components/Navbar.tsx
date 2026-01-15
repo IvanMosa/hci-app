@@ -21,9 +21,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     checkLoginStatus();
-
     window.addEventListener("authChange", checkLoginStatus);
-
     return () => {
       window.removeEventListener("authChange", checkLoginStatus);
     };
@@ -31,14 +29,15 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-
     window.dispatchEvent(new Event("authChange"));
-
     router.push("/login");
   };
 
+  const navItemStyles =
+    "font-semibold hover:underline underline-offset-8 decoration-2 transition-all duration-200";
+
   return (
-    <nav className="text-black px-15 py-6 flex justify-between items-center">
+    <nav className="text-black px-15 py-6 flex justify-between items-center bg-white">
       <Link href="/">
         <Image
           src={logo}
@@ -50,18 +49,15 @@ export const Navbar = () => {
         />
       </Link>
 
-      <div className="space-x-6 text-[#070415] align-center flex items-center">
-        <Link
-          href="/"
-          className="hover:text-gray-500 transition-colors duration-200"
-        >
+      <div className="space-x-8 text-[#070415] align-center flex items-center">
+        <Link href="/" className={navItemStyles}>
           Home
         </Link>
 
         <div className="relative inline-flex items-center">
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-1 cursor-pointer hover:text-gray-500"
+            className={`flex items-center gap-1 cursor-pointer ${navItemStyles}`}
           >
             <span>Explore</span>
             <Image
@@ -77,22 +73,22 @@ export const Navbar = () => {
 
           <ExploreModal open={open} />
         </div>
-        <Link
-          href="/dashboard"
-          className="hover:text-gray-500 transition-colors duration-200"
-        >
+
+        <Link href="/dashboard" className={navItemStyles}>
           Dashboard
         </Link>
 
         {isLoggedIn ? (
           <button
             onClick={handleLogout}
-            className="bg-[#070415] text-white border rounded-[46px] px-4 py-4 text-[12px] hover:bg-gray-800 transition uppercase hover:cursor-pointer"
+            className="bg-[#070415] text-white border rounded-[46px] px-8 py-4 text-[12px] font-bold hover:bg-gray-800 transition uppercase hover:cursor-pointer"
           >
             Log Out
           </button>
         ) : (
-          <Button content="log in / sign up" />
+          <div className="pl-4">
+            <Button content="log in / sign up" />
+          </div>
         )}
       </div>
     </nav>
