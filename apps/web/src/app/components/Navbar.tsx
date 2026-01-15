@@ -5,11 +5,37 @@ import { Button } from "./Button";
 import logo from "../../../public/freelancia.png";
 import Image from "next/image";
 import expand from "../../../public/expand_more.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ExploreModal } from "./ExploreModal";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  const checkLoginStatus = () => {
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token);
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+
+    window.addEventListener("authChange", checkLoginStatus);
+
+    return () => {
+      window.removeEventListener("authChange", checkLoginStatus);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+
+    window.dispatchEvent(new Event("authChange"));
+
+    router.push("/login");
+  };
 
   return (
     <nav className="text-black px-15 py-6 flex justify-between items-center">
@@ -43,7 +69,9 @@ export const Navbar = () => {
               alt="Expand Icon"
               width={16}
               height={16}
-              className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+              className={`transition-transform duration-200 ${
+                open ? "rotate-180" : ""
+              }`}
             />
           </button>
 
@@ -56,7 +84,16 @@ export const Navbar = () => {
           Dashboard
         </Link>
 
-        <Button content="log in / sign up" />
+        {isLoggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="bg-[#070415] text-white border rounded-[46px] px-4 py-4 text-[12px] hover:bg-gray-800 transition uppercase hover:cursor-pointer"
+          >
+            Log Out
+          </button>
+        ) : (
+          <Button content="log in / sign up" />
+        )}
       </div>
     </nav>
   );
