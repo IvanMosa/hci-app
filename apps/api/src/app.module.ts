@@ -9,6 +9,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { JobModule } from './job/job.module';
 import { ApplicationModule } from './application/application.module';
 import { HealthModule } from './health/health.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { HealthModule } from './health/health.module';
     JobModule,
     ApplicationModule,
     HealthModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

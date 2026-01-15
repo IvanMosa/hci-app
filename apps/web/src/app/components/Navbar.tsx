@@ -56,7 +56,7 @@ export const Navbar = () => {
           Dashboard
         </Link>
 
-        <Button />
+        <Button content="log in / sign up" />
       </div>
     </nav>
   );
