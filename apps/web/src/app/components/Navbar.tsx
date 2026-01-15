@@ -1,43 +1,61 @@
+"use client";
+
 import Link from "next/link";
+import { Button } from "./Button";
+import logo from "../../../public/freelancia.png";
+import Image from "next/image";
+import expand from "../../../public/expand_more.png";
+import { useState } from "react";
+import { ExploreModal } from "./ExploreModal";
 
 export const Navbar = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <nav className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
+    <nav className="text-black px-15 py-6 flex justify-between items-center">
       <div className="text-lg font-bold">
-        <Link href="/">Freelancia</Link>
+        <Image
+          src={logo}
+          alt="Freelancia Logo"
+          width={150}
+          height={40}
+          priority
+        />
       </div>
 
-      <div className="space-x-6">
+      <div className="space-x-6 text-[#070415]">
         <Link
           href="/"
-          className="hover:text-gray-300 transition-colors duration-200"
+          className="hover:text-gray-500 transition-colors duration-200"
         >
           Home
         </Link>
-        <Link
-          href="/profile"
-          className="hover:text-gray-300 transition-colors duration-200"
-        >
-          Profile
-        </Link>
+
+        <div className="relative inline-flex items-center">
+          <button
+            onClick={() => setOpen(!open)}
+            className="flex items-center gap-1 cursor-pointer hover:text-gray-500"
+          >
+            <span>Explore</span>
+            <Image
+              src={expand}
+              alt="Expand Icon"
+              width={16}
+              height={16}
+              className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            />
+          </button>
+
+          <ExploreModal open={open} />
+        </div>
         <Link
           href="/dashboard"
-          className="hover:text-gray-300 transition-colors duration-200"
+          className="hover:text-gray-500 transition-colors duration-200"
         >
           Dashboard
         </Link>
-        <Link
-          href="/login"
-          className="hover:text-gray-300 transition-colors duration-200"
-        >
-          Login
-        </Link>
-        <Link
-          href="/register"
-          className="hover:text-gray-300 transition-colors duration-200"
-        >
-          Register
-        </Link>
+
+        <Button />
       </div>
     </nav>
   );
