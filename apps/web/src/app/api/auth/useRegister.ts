@@ -28,6 +28,8 @@ export const useRegister = (onSuccessCallback: () => void) =>
 
       onSuccessCallback();
     },
+
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Registration failed.");
     },

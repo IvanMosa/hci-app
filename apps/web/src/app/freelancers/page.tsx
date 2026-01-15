@@ -1,4 +1,4 @@
-const FreelancersPage = ({ params }: { params: { id: string } }) => {
+const FreelancersPage = () => {
   return <h2>Freelancers Page</h2>;
 };
 
