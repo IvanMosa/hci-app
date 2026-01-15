@@ -11,7 +11,16 @@ export const SearchSection = () => {
                  py-20 lg:py-0 
                  min-h-screen lg:h-[960.47px]"
     >
-      <h2 className="text-[#070415] text-4xl md:text-5xl font-semibold mb-12">
+      <h2
+        className="text-[#070415] mb-12 text-center"
+        style={{
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 500,
+          fontSize: "64px",
+          lineHeight: "67px",
+          letterSpacing: "0px",
+        }}
+      >
         What are you looking for?
       </h2>
 
@@ -45,14 +54,15 @@ export const SearchSection = () => {
         </Link>
       </div>
 
-      <div className="relative w-full max-w-2xl px-4">
+      <div className="relative px-4 w-full" style={{ maxWidth: "867px" }}>
         <input
           type="text"
           placeholder="Search freelancers, projects, etc."
-          className="w-full bg-[#D9D9D9] py-4 px-6 rounded-full text-gray-700 placeholder-[#070415] focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all"
+          className="w-full bg-[#D9D9D9] px-8 rounded-full text-gray-700 placeholder-[#070415] focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all"
+          style={{ height: "80px" }}
         />
-        <button className="absolute right-6 top-1/2 -translate-y-1/2 bg-[#070415] p-2.5 rounded-full hover:bg-gray-800 transition cursor-pointer">
-          <Search className="text-white w-5 h-5" />
+        <button className="absolute right-8 top-1/2 -translate-y-1/2 bg-[#070415] p-3.5 rounded-full hover:bg-gray-800 transition cursor-pointer">
+          <Search className="text-white w-6 h-6" />
         </button>
       </div>
     </section>
