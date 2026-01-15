@@ -1,11 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "./Button";
-import logo from "../../../public/freelancia.png";
-import Image from "next/image";
-import expand from "../../../public/expand_more.png";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Button } from "../index";
+import Image from "next/image";
 import { ExploreModal } from "./ExploreModal";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +39,7 @@ export const Navbar = () => {
     <nav className="text-black px-15 py-6 flex justify-between items-center">
       <Link href="/">
         <Image
-          src={logo}
+          src="/freelancia.png"
           alt="Freelancia Logo"
           width={150}
           height={40}
@@ -65,7 +63,7 @@ export const Navbar = () => {
           >
             <span>Explore</span>
             <Image
-              src={expand}
+              src="/expand_more.png"
               alt="Expand Icon"
               width={16}
               height={16}

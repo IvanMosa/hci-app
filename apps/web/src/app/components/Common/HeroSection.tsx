@@ -1,12 +1,11 @@
 import React from "react";
-import bgImage from "../../../public/image 10.png";
 import Image from "next/image";
 
 export const HeroSection = () => {
   return (
     <div className="relative w-full lg:w-1/2 min-h-[80vh] bg-zinc-900 flex items-center justify-center px-8 overflow-hidden z-10">
       <Image
-        src={bgImage}
+        src="/image 10.png"
         alt="Background Image"
         className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
       />

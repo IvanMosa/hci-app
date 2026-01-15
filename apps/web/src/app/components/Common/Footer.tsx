@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import socialMediaLogos from "../../../public/Frame 20.png";
 
 export const Footer = () => {
   return (
@@ -29,7 +28,7 @@ export const Footer = () => {
         </div>
 
         <Image
-          src={socialMediaLogos}
+          src="/Frame 20.png"
           alt="Social Media Logos"
           width={150}
           height={20}

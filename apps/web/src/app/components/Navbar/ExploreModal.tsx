@@ -1,6 +1,4 @@
 import Image from "next/image";
-import peopleLogo from "../../../public/people_alt.png";
-import folderLogo from "../../../public/folder.png";
 import Link from "next/link";
 
 interface Props {
@@ -18,13 +16,13 @@ export const ExploreModal = ({ open }: Props) => {
     >
       <ul className="py-2 text-sm">
         <li className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer">
-          <Image src={folderLogo} alt="Projects Icon" width={16} height={16} />
+          <Image src="/folder.png" alt="Projects Icon" width={16} height={16} />
           <Link href="/projects">Projects</Link>
         </li>
 
         <li className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer">
           <Image
-            src={peopleLogo}
+            src="/people_alt.png"
             alt="Freelancers Icon"
             width={16}
             height={16}

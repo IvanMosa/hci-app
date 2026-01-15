@@ -1,6 +1,4 @@
-import { HeroSection } from "@/components/HeroSection";
-import { AuthForm } from "@/components/AuthForm";
-import { Footer } from "@/components/Footer";
+import { HeroSection, AuthForm, Footer } from "@/components/index";
 
 export default function Home() {
   return (
@@ -10,7 +8,6 @@ export default function Home() {
         <AuthForm />
       </div>
 
-      {/* Footer Area */}
       <Footer />
     </main>
   );
