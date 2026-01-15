@@ -1,8 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma.service';
 import { compare, hash } from 'bcrypt';
 import { RegistrationDto } from './auth.dto';
+import { UserType } from '@prisma/client';
 
 interface JwtResponseDto {
   accessToken: string;
@@ -30,12 +35,12 @@ export class AuthService {
     });
 
     if (!loginUser) {
-      throw new BadRequestException('Wrong username or password');
+      throw new UnauthorizedException('Wrong username or password');
     }
 
     const passwordsMatch = await compare(password, loginUser.password);
     if (!passwordsMatch) {
-      throw new BadRequestException('Wrong username or password');
+      throw new UnauthorizedException('Wrong username or password');
     }
 
     const accessToken = this.jwtService.sign({
@@ -68,8 +73,11 @@ export class AuthService {
         name: register.name,
         surname: register.surname,
         password: hashedPassword,
-        type: register.type,
-        dateOfBirth: register.dateOfBirth,
+        type:
+          register.type.toLowerCase() === 'freelancer'
+            ? UserType.freelancer
+            : UserType.client,
+        dateOfBirth: new Date(register.dateOfBirth),
       },
     });
 
