@@ -13,17 +13,18 @@ export const Navbar = () => {
 
   return (
     <nav className="text-black px-15 py-6 flex justify-between items-center">
-      <div className="text-lg font-bold">
+      <Link href="/">
         <Image
           src={logo}
           alt="Freelancia Logo"
           width={150}
           height={40}
           priority
+          className="mb-2"
         />
-      </div>
+      </Link>
 
-      <div className="space-x-6 text-[#070415]">
+      <div className="space-x-6 text-[#070415] align-center flex items-center">
         <Link
           href="/"
           className="hover:text-gray-500 transition-colors duration-200"
