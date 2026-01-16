@@ -1372,7 +1372,7 @@
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.2.9.tgz#d229a7b7f9dac167a156992ef23c7f023653f53b"
   integrity sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==
 
-"@prisma/client@6":
+"@prisma/client@^6.0.0":
   version "6.19.2"
   resolved "https://registry.yarnpkg.com/@prisma/client/-/client-6.19.2.tgz#96cde2f9340a5d9a91a80b2e0733ede158aede5d"
   integrity sha512-gR2EMvfK/aTxsuooaDA32D8v+us/8AAet+C3J1cc04SW35FPdZYgLF+iN4NDLUgAaUGTKdAB0CYenu1TAgGdMg==
@@ -6042,7 +6042,7 @@ pretty-format@30.2.0, pretty-format@^30.0.0:
     ansi-styles "^5.2.0"
     react-is "^18.3.1"
 
-prisma@6:
+prisma@^6.0.0:
   version "6.19.2"
   resolved "https://registry.yarnpkg.com/prisma/-/prisma-6.19.2.tgz#ad6f41a57fd855c730898cccb77da5d2c9d1774d"
   integrity sha512-XTKeKxtQElcq3U9/jHyxSPgiRgeYDKxWTPOf6NkXA0dNj5j40MfEsZkMbyNpwDWCUv7YBFUl7I2VK/6ALbmhEg==
