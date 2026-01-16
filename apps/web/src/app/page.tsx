@@ -1,17 +1,15 @@
-import { Navbar } from "./components/Navbar";
-import Hero from "./components/Hero";
 import { SearchSection } from "./components/SearchSection";
 import { FeaturedFreelancers } from "./components/FeaturedFreelancers";
 import { FeaturedProjects } from "./components/FeaturedProjects";
 import { Testimonials } from "./components/Testimonials";
-import { Footer } from "./components/Footer";
 import { JoinCommunity } from "./components/JoinCommunity";
 import { FooterHome } from "./components/FooterHome";
+import HeroHome from "./components/HeroHome";
 
 export default function Home() {
   return (
     <main>
-      <Hero />
+      <HeroHome />
       <SearchSection />
       <FeaturedFreelancers />
       <FeaturedProjects />

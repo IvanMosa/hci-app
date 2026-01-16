@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Hero = () => {
+const HeroHome = () => {
   return (
     <section className="relative w-full h-[600px] md:h-[800px] lg:h-[960px] overflow-hidden bg-[#070415]">
       <div
@@ -46,4 +46,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default HeroHome;
