@@ -39,7 +39,7 @@ export const JoinCommunity = () => {
         </h2>
 
         <Link
-          href="/signup"
+          href="/login"
           className="inline-block bg-white text-[#070415] px-14 py-4 rounded-full font-bold uppercase text-sm tracking-widest hover:bg-gray-200 transition-all shadow-lg"
         >
           Join Now

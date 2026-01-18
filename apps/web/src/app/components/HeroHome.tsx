@@ -35,7 +35,7 @@ const HeroHome = () => {
           </Link>
 
           <Link
-            href="/find-job"
+            href="/explore?type=projects"
             className="border-2 border-white text-white px-10 py-4 rounded-full font-bold uppercase text-[13px] tracking-widest hover:bg-white hover:text-[#070415] transition-all w-64 sm:w-auto"
           >
             Find a Job
