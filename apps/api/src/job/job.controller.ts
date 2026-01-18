@@ -6,11 +6,16 @@ import {
   Param,
   Delete,
   UseGuards,
+  Post,
+  UsePipes,
+  ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { JobService } from './job.service';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FreelancerGuard } from 'src/auth/freelancer.guard';
+import { CreateJobDto } from './dto/create-job.dto';
 
 @ApiTags('Job')
 @Controller('job')
@@ -37,5 +42,24 @@ export class JobController {
   @UseGuards(FreelancerGuard)
   remove(@Param('id') id: string) {
     return this.jobService.remove(id);
+  }
+
+  @Post()
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async create(@Body() createJobDto: CreateJobDto) {
+    return this.jobService.create(createJobDto);
+  }
+
+  @Get('client/:clientId')
+  async getClientJobs(
+    @Param('clientId') clientId: string,
+    @Query('skip') skip: string,
+    @Query('take') take: string,
+  ) {
+    return this.jobService.findByClient(
+      clientId,
+      parseInt(skip),
+      parseInt(take),
+    );
   }
 }
