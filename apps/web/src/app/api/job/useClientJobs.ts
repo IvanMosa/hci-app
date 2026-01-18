@@ -25,6 +25,7 @@ export interface Job {
   status: JobStatus;
   createdAt: string;
   updatedAt: string;
+  bio: string;
 }
 
 export const useClientJobs = (clientId: string) => {

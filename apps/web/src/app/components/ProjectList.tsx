@@ -3,26 +3,43 @@
 import React from "react";
 import Image from "next/image";
 import projectImg from "../../../public/image 4.png";
+import { useJobs } from "@/api/job/useJobs";
+import { Job } from "@/api/job/useClientJobs";
+import { ProjectDetailsModal } from "./ProjectDetailsModal";
 
-const projectsData = Array(12).fill({
-  id: 1,
-  title: "Website design + development",
-  client: "RISK",
-  price: "$1200",
-  img: projectImg,
-});
+export interface JobWithClient extends Job {
+  client: {
+    name: string;
+    surname: string;
+  };
+}
 
 export const ProjectList = () => {
+  const [selectedJobId, setSelectedJobId] = React.useState<string | null>(null);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useJobs();
+
+  const allJobs =
+    (data?.pages.flatMap((page) => page) as JobWithClient[]) || [];
+
+  if (isLoading)
+    return <div className="text-center py-20 font-bold">Loading...</div>;
+
   return (
     <section className="bg-white pb-20">
       <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 mt-10">
-        {projectsData.map((p, index) => (
-          <div key={index} className="flex flex-col group cursor-pointer">
-            <div className="relative overflow-hidden rounded-xl mb-4">
+        {allJobs.map((p) => (
+          <div
+            key={p.id}
+            className="flex flex-col group cursor-pointer"
+            onClick={() => setSelectedJobId(p.id)}
+          >
+            <div className="relative overflow-hidden rounded-xl mb-4 h-[360px]">
               <Image
-                src={p.img}
-                alt={p.title}
-                className="object-cover w-full h-auto transition-transform duration-500 group-hover:scale-105"
+                src={projectImg}
+                alt={p?.title}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
@@ -39,22 +56,33 @@ export const ProjectList = () => {
                   {p.title}
                 </h3>
                 <span className="text-[#070415] font-bold text-[15px]">
-                  {p.price}
+                  ${Number(p.budget).toLocaleString()}
                 </span>
               </div>
               <p className="text-gray-400 text-xs font-medium mt-1 uppercase tracking-wider">
-                {p.client}
+                {p.client?.name} {p.client?.surname}
               </p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-center mt-16">
-        <button className="bg-[#070415] text-white px-10 py-4 rounded-full font-bold text-[12px] uppercase tracking-widest hover:bg-gray-800 transition-all">
-          Load More Projects
-        </button>
-      </div>
+      <ProjectDetailsModal
+        jobId={selectedJobId}
+        onClose={() => setSelectedJobId(null)}
+      />
+
+      {hasNextPage && (
+        <div className="flex justify-center mt-16">
+          <button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="bg-[#070415] text-white px-10 py-4 rounded-full font-bold text-[12px] uppercase tracking-widest hover:bg-gray-800 transition-all disabled:bg-gray-500"
+          >
+            {isFetchingNextPage ? "Loading..." : "Load More Projects"}
+          </button>
+        </div>
+      )}
     </section>
   );
 };

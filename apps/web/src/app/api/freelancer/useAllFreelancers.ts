@@ -1,5 +1,5 @@
 import { api } from "../index";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export interface FreelancerWithUser {
   id: string;
@@ -17,16 +17,25 @@ export interface FreelancerWithUser {
   }[];
 }
 
-const getAllFreelancers = async (): Promise<FreelancerWithUser[]> => {
-  const response = await api.get<never, FreelancerWithUser[]>(
-    "/freelancer-profile",
-  );
-  return response;
+const getAllFreelancers = async ({
+  pageParam = 0,
+}): Promise<FreelancerWithUser[]> => {
+  return await api.get(`/freelancer-profile`, {
+    params: {
+      skip: pageParam,
+      take: 12,
+    },
+  });
 };
 
 export const useAllFreelancers = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["freelancers-list"],
     queryFn: getAllFreelancers,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < 12) return undefined;
+      return allPages.length * 12;
+    },
   });
 };

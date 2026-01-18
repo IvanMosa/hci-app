@@ -21,13 +21,29 @@ export class JobService {
     });
   }
 
-  findAll() {
-    return this.prisma.job.findMany();
+  async findAll(skip: number, take: number) {
+    return this.prisma.job.findMany({
+      where: { status: 'active' },
+      skip: skip || 0,
+      take: take || 12,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        client: {
+          select: {
+            name: true,
+            surname: true,
+          },
+        },
+      },
+    });
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     return this.prisma.job.findUnique({
       where: { id },
+      include: {
+        client: true,
+      },
     });
   }
 

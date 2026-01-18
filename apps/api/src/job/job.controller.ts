@@ -23,8 +23,8 @@ export class JobController {
   constructor(private readonly jobService: JobService) {}
 
   @Get()
-  findAll() {
-    return this.jobService.findAll();
+  async findAll(@Query('skip') skip: string, @Query('take') take: string) {
+    return this.jobService.findAll(parseInt(skip), parseInt(take));
   }
 
   @Get(':id')

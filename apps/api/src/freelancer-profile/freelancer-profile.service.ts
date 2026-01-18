@@ -6,8 +6,10 @@ import { PrismaService } from 'src/prisma.service';
 export class FreelancerProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(skip: number, take: number) {
     return this.prisma.freelancerProfile.findMany({
+      skip,
+      take,
       include: {
         user: {
           select: {
@@ -25,6 +27,7 @@ export class FreelancerProfileService {
         },
         portfolio: true,
       },
+      orderBy: { id: 'desc' },
     });
   }
 

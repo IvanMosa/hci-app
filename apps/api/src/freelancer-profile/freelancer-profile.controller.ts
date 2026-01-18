@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { FreelancerProfileService } from './freelancer-profile.service';
 import { UpdateFreelancerProfileDto } from './dto/update-freelancer-profile.dto';
@@ -28,8 +29,8 @@ export class FreelancerProfileController {
   // }
 
   @Get()
-  findAll() {
-    return this.freelancerProfileService.findAll();
+  findAll(@Query('skip') skip: string, @Query('take') take: string) {
+    return this.freelancerProfileService.findAll(+skip || 0, +take || 12);
   }
 
   @Get(':id')

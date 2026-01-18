@@ -10,7 +10,16 @@ import defaultFreelancerImg from "../../../public/john-doe.png";
 
 export const FreelancerList = () => {
   const router = useRouter();
-  const { data: freelancers, isLoading, error } = useAllFreelancers();
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    error,
+  } = useAllFreelancers();
+
+  const allFreelancers = data?.pages.flatMap((page) => page) || [];
 
   if (isLoading) {
     return (
@@ -31,7 +40,7 @@ export const FreelancerList = () => {
   return (
     <section className="bg-white pb-20">
       <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
-        {freelancers?.map((f) => (
+        {allFreelancers.map((f) => (
           <div
             key={f.id}
             onClick={() => router.push(`/profile/${f.user?.id}`)}
@@ -77,11 +86,17 @@ export const FreelancerList = () => {
         ))}
       </div>
 
-      <div className="flex justify-center mt-16">
-        <button className="bg-[#070415] text-white px-8 py-3 rounded-full font-bold text-[12px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-sm">
-          Load More Freelancers
-        </button>
-      </div>
+      {hasNextPage && (
+        <div className="flex justify-center mt-16">
+          <button
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+            className="bg-[#070415] text-white px-8 py-3 rounded-full font-bold text-[12px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-sm disabled:bg-gray-400"
+          >
+            {isFetchingNextPage ? "Loading..." : "Load More Freelancers"}
+          </button>
+        </div>
+      )}
     </section>
   );
 };
