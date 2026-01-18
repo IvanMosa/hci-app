@@ -1,9 +1,17 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import socialMediaLogos from "../../../public/Frame 20.png";
 
 export const Footer = () => {
-  const storedUserId = localStorage.getItem("userId");
+  const [storedUserId, setStoredUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    setStoredUserId(userId);
+  }, []);
+
   return (
     <footer className="bg-[#070415] text-white py-20 px-4 mt-auto">
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-8">

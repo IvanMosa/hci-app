@@ -26,7 +26,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
         </h1>
       </div>
 
-      <section className="mb-20">
+      <section className="mb-10">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-xl font-bold mb-6 text-[#070415]">
