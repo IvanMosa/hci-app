@@ -4,7 +4,23 @@ import React from "react";
 import Image from "next/image";
 import johnDoeImg from "../../../public/john-doe.png";
 
+import nodejsImg from "../../../public/nodejs-original.png";
+import reactImg from "../../../public/react-original.png";
+import javaImg from "../../../public/java-original.png";
+import pgadminImg from "../../../public/pgadmin-original.png";
+import html5Img from "../../../public/html5-original.png";
+import figmaImg from "../../../public/figma-original.png";
+
 export const FreelancerProfile = ({ profile }: { profile: any }) => {
+  const skills = [
+    { id: "node", src: nodejsImg, alt: "Node.js" },
+    { id: "react", src: reactImg, alt: "React" },
+    { id: "java", src: javaImg, alt: "Java" },
+    { id: "pg", src: pgadminImg, alt: "pgAdmin" },
+    { id: "html", src: html5Img, alt: "HTML5" },
+    { id: "figma", src: figmaImg, alt: "Figma" },
+  ];
+
   return (
     <div className="w-full px-15 py-12 bg-white">
       <div className="flex items-center justify-between mb-16">
@@ -62,12 +78,19 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
           </div>
 
           <div className="flex gap-4">
-            {[1, 2, 3, 4, 5, 6].map((s) => (
+            {skills.map((skill) => (
               <div
-                key={s}
-                className="w-14 h-14 rounded-full border border-gray-100 shadow-sm flex items-center justify-center p-3 hover:scale-105 transition-transform bg-white"
+                key={skill.id}
+                className="w-14 h-14 rounded-full border border-gray-100 shadow-sm flex items-center justify-center p-3 hover:scale-110 transition-transform bg-white"
               >
-                <div className="w-full h-full bg-gray-50 rounded-md" />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={skill.src}
+                    alt={skill.alt}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               </div>
             ))}
           </div>
