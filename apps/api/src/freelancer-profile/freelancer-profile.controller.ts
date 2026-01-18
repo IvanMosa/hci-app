@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
   Query,
 } from '@nestjs/common';
 import { FreelancerProfileService } from './freelancer-profile.service';

@@ -82,6 +82,14 @@ export class AuthService {
       },
     });
 
+    await this.prisma.freelancerProfile.create({
+      data: {
+        userId: newUser.id,
+        bio: '',
+        location: '',
+      },
+    });
+
     const accessToken = this.jwtService.sign({
       id: newUser.id,
       email: newUser.email,
