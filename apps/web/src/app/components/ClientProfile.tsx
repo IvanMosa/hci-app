@@ -6,6 +6,7 @@ import projectImg from "../../../public/image 4.png";
 import { PostProjectModal } from "./PostProjectModal";
 import { useClientJobs } from "@/api/job/useClientJobs";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ClientProfile = ({ profile }: { profile: any }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const clientId = profile.userDetails?.id;
@@ -63,34 +64,37 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[23px]">
-              {allJobs.map((job: any) => (
-                <div
-                  key={job?.id}
-                  className="flex flex-col group cursor-pointer"
-                >
-                  <div className="relative h-[360px] w-full overflow-hidden rounded-xl mb-4">
-                    <Image
-                      src={projectImg}
-                      alt={job?.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex justify-between items-start">
-                    <div className="flex flex-col">
-                      <h3 className="text-[#070415] font-bold text-[15px]">
-                        {job?.title}
-                      </h3>
-                      <p className="text-gray-400 text-[12px] uppercase">
-                        RISK
-                      </p>
+              {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                allJobs.map((job: any) => (
+                  <div
+                    key={job?.id}
+                    className="flex flex-col group cursor-pointer"
+                  >
+                    <div className="relative h-[360px] w-full overflow-hidden rounded-xl mb-4">
+                      <Image
+                        src={projectImg}
+                        alt={job?.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                     </div>
-                    <span className="text-[#070415] font-bold text-[15px]">
-                      ${job?.budget}
-                    </span>
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col">
+                        <h3 className="text-[#070415] font-bold text-[15px]">
+                          {job?.title}
+                        </h3>
+                        <p className="text-gray-400 text-[12px] uppercase">
+                          RISK
+                        </p>
+                      </div>
+                      <span className="text-[#070415] font-bold text-[15px]">
+                        ${job?.budget}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              }
             </div>
 
             {hasNextPage && (

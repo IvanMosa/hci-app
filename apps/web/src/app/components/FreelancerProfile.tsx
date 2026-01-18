@@ -11,6 +11,7 @@ import pgadminImg from "../../../public/pgadmin-original.png";
 import html5Img from "../../../public/html5-original.png";
 import figmaImg from "../../../public/figma-original.png";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FreelancerProfile = ({ profile }: { profile: any }) => {
   const skills = [
     { id: "node", src: nodejsImg, alt: "Node.js" },

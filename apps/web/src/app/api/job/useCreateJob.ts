@@ -19,6 +19,7 @@ interface ApiError {
 }
 
 const createJob = async (data: CreateJobInput) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return api.post<CreateJobInput, any>("/job", data);
 };
 

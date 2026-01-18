@@ -1,5 +1,5 @@
 import { api } from "../index";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 export interface FreelancerWithUser {
   id: string;

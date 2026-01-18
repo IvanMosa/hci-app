@@ -1,4 +1,4 @@
-const ProjectsPage = ({ params }: { params: { id: string } }) => {
+const ProjectsPage = () => {
   return <h2>Projects Page</h2>;
 };
 
