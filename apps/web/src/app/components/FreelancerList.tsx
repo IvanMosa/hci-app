@@ -4,12 +4,18 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { useAllFreelancers } from "@/api/freelancer/useAllFreelancers";
+import {
+  FreelancerWithUser,
+  useAllFreelancers,
+} from "@/api/freelancer/useAllFreelancers";
 import traitsImg from "../../../public/traits.png";
 import defaultFreelancerImg from "../../../public/john-doe.png";
+import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
 
 export const FreelancerList = () => {
-  const router = useRouter();
+  const [selectedFreelancer, setSelectedFreelancer] =
+    React.useState<FreelancerWithUser | null>(null);
+
   const {
     data,
     fetchNextPage,
@@ -43,7 +49,7 @@ export const FreelancerList = () => {
         {allFreelancers.map((f) => (
           <div
             key={f.id}
-            onClick={() => router.push(`/profile/${f.user?.id}`)}
+            onClick={() => setSelectedFreelancer(f)}
             className="flex flex-col group cursor-pointer"
           >
             <div className="relative overflow-hidden rounded-xl mb-4 h-[360px]">
@@ -85,6 +91,11 @@ export const FreelancerList = () => {
           </div>
         ))}
       </div>
+
+      <FreelancerDetailsModal
+        freelancer={selectedFreelancer}
+        onClose={() => setSelectedFreelancer(null)}
+      />
 
       {hasNextPage && (
         <div className="flex justify-center mt-16">
