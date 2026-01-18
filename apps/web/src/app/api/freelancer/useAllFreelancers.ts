@@ -28,9 +28,9 @@ const getAllFreelancers = async ({
   });
 };
 
-export const useAllFreelancers = () => {
+export const useAllFreelancers = (search?: string) => {
   return useInfiniteQuery({
-    queryKey: ["freelancers-list"],
+    queryKey: ["freelancers-list", search],
     queryFn: getAllFreelancers,
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {

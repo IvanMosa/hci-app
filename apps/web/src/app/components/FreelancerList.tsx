@@ -12,41 +12,30 @@ import traitsImg from "../../../public/traits.png";
 import defaultFreelancerImg from "../../../public/john-doe.png";
 import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
 
-export const FreelancerList = () => {
+export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
   const [selectedFreelancer, setSelectedFreelancer] =
     React.useState<FreelancerWithUser | null>(null);
-
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    error,
-  } = useAllFreelancers();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useAllFreelancers(searchQuery);
 
   const allFreelancers = data?.pages.flatMap((page) => page) || [];
 
-  if (isLoading) {
+  const filteredFreelancers = allFreelancers.filter((f) => {
+    const fullName = `${f.user?.name} ${f.user?.surname}`.toLowerCase();
+    return fullName.includes(searchQuery.toLowerCase());
+  });
+
+  if (isLoading)
     return (
       <div className="flex justify-center py-20">
-        <Loader2 className="animate-spin text-[#070415]" size={40} />
+        <Loader2 className="animate-spin" size={40} />
       </div>
     );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-20 text-red-500 font-bold">
-        Error loading freelancers.
-      </div>
-    );
-  }
 
   return (
     <section className="bg-white pb-20">
       <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
-        {allFreelancers.map((f) => (
+        {filteredFreelancers.map((f) => (
           <div
             key={f.id}
             onClick={() => setSelectedFreelancer(f)}

@@ -14,21 +14,24 @@ export interface JobWithClient extends Job {
   };
 }
 
-export const ProjectList = () => {
+export const ProjectList = ({ searchQuery }: { searchQuery: string }) => {
   const [selectedJobId, setSelectedJobId] = React.useState<string | null>(null);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useJobs();
+    useJobs(searchQuery);
 
   const allJobs =
     (data?.pages.flatMap((page) => page) as JobWithClient[]) || [];
 
+  const filteredJobs = allJobs.filter((p) =>
+    p.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   if (isLoading)
     return <div className="text-center py-20 font-bold">Loading...</div>;
-
   return (
     <section className="bg-white pb-20">
       <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 mt-10">
-        {allJobs.map((p) => (
+        {filteredJobs.map((p) => (
           <div
             key={p.id}
             className="flex flex-col group cursor-pointer"

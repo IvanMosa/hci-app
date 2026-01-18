@@ -9,19 +9,25 @@ import filterIcon from "../../../public/filter_list.png";
 interface ToolbarProps {
   view: "projects" | "freelancers";
   setView: (val: "projects" | "freelancers") => void;
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
 }
 
-export const ExploreToolbar = ({ view, setView }: ToolbarProps) => {
+export const ExploreToolbar = ({
+  view,
+  setView,
+  searchQuery,
+  setSearchQuery,
+}: ToolbarProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleViewChange = (newView: "projects" | "freelancers") => {
     setView(newView);
-
+    setSearchQuery("");
     const params = new URLSearchParams(searchParams.toString());
     params.set("type", newView);
-
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
@@ -38,8 +44,7 @@ export const ExploreToolbar = ({ view, setView }: ToolbarProps) => {
                   : "text-gray-500"
               }`}
             >
-              <Briefcase size={18} />
-              Projects
+              <Briefcase size={18} /> Projects
             </button>
             <button
               onClick={() => handleViewChange("freelancers")}
@@ -49,14 +54,15 @@ export const ExploreToolbar = ({ view, setView }: ToolbarProps) => {
                   : "text-gray-500"
               }`}
             >
-              <Users size={18} />
-              Freelancers
+              <Users size={18} /> Freelancers
             </button>
           </div>
 
           <div className="relative w-full max-w-sm">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={`Search ${view === "projects" ? "projects" : "freelancers"}`}
               className="w-full bg-gray-100 py-3 px-6 pr-12 rounded-full text-sm focus:outline-none"
             />
@@ -65,7 +71,6 @@ export const ExploreToolbar = ({ view, setView }: ToolbarProps) => {
             </button>
           </div>
         </div>
-
         <button className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-[46px] text-sm font-semibold hover:bg-gray-50 transition-colors shrink-0 cursor-pointer">
           <Image src={filterIcon} alt="Filter" width={18} height={18} />
           Filters
