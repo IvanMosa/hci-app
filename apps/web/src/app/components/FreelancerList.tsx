@@ -2,27 +2,47 @@
 
 import React from "react";
 import Image from "next/image";
-import freelancerImg from "../../../public/john-doe.png";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { useAllFreelancers } from "@/api/freelancer/useAllFreelancers";
 import traitsImg from "../../../public/traits.png";
-
-const freelancersData = Array(12).fill({
-  id: 1,
-  name: "John Doe",
-  role: "Designer",
-  img: freelancerImg,
-});
+import defaultFreelancerImg from "../../../public/john-doe.png";
 
 export const FreelancerList = () => {
+  const router = useRouter();
+  const { data: freelancers, isLoading, error } = useAllFreelancers();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="animate-spin text-[#070415]" size={40} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-20 text-red-500 font-bold">
+        Error loading freelancers.
+      </div>
+    );
+  }
+
   return (
     <section className="bg-white pb-20">
       <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
-        {freelancersData.map((f, index) => (
-          <div key={index} className="flex flex-col group cursor-pointer">
-            <div className="relative overflow-hidden rounded-xl mb-4">
+        {freelancers?.map((f) => (
+          <div
+            key={f.id}
+            onClick={() => router.push(`/profile/${f.user?.id}`)}
+            className="flex flex-col group cursor-pointer"
+          >
+            <div className="relative overflow-hidden rounded-xl mb-4 h-[360px]">
               <Image
-                src={f.img}
-                alt={f.name}
-                className="object-cover w-full h-auto transition-transform duration-500 group-hover:scale-105"
+                src={defaultFreelancerImg}
+                alt={f.user?.name || "Freelancer"}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
@@ -36,10 +56,10 @@ export const FreelancerList = () => {
             <div className="flex justify-between items-start">
               <div className="flex flex-col">
                 <h3 className="text-[#070415] font-bold text-lg leading-tight">
-                  {f.name}
+                  {f.user?.name} {f.user?.surname}
                 </h3>
-                <p className="text-gray-400 text-sm font-medium mt-1">
-                  {f.role}
+                <p className="text-gray-400 text-sm font-medium mt-1 capitalize">
+                  {f.user?.type}
                 </p>
               </div>
 

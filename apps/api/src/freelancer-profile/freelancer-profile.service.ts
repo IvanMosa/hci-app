@@ -5,12 +5,27 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class FreelancerProfileService {
   constructor(private readonly prisma: PrismaService) {}
-  // create(createFreelancerProfileDto: CreateFreelancerProfileDto) {
-  //   return 'This action adds a new freelancerProfile';
-  // }
 
-  findAll() {
-    return this.prisma.freelancerProfile.findMany();
+  async findAll() {
+    return this.prisma.freelancerProfile.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+            type: true,
+          },
+        },
+        skills: {
+          include: {
+            skill: true,
+          },
+        },
+        portfolio: true,
+      },
+    });
   }
 
   findOne(id: string) {
