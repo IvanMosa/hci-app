@@ -3,6 +3,7 @@ import Image from "next/image";
 import socialMediaLogos from "../../../public/Frame 20.png";
 
 export const Footer = () => {
+  const storedUserId = localStorage.getItem("userId");
   return (
     <footer className="bg-[#070415] text-white py-20 px-4 mt-auto">
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-8">
@@ -19,10 +20,10 @@ export const Footer = () => {
             <a href="#" className="hover:text-zinc-300 transition-colors">
               Explore
             </a>
-            <a href="#" className="hover:text-zinc-300 transition-colors">
-              Dashboard
-            </a>
-            <a href="#" className="hover:text-zinc-300 transition-colors">
+            <a
+              href={`/profile/${storedUserId}`}
+              className="hover:text-zinc-300 transition-colors"
+            >
               Profile
             </a>
           </nav>

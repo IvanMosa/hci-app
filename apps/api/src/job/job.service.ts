@@ -72,7 +72,6 @@ export class JobService {
   }
 
   async findByClient(clientId: string, skip: number, take: number) {
-    console.log(clientId);
     return this.prisma.job.findMany({
       where: { clientId },
       skip: skip,

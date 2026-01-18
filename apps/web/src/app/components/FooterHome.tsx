@@ -1,9 +1,18 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import socialMediaLogos from "../../../public/social-media-black.png";
 import logoBlack from "../../../public/freelancia-black.png";
 
 export const FooterHome = () => {
+  const [storedUserId, setStoredUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    setStoredUserId(userId);
+  }, []);
+
   return (
     <footer className="w-full bg-white text-[#070415] py-20 px-4 mt-auto border-t border-gray-100">
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-8">
@@ -40,10 +49,10 @@ export const FooterHome = () => {
             >
               Explore
             </a>
-            <a href="#" className="hover:text-gray-500 transition-colors">
-              Dashboard
-            </a>
-            <a href="#" className="hover:text-gray-500 transition-colors">
+            <a
+              href={`/profile/${storedUserId}`}
+              className="hover:text-gray-500 transition-colors"
+            >
               Profile
             </a>
           </nav>
