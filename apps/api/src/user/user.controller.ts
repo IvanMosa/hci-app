@@ -19,7 +19,6 @@ export class UserController {
   }
 
   @Get(':id')
-  @UseGuards(UserGuard)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }

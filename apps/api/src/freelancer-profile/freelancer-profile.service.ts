@@ -31,4 +31,11 @@ export class FreelancerProfileService {
       where: { id },
     });
   }
+
+  async findByUserId(userId: string) {
+    const profile = await this.prisma.freelancerProfile.findUnique({
+      where: { userId: userId },
+    });
+    return { data: profile };
+  }
 }

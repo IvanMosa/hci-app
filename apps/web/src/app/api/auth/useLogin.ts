@@ -10,6 +10,7 @@ type LoginType = {
 
 export type JwtResponse = {
   accessToken: string;
+  userId: string;
 };
 
 interface ApiError {
@@ -30,6 +31,7 @@ export const useLogin = (onSuccessCallback?: () => void) => {
     mutationKey: ["login-user"],
     onSuccess: (data: JwtResponse) => {
       localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userId", data.userId);
 
       window.dispatchEvent(new Event("authChange"));
 

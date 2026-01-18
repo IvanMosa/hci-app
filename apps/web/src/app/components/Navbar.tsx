@@ -12,11 +12,15 @@ import { useRouter } from "next/navigation";
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null); // Stanje za userId
   const router = useRouter();
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("accessToken");
+    const storedUserId = localStorage.getItem("userId"); // Dohvaćanje userId-a
+
     setIsLoggedIn(!!token);
+    setUserId(storedUserId);
   };
 
   useEffect(() => {
@@ -29,6 +33,7 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId"); // Brišemo i userId pri logoutu
     window.dispatchEvent(new Event("authChange"));
     router.push("/login");
   };
@@ -71,11 +76,15 @@ export const Navbar = () => {
             />
           </button>
 
-          <ExploreModal open={open} />
+          <ExploreModal open={open} onClose={() => setOpen(false)} />
         </div>
 
-        <Link href="/dashboard" className={navItemStyles}>
-          Dashboard
+        {/* Dinamički link na profil: ako nema ID-a, šalje na login ili osnovni profile */}
+        <Link
+          href={userId ? `/profile/${userId}` : "/login"}
+          className={navItemStyles}
+        >
+          Profile
         </Link>
 
         {isLoggedIn ? (

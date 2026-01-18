@@ -28,7 +28,7 @@ const HeroHome = () => {
 
         <div className="flex flex-col sm:flex-row gap-5 items-center">
           <Link
-            href="/find-freelancers"
+            href="/explore?type=freelancers"
             className="bg-white text-[#070415] px-10 py-4 rounded-full font-bold uppercase text-[13px] tracking-widest hover:bg-gray-200 transition-colors w-64 sm:w-auto"
           >
             Find Freelancers

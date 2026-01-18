@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { FreelancerProfileService } from './freelancer-profile.service';
 import { UpdateFreelancerProfileDto } from './dto/update-freelancer-profile.dto';
@@ -50,5 +51,10 @@ export class FreelancerProfileController {
   @UseGuards(AdminGuard)
   remove(@Param('id') id: string) {
     return this.freelancerProfileService.remove(id);
+  }
+
+  @Get('profile/:id')
+  findMyProfile(@Param('id') id: string) {
+    return this.freelancerProfileService.findByUserId(id);
   }
 }

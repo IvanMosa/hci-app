@@ -16,20 +16,17 @@ export const ExploreToolbar = ({ view, setView }: ToolbarProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Funkcija koja mijenja URL bez refresha
   const handleViewChange = (newView: "projects" | "freelancers") => {
     setView(newView);
 
-    // Kreiramo nove parametre na temelju postojećih
     const params = new URLSearchParams(searchParams.toString());
     params.set("type", newView);
 
-    // Gurnemo novu putanju u browser history bez osvježavanja stranice
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   return (
-    <div className="px-15 pt-10 pb-6 w-full">
+    <div className="px-15 pb-6 w-full">
       <div className="flex flex-col md:flex-row items-center gap-4">
         <div className="flex flex-1 items-center gap-4 w-full">
           <div className="flex bg-gray-100 p-1 rounded-lg shrink-0">

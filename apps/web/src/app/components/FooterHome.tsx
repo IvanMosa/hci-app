@@ -34,7 +34,10 @@ export const FooterHome = () => {
             <a href="#" className="hover:text-gray-500 transition-colors">
               Home
             </a>
-            <a href="#" className="hover:text-gray-500 transition-colors">
+            <a
+              href="/explore?type=projects"
+              className="hover:text-gray-500 transition-colors"
+            >
               Explore
             </a>
             <a href="#" className="hover:text-gray-500 transition-colors">

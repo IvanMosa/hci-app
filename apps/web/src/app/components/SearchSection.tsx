@@ -26,7 +26,7 @@ export const SearchSection = () => {
 
       <div className="flex gap-8 mb-8 text-[#070415]">
         <Link
-          href="/project"
+          href="/explore?type=projects"
           className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition cursor-pointer"
         >
           <Image
@@ -40,7 +40,7 @@ export const SearchSection = () => {
         </Link>
 
         <Link
-          href="/freelancers"
+          href="/explore?type=freelancers"
           className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition cursor-pointer"
         >
           <Image

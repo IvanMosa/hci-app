@@ -11,6 +11,7 @@ import { UserType } from '@prisma/client';
 
 interface JwtResponseDto {
   accessToken: string;
+  userId?: string;
 }
 
 @Injectable()
@@ -50,7 +51,7 @@ export class AuthService {
       surname: loginUser.surname,
     });
 
-    return { accessToken };
+    return { accessToken, userId: loginUser.id };
   }
 
   async userRegister(register: RegistrationDto): Promise<JwtResponseDto> {
