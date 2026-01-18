@@ -15,14 +15,13 @@ export const FeaturedProjects = () => {
   const { data, isLoading } = useJobs();
 
   const allProjects =
-    (data?.pages.flatMap((page) => page) as JobWithClient[]).slice(0, 5) || [];
+    (data?.pages.flatMap((page) => page) as JobWithClient[])?.slice(0, 5) || [];
 
   const nextSlide = () => {
-    // Možemo se pomaknuti samo dok ne dođemo do zadnja 3 projekta
     if (currentIndex < allProjects.length - 3) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setCurrentIndex(0); // Reset na početak
+      setCurrentIndex(0);
     }
   };
 
@@ -30,7 +29,7 @@ export const FeaturedProjects = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     } else {
-      setCurrentIndex(allProjects.length - 3); // Na zadnju moguću poziciju
+      setCurrentIndex(allProjects.length - 3);
     }
   };
 
