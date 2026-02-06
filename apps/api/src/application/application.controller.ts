@@ -1,5 +1,17 @@
-import { Controller, Get, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Param,
+  Delete,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApplicationService } from './application.service';
+import { CreateApplicationDto } from './dto/create-application.dto';
+import { UpdateApplicationDto } from './dto/update-application.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Application')
@@ -7,10 +19,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
-  // @Post()
-  // create(@Body() createApplicationDto: CreateApplicationDto) {
-  //   return this.applicationService.create(createApplicationDto);
-  // }
+  @Post()
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  create(@Body() createApplicationDto: CreateApplicationDto) {
+    return this.applicationService.create(createApplicationDto);
+  }
 
   @Get()
   findAll() {
@@ -19,19 +32,30 @@ export class ApplicationController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.applicationService.findOne(+id);
+    return this.applicationService.findOne(id);
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateApplicationDto: UpdateApplicationDto,
-  // ) {
-  //   return this.applicationService.update(+id, updateApplicationDto);
-  // }
+  @Patch(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  update(
+    @Param('id') id: string,
+    @Body() updateApplicationDto: UpdateApplicationDto,
+  ) {
+    return this.applicationService.update(id, updateApplicationDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.applicationService.remove(+id);
+    return this.applicationService.remove(id);
+  }
+
+  @Get('job/:jobId')
+  findByJob(@Param('jobId') jobId: string) {
+    return this.applicationService.findByJob(jobId);
+  }
+
+  @Get('freelancer/:freelancerId')
+  findByFreelancer(@Param('freelancerId') freelancerId: string) {
+    return this.applicationService.findByFreelancer(freelancerId);
   }
 }
