@@ -30,6 +30,16 @@ export class ApplicationController {
     return this.applicationService.findAll();
   }
 
+  @Get('job/:jobId')
+  findByJob(@Param('jobId') jobId: string) {
+    return this.applicationService.findByJob(jobId);
+  }
+
+  @Get('freelancer/:freelancerId')
+  findByFreelancer(@Param('freelancerId') freelancerId: string) {
+    return this.applicationService.findByFreelancer(freelancerId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.applicationService.findOne(id);
@@ -47,15 +57,5 @@ export class ApplicationController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.applicationService.remove(id);
-  }
-
-  @Get('job/:jobId')
-  findByJob(@Param('jobId') jobId: string) {
-    return this.applicationService.findByJob(jobId);
-  }
-
-  @Get('freelancer/:freelancerId')
-  findByFreelancer(@Param('freelancerId') freelancerId: string) {
-    return this.applicationService.findByFreelancer(freelancerId);
   }
 }
