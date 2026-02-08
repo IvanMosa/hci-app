@@ -25,7 +25,7 @@ export const FreelancerDetailsModal = ({
           onClick={onClose}
           className="absolute top-6 right-8 text-gray-400 hover:text-black z-20"
         >
-          <X size={28} />
+          <X size={28} className="cursor-pointer" />
         </button>
 
         <div className="flex flex-col h-full">
