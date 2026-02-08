@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
 import projectImg from "../../../public/image 7.png";
 import { useJobDetails } from "@/api/job/useJobDetails";
+import { ApplyModal } from "./ApplyModal";
 
 interface ProjectDetailsModalProps {
   jobId: string | null;
@@ -16,6 +17,15 @@ export const ProjectDetailsModal = ({
   onClose,
 }: ProjectDetailsModalProps) => {
   const { data: job, isLoading } = useJobDetails(jobId);
+  const [applyOpen, setApplyOpen] = useState(false);
+  const [freelancerProfileId, setFreelancerProfileId] = useState<string | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const profileId = localStorage.getItem("freelancerProfileId");
+    setFreelancerProfileId(profileId);
+  }, []);
 
   if (!jobId) return null;
 
@@ -31,7 +41,7 @@ export const ProjectDetailsModal = ({
 
         {isLoading ? (
           <div className="flex items-center justify-center h-[750px] font-bold">
-            Učitavanje...
+            Loading...
           </div>
         ) : job ? (
           <div className="p-16 flex flex-col h-full">
@@ -39,7 +49,10 @@ export const ProjectDetailsModal = ({
               <h2 className="text-[32px] font-bold text-[#070415] tracking-tight">
                 {job.title}
               </h2>
-              <button className="bg-[#070415] text-white px-10 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all">
+              <button
+                onClick={() => setApplyOpen(true)}
+                className="bg-[#070415] text-white px-10 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all cursor-pointer"
+              >
                 Apply
               </button>
             </div>
@@ -102,6 +115,16 @@ export const ProjectDetailsModal = ({
                 </div>
               </div>
             </div>
+
+            {applyOpen && freelancerProfileId && (
+              <ApplyModal
+                isOpen={applyOpen}
+                onClose={() => setApplyOpen(false)}
+                jobId={job.id}
+                jobTitle={job.title}
+                freelancerId={freelancerProfileId}
+              />
+            )}
           </div>
         ) : null}
       </div>
