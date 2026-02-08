@@ -30,14 +30,14 @@ export const ProjectList = ({ searchQuery }: { searchQuery: string }) => {
     return <div className="text-center py-20 font-bold">Loading...</div>;
   return (
     <section className="bg-white pb-20">
-      <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 mt-10">
+      <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-14 gap-y-12 mt-10">
         {filteredJobs.map((p) => (
           <div
             key={p.id}
             className="flex flex-col group cursor-pointer"
             onClick={() => setSelectedJobId(p.id)}
           >
-            <div className="relative overflow-hidden rounded-xl mb-4 h-[360px]">
+            <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
               <Image
                 src={projectImg}
                 alt={p?.title}

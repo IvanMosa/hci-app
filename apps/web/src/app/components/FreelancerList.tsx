@@ -33,14 +33,14 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
 
   return (
     <section className="bg-white pb-20">
-      <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
+      <div className="px-15 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-14 mt-10">
         {filteredFreelancers.map((f) => (
           <div
             key={f.id}
             onClick={() => setSelectedFreelancer(f)}
             className="flex flex-col group cursor-pointer"
           >
-            <div className="relative overflow-hidden rounded-xl mb-4 h-[360px]">
+            <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
               <Image
                 src={defaultFreelancerImg}
                 alt={f.user?.name || "Freelancer"}
