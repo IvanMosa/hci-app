@@ -23,7 +23,7 @@ const getAllFreelancers = async ({
   return await api.get(`/freelancer-profile`, {
     params: {
       skip: pageParam,
-      take: 12,
+      take: 15,
     },
   });
 };
@@ -34,8 +34,8 @@ export const useAllFreelancers = (search?: string) => {
     queryFn: getAllFreelancers,
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < 12) return undefined;
-      return allPages.length * 12;
+      if (lastPage.length < 15) return undefined;
+      return allPages.length * 15;
     },
   });
 };

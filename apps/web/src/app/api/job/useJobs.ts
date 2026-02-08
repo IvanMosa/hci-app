@@ -9,7 +9,7 @@ export const useJobs = (search?: string) => {
       const response = await api.get<never, Job[]>("/job", {
         params: {
           skip: pageParam,
-          take: 12,
+          take: 15,
         },
       });
       console.log(response);
@@ -17,7 +17,7 @@ export const useJobs = (search?: string) => {
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage || lastPage.length < 12) return undefined;
+      if (!lastPage || lastPage.length < 15) return undefined;
       return allPages.reduce((acc, page) => acc + page.length, 0);
     },
   });
