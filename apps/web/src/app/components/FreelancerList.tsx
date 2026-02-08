@@ -34,6 +34,14 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
   return (
     <section className="bg-white pb-20">
       <div className="px-15 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-14 mt-10">
+        {filteredFreelancers.length === 0 && !isLoading && (
+          <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
+            <p className="text-xl font-medium">
+              No freelancers found for "{searchQuery}"
+            </p>
+          </div>
+        )}
+
         {filteredFreelancers.map((f) => (
           <div
             key={f.id}
@@ -85,7 +93,7 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
         onClose={() => setSelectedFreelancer(null)}
       />
 
-      {hasNextPage && (
+      {hasNextPage && filteredFreelancers.length > 0 && (
         <div className="flex justify-center mt-16">
           <button
             onClick={() => fetchNextPage()}

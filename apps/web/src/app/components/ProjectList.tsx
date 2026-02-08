@@ -31,6 +31,14 @@ export const ProjectList = ({ searchQuery }: { searchQuery: string }) => {
   return (
     <section className="bg-white pb-20">
       <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-14 gap-y-12 mt-10">
+        {filteredJobs.length === 0 && !isLoading && (
+          <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
+            <p className="text-xl font-medium">
+              No projects found for "{searchQuery}"
+            </p>
+          </div>
+        )}
+
         {filteredJobs.map((p) => (
           <div
             key={p.id}
@@ -75,7 +83,7 @@ export const ProjectList = ({ searchQuery }: { searchQuery: string }) => {
         onClose={() => setSelectedJobId(null)}
       />
 
-      {hasNextPage && (
+      {hasNextPage && filteredJobs.length > 0 && (
         <div className="flex justify-center mt-16">
           <button
             onClick={() => fetchNextPage()}
