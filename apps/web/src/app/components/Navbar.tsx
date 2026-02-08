@@ -79,6 +79,18 @@ export const Navbar = () => {
           <ExploreModal open={open} onClose={() => setOpen(false)} />
         </div>
 
+        {isLoggedIn && (
+          <Link href="/dashboard" className={navItemStyles}>
+            Dashboard
+          </Link>
+        )}
+
+        {isLoggedIn && (
+          <Link href="/projects" className={navItemStyles}>
+            Projects
+          </Link>
+        )}
+
         <Link
           href={userId ? `/profile/${userId}` : "/login"}
           className={navItemStyles}
