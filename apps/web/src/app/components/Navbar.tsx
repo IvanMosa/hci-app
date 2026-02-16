@@ -43,7 +43,7 @@ export const Navbar = () => {
     "font-semibold hover:underline underline-offset-8 decoration-2 transition-all duration-200";
 
   return (
-    <nav className="text-black px-15 py-6 flex justify-between items-center bg-white">
+    <nav className="text-black px-15 py-4 flex justify-between items-center bg-white">
       <Link href="/">
         <Image
           src={logo}
@@ -102,7 +102,7 @@ export const Navbar = () => {
         {isLoggedIn ? (
           <button
             onClick={handleLogout}
-            className="bg-[#070415] text-white border rounded-[46px] px-8 py-4 text-[12px] font-bold hover:bg-gray-800 transition uppercase hover:cursor-pointer"
+            className="bg-[#070415] text-white border rounded-[46px] px-8 py-2 text-[12px] font-bold hover:bg-gray-800 transition uppercase hover:cursor-pointer"
           >
             Log Out
           </button>
