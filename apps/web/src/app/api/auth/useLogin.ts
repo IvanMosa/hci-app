@@ -11,6 +11,7 @@ type LoginType = {
 export type JwtResponse = {
   accessToken: string;
   userId: string;
+  userType?: string;
 };
 
 interface ApiError {
@@ -32,6 +33,9 @@ export const useLogin = (onSuccessCallback?: () => void) => {
     onSuccess: (data: JwtResponse) => {
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("userId", data.userId);
+      if (data.userType) {
+        localStorage.setItem("userType", data.userType);
+      }
 
       window.dispatchEvent(new Event("authChange"));
 

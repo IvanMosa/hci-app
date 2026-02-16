@@ -34,6 +34,7 @@ export const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userId");
+    localStorage.removeItem("userType");
     window.dispatchEvent(new Event("authChange"));
     router.push("/login");
   };
