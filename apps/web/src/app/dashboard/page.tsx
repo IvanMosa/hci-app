@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Briefcase, FileText, DollarSign, Clock } from "lucide-react";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";
-import { useClientJobs } from "@/api/job/useClientJobs";
 import { useMyApplications } from "@/api/application/useMyApplications";
+import { useAllClientJobs } from "@/api/job/useAllClientJobs";
 import { Footer } from "@/components/Footer";
 
 export default function DashboardPage() {
@@ -55,7 +55,7 @@ function DashboardContent({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <div className="w-full px-15 py-12">
+      <div className="w-full px-15 py-6">
         <div className="mb-12">
           <h1 className="text-3xl font-bold text-[#070415] mb-2">
             Welcome back, {profile.userDetails?.name}!
@@ -78,9 +78,11 @@ function DashboardContent({ userId }: { userId: string }) {
   );
 }
 
+const PROJECTS_PER_PAGE = 4;
+
 function ClientDashboard({ userId }: { userId: string }) {
-  const { data, isLoading } = useClientJobs(userId);
-  const allJobs = data?.pages.flatMap((page) => page) || [];
+  const { data: allJobs = [], isLoading } = useAllClientJobs(userId);
+  const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_PAGE);
 
   const activeJobs = allJobs.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,9 +98,12 @@ function ClientDashboard({ userId }: { userId: string }) {
     0,
   );
 
+  const visibleJobs = allJobs.slice(0, visibleCount);
+  const hasMore = visibleCount < allJobs.length;
+
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <StatCard
           icon={<Briefcase size={24} />}
           label="Total Projects"
@@ -122,9 +127,7 @@ function ClientDashboard({ userId }: { userId: string }) {
       </div>
 
       <section>
-        <h2 className="text-xl font-bold text-[#070415] mb-6">
-          Your Projects
-        </h2>
+        <h2 className="text-xl font-bold text-[#070415] mb-6">Your Projects</h2>
         {isLoading ? (
           <p className="text-gray-500">Loading projects...</p>
         ) : allJobs.length === 0 ? (
@@ -132,38 +135,52 @@ function ClientDashboard({ userId }: { userId: string }) {
             You haven&apos;t posted any projects yet.
           </p>
         ) : (
-          <div className="space-y-4">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {allJobs.map((job: any) => (
-              <div
-                key={job?.id}
-                className="flex items-center justify-between p-6 border border-gray-100 rounded-xl hover:shadow-sm transition-all"
-              >
-                <div>
-                  <h3 className="font-bold text-[#070415] text-[15px]">
-                    {job?.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm mt-1">
-                    {job?.category?.replace("_", " ")} •{" "}
-                    {new Date(job?.createdAt).toLocaleDateString()}
-                  </p>
+          <div className="h-[495px] overflow-y-auto pr-2">
+            <div className="space-y-4">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {visibleJobs.map((job: any) => (
+                <div
+                  key={job?.id}
+                  className="flex items-center justify-between p-6 border border-gray-100 rounded-xl hover:shadow-sm transition-all"
+                >
+                  <div>
+                    <h3 className="font-bold text-[#070415] text-[15px]">
+                      {job?.title}
+                    </h3>
+                    <p className="text-gray-400 text-sm mt-1">
+                      {job?.category?.replace("_", " ")} •{" "}
+                      {new Date(job?.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <span className="text-[#070415] font-bold">
+                      ${Number(job?.budget).toLocaleString()}
+                    </span>
+                    <span
+                      className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
+                        job?.status === "active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-600"
+                      }`}
+                    >
+                      {job?.status}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-6">
-                  <span className="text-[#070415] font-bold">
-                    ${Number(job?.budget).toLocaleString()}
-                  </span>
-                  <span
-                    className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
-                      job?.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    {job?.status}
-                  </span>
-                </div>
+              ))}
+            </div>
+            {hasMore && (
+              <div className="flex justify-center mt-4 pb-2">
+                <button
+                  onClick={() =>
+                    setVisibleCount((prev) => prev + PROJECTS_PER_PAGE)
+                  }
+                  className="px-6 py-2 bg-[#070415] text-white text-sm font-semibold rounded-lg hover:bg-[#1a1430] transition-colors cursor-pointer"
+                >
+                  Load More
+                </button>
               </div>
-            ))}
+            )}
           </div>
         )}
       </section>
@@ -200,9 +217,7 @@ function FreelancerDashboard({ profile }: { profile: any }) {
         <StatCard
           icon={<DollarSign size={24} />}
           label="Hourly Rate"
-          value={
-            profile?.hourlyRate ? `$${profile.hourlyRate}/hr` : "Not set"
-          }
+          value={profile?.hourlyRate ? `$${profile.hourlyRate}/hr` : "Not set"}
         />
       </div>
 
