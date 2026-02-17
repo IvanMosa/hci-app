@@ -7,12 +7,27 @@ import { ExploreToolbar } from "../components/ExploreToolbar";
 import { FreelancerList } from "../components/FreelancerList";
 import { ProjectList } from "@/components/ProjectList";
 
+export interface ProjectFilters {
+  status: string;
+  minPrice: number;
+  maxPrice: number;
+  projectName: string;
+  clientName: string;
+}
+
 export default function ExploreClient() {
   const searchParams = useSearchParams();
   const typeParam = searchParams.get("type");
 
   const [view, setView] = useState<"projects" | "freelancers">("freelancers");
   const [searchQuery, setSearchQuery] = useState("");
+  const [projectFilters, setProjectFilters] = useState<ProjectFilters>({
+    status: "all",
+    minPrice: 0,
+    maxPrice: 50000,
+    projectName: "",
+    clientName: "",
+  });
 
   useEffect(() => {
     if (typeParam === "projects" || typeParam === "freelancers") {
@@ -27,12 +42,14 @@ export default function ExploreClient() {
         setView={setView}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        projectFilters={projectFilters}
+        setProjectFilters={setProjectFilters}
       />
 
       {view === "freelancers" ? (
         <FreelancerList searchQuery={searchQuery} />
       ) : (
-        <ProjectList searchQuery={searchQuery} />
+        <ProjectList searchQuery={searchQuery} filters={projectFilters} />
       )}
 
       <Footer />
