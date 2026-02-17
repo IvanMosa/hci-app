@@ -72,7 +72,7 @@ export const ProjectList = ({
         {filteredJobs.length === 0 && !isLoading && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
             <p className="text-xl font-medium">
-              No projects found for "{searchQuery}"
+              No projects found for &ldquo;{searchQuery}&rdquo;
             </p>
           </div>
         )}

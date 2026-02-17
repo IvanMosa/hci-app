@@ -37,7 +37,7 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
         {filteredFreelancers.length === 0 && !isLoading && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
             <p className="text-xl font-medium">
-              No freelancers found for "{searchQuery}"
+              No freelancers found for &ldquo;{searchQuery}&rdquo;
             </p>
           </div>
         )}

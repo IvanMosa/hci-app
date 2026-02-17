@@ -20,20 +20,11 @@ export const FreelancerDetailsModal = ({
 }: FreelancerDetailsModalProps) => {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
-  const [userType, setUserType] = useState<string | null>(null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     setUserId(storedUserId);
   }, []);
-
-  useEffect(() => {
-    if (!userId) return;
-    const cached = localStorage.getItem("userType");
-    if (cached) {
-      setUserType(cached);
-    }
-  }, [userId]);
 
   if (!freelancer) return null;
 

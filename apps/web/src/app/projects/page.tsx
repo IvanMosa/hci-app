@@ -129,6 +129,7 @@ function ClientProjects({ userId }: { userId: string }) {
     } else {
       setSelectedJobId(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   return (
