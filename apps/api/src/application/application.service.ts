@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
-import { Prisma } from '@prisma/client';
+import { ApplicationStatus, Prisma } from '@prisma/client';
 
 @Injectable()
 export class ApplicationService {
@@ -63,6 +63,21 @@ export class ApplicationService {
     });
   }
 
+  updateStatus(id: string, status: 'accepted' | 'rejected') {
+    return this.prisma.application.update({
+      where: { id },
+      data: { status: status as ApplicationStatus },
+      include: {
+        job: true,
+        freelancer: {
+          include: {
+            user: { select: { name: true, surname: true, email: true } },
+          },
+        },
+      },
+    });
+  }
+
   findByJob(jobId: string) {
     return this.prisma.application.findMany({
       where: { jobId },
@@ -84,6 +99,25 @@ export class ApplicationService {
         job: {
           include: {
             client: { select: { name: true, surname: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  findByClient(clientId: string) {
+    return this.prisma.application.findMany({
+      where: {
+        job: { clientId },
+      },
+      include: {
+        job: {
+          select: { id: true, title: true, budget: true, status: true },
+        },
+        freelancer: {
+          include: {
+            user: { select: { name: true, surname: true, email: true } },
           },
         },
       },

@@ -32,6 +32,12 @@ enum JobCategory {
   other
 }
 
+enum ApplicationStatus {
+  pending
+  accepted
+  rejected
+}
+
 model User {
   id           String      @id @default(uuid())
   name         String
@@ -111,7 +117,8 @@ model Application {
   jobId        String
   freelancerId String
   proposal     String?
-  bidAmount    Decimal? 
+  bidAmount    Decimal?
+  status       ApplicationStatus @default(pending)
   createdAt    DateTime @default(now())
 
   job         Job             @relation(fields: [jobId], references: [id], onDelete: Cascade)

@@ -40,6 +40,11 @@ export class ApplicationController {
     return this.applicationService.findByFreelancer(freelancerId);
   }
 
+  @Get('client/:clientId')
+  findByClient(@Param('clientId') clientId: string) {
+    return this.applicationService.findByClient(clientId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.applicationService.findOne(id);
@@ -52,6 +57,14 @@ export class ApplicationController {
     @Body() updateApplicationDto: UpdateApplicationDto,
   ) {
     return this.applicationService.update(id, updateApplicationDto);
+  }
+
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: 'accepted' | 'rejected',
+  ) {
+    return this.applicationService.updateStatus(id, status);
   }
 
   @Delete(':id')

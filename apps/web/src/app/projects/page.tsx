@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight, Check, X } from "lucide-react";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";
 import { useClientJobs } from "@/api/job/useClientJobs";
 import { useMyApplications } from "@/api/application/useMyApplications";
+import { useJobApplications } from "@/api/application/useJobApplications";
+import { useUpdateApplicationStatus } from "@/api/application/useUpdateApplicationStatus";
 import { PostProjectModal } from "@/components/PostProjectModal";
 import { Footer } from "@/components/Footer";
 import Image from "next/image";
@@ -72,6 +74,7 @@ function ClientProjects({ userId }: { userId: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useClientJobs(userId);
 
@@ -81,6 +84,16 @@ function ClientProjects({ userId }: { userId: string }) {
       ? allJobs
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
         allJobs.filter((job: any) => job?.status === filter);
+
+  // Auto-select first job
+  useEffect(() => {
+    if (filteredJobs.length > 0 && !selectedJobId) {
+      setSelectedJobId(filteredJobs[0]?.id);
+    }
+  }, [filteredJobs, selectedJobId]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const selectedJob = allJobs.find((j: any) => j?.id === selectedJobId);
 
   const visibleCards = 5;
   const maxIndex = Math.max(0, filteredJobs.length - visibleCards);
@@ -148,15 +161,21 @@ function ClientProjects({ userId }: { userId: string }) {
       ) : filteredJobs.length === 0 ? (
         <p className="text-gray-500 text-center py-20">No projects found.</p>
       ) : (
-        <div className="flex items-center -mx-12">
-          <button
-            onClick={prevSlide}
-            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
-          >
-            <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
-          </button>
+        <div
+          className={`flex items-center ${filteredJobs.length > visibleCards ? "-mx-12" : ""}`}
+        >
+          {filteredJobs.length > visibleCards && (
+            <button
+              onClick={prevSlide}
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+            >
+              <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
+            </button>
+          )}
 
-          <div className="overflow-hidden flex-1">
+          <div
+            className={`overflow-x-clip overflow-y-visible flex-1 py-4 ${filteredJobs.length > visibleCards ? "px-2" : ""}`}
+          >
             <div
               className="flex transition-transform duration-500 ease-in-out gap-6"
               style={{
@@ -167,12 +186,23 @@ function ClientProjects({ userId }: { userId: string }) {
               {filteredJobs.map((job: any) => (
                 <div
                   key={job?.id}
-                  className="flex flex-col group cursor-pointer"
+                  className={`flex flex-col group cursor-pointer transition-all duration-300 ${
+                    selectedJobId === job?.id
+                      ? "scale-[1.03] opacity-100"
+                      : "opacity-70 hover:opacity-100"
+                  }`}
                   style={{
                     minWidth: `calc((100% - ${(visibleCards - 1) * 24}px) / ${visibleCards})`,
                   }}
+                  onClick={() => setSelectedJobId(job?.id)}
                 >
-                  <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
+                  <div
+                    className={`relative overflow-hidden rounded-xl mb-4 h-[280px] transition-shadow duration-300 ${
+                      selectedJobId === job?.id
+                        ? "shadow-[0_8px_30px_rgba(7,4,21,0.25)]"
+                        : ""
+                    }`}
+                  >
                     <Image
                       src={projectImg}
                       alt={job?.title}
@@ -209,12 +239,14 @@ function ClientProjects({ userId }: { userId: string }) {
             </div>
           </div>
 
-          <button
-            onClick={nextSlide}
-            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
-          >
-            <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
-          </button>
+          {filteredJobs.length > visibleCards && (
+            <button
+              onClick={nextSlide}
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+            >
+              <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
+            </button>
+          )}
         </div>
       )}
 
@@ -228,6 +260,20 @@ function ClientProjects({ userId }: { userId: string }) {
             {isFetchingNextPage ? "Loading..." : "Load More"}
           </button>
         </div>
+      )}
+
+      {allJobs.length > 0 ? (
+        <ProjectApplicationsSection
+          jobId={selectedJobId}
+          jobTitle={selectedJob?.title}
+        />
+      ) : (
+        <section className="mt-16">
+          <h2 className="text-xl font-bold text-[#070415] mb-6">
+            Applications
+          </h2>
+          <p className="text-gray-500">No projects yet.</p>
+        </section>
       )}
 
       <PostProjectModal
@@ -283,15 +329,21 @@ function FreelancerProjects({ profile }: { profile: any }) {
           to find opportunities.
         </p>
       ) : (
-        <div className="flex items-center -mx-12">
-          <button
-            onClick={prevSlide}
-            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
-          >
-            <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
-          </button>
+        <div
+          className={`flex items-center ${applications.length > visibleCards ? "-mx-12" : ""}`}
+        >
+          {applications.length > visibleCards && (
+            <button
+              onClick={prevSlide}
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+            >
+              <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
+            </button>
+          )}
 
-          <div className="overflow-hidden flex-1">
+          <div
+            className={`overflow-x-clip overflow-y-visible flex-1 py-4 ${applications.length > visibleCards ? "px-2" : ""}`}
+          >
             <div
               className="flex transition-transform duration-500 ease-in-out gap-6"
               style={{
@@ -316,12 +368,18 @@ function FreelancerProjects({ profile }: { profile: any }) {
                     <div className="absolute top-4 right-4">
                       <span
                         className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
-                          app.job?.status === "active"
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-gray-100 text-gray-600"
+                          app.status === "accepted"
+                            ? "bg-green-100 text-green-700"
+                            : app.status === "rejected"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
                         }`}
                       >
-                        {app.job?.status === "active" ? "Pending" : "Completed"}
+                        {app.status === "accepted"
+                          ? "Accepted"
+                          : app.status === "rejected"
+                            ? "Rejected"
+                            : "Pending"}
                       </span>
                     </div>
                   </div>
@@ -345,14 +403,120 @@ function FreelancerProjects({ profile }: { profile: any }) {
             </div>
           </div>
 
-          <button
-            onClick={nextSlide}
-            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
-          >
-            <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
-          </button>
+          {applications.length > visibleCards && (
+            <button
+              onClick={nextSlide}
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+            >
+              <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
+            </button>
+          )}
         </div>
       )}
     </div>
+  );
+}
+
+function ProjectApplicationsSection({
+  jobId,
+  jobTitle,
+}: {
+  jobId: string | null;
+  jobTitle?: string;
+}) {
+  const { data: applications, isLoading } = useJobApplications(jobId);
+  const { mutate: updateStatus, isPending } = useUpdateApplicationStatus();
+
+  const handleStatusChange = (
+    applicationId: string,
+    status: "accepted" | "rejected",
+  ) => {
+    updateStatus({ applicationId, status });
+  };
+
+  return (
+    <section className="mt-16 transition-all duration-500 ease-in-out">
+      <h2 className="text-xl font-bold text-[#070415] mb-6">
+        Applications on {jobTitle || "..."}
+      </h2>
+      <div className="transition-all duration-500 ease-in-out overflow-hidden">
+        {isLoading ? (
+          <p className="text-gray-500">Loading applications...</p>
+        ) : !applications || applications.length === 0 ? (
+          <p className="text-gray-500">No applications for this project yet.</p>
+        ) : (
+          <div className="space-y-4">
+            {applications.map((app) => (
+              <div
+                key={app.id}
+                className={`flex items-center justify-between p-6 border rounded-xl transition-all duration-300 ${
+                  app.status === "accepted"
+                    ? "border-green-200 bg-green-50/50"
+                    : app.status === "rejected"
+                      ? "border-red-200 bg-red-50/30 opacity-60"
+                      : "border-gray-100 hover:shadow-sm"
+                }`}
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-bold text-[#070415] text-[15px]">
+                      {app.freelancer?.user?.name}{" "}
+                      {app.freelancer?.user?.surname}
+                    </h3>
+                    {app.status !== "pending" && (
+                      <span
+                        className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
+                          app.status === "accepted"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {app.status}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-400 text-sm mt-1">
+                    {app.freelancer?.user?.email} •{" "}
+                    {new Date(app.createdAt).toLocaleDateString()}
+                  </p>
+                  {app.proposal && (
+                    <p className="text-gray-500 text-sm mt-2 max-w-xl line-clamp-2">
+                      {app.proposal}
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center gap-4">
+                  {app.bidAmount && (
+                    <span className="text-[#070415] font-bold text-[15px]">
+                      ${Number(app.bidAmount).toLocaleString()}
+                    </span>
+                  )}
+                  {app.status === "pending" && (
+                    <div className="flex items-center gap-2 ml-2">
+                      <button
+                        onClick={() => handleStatusChange(app.id, "accepted")}
+                        disabled={isPending}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white text-xs font-bold uppercase tracking-wider rounded-full hover:bg-green-700 transition-colors disabled:opacity-50 cursor-pointer"
+                      >
+                        <Check size={14} strokeWidth={2.5} />
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => handleStatusChange(app.id, "rejected")}
+                        disabled={isPending}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-white text-red-600 text-xs font-bold uppercase tracking-wider rounded-full border border-red-200 hover:bg-red-50 transition-colors disabled:opacity-50 cursor-pointer"
+                      >
+                        <X size={14} strokeWidth={2.5} />
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
