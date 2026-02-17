@@ -2,115 +2,117 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import projectImg from "../../../public/image 4.png";
-import { PostProjectModal } from "./PostProjectModal";
-import { useClientJobs } from "@/api/job/useClientJobs";
+import { Pencil, Briefcase, FileText } from "lucide-react";
+import johnDoeImg from "../../../public/john-doe.png";
+import { useAllClientJobs } from "@/api/job/useAllClientJobs";
+import { useClientApplications } from "@/api/application/useClientApplications";
+import { EditProfileModal } from "./EditProfileModal";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ClientProfile = ({ profile }: { profile: any }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const clientId = profile.userDetails?.id;
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useClientJobs(clientId);
+  const { data: allJobs = [] } = useAllClientJobs(clientId);
+  const { data: allApplications = [] } = useClientApplications(clientId);
 
-  const allJobs = data?.pages.flatMap((page) => page) || [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const completedJobs = allJobs.filter((j: any) => j?.status === "completed");
+  const acceptedApps = allApplications.filter((a) => a?.status === "accepted");
 
   return (
     <div className="w-full px-15 py-6">
-      <div className="flex items-center gap-4 mb-12">
-        <div className="w-16 h-16 bg-[#525fba] rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
-          <span className="text-[10px]">PHOTO</span>
+      <div className="flex items-center justify-between mb-16">
+        <div className="flex items-center gap-6">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100">
+            <Image
+              src={johnDoeImg}
+              alt="Profile"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <h1 className="text-3xl font-bold text-[#070415]">
+            {profile.userDetails?.name} {profile.userDetails?.surname}
+          </h1>
+          <button
+            onClick={() => setIsEditOpen(true)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+          >
+            <Pencil size={18} className="text-gray-400" />
+          </button>
         </div>
-        <h1 className="text-2xl font-bold text-[#070415]">
-          {profile.userDetails?.name} {profile.userDetails?.surname}
-        </h1>
       </div>
 
-      <section className="mb-10">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-xl font-bold mb-6 text-[#070415]">
-              Personal Information
-            </h2>
-            <div className="text-gray-500 text-sm space-y-1 leading-relaxed font-medium">
-              <p>Split, Croatia</p>
-              <p>{profile.userDetails?.email}</p>
-              <p>+385 95 123 4567</p>
+      <div className="flex justify-between items-start mb-16">
+        <section>
+          <h2 className="text-2xl font-bold mb-8 text-[#070415]">
+            Personal Information
+          </h2>
+          <div className="text-gray-500 text-[15px] space-y-1 font-medium leading-relaxed">
+            <p>{profile?.location || "Split, Croatia"}</p>
+            <p>{profile.userDetails?.email}</p>
+            <p>+385 95 123 4567</p>
+          </div>
+        </section>
+
+        <div className="flex gap-6">
+          <div className="w-52 p-6 border border-gray-100 rounded-xl">
+            <div className="flex items-center gap-3 mb-4 text-gray-400">
+              <Briefcase size={22} />
+              <span className="text-sm font-semibold text-[#070415]">
+                Projects
+              </span>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500">Total</span>
+                <span className="text-lg font-bold text-[#070415]">
+                  {allJobs.length}
+                </span>
+              </div>
+              <div className="h-px bg-gray-100" />
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500">Completed</span>
+                <span className="text-lg font-bold text-green-600">
+                  {completedJobs.length}
+                </span>
+              </div>
             </div>
           </div>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-[#070415] text-white px-8 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-gray-800 transition-all cursor-pointer"
-          >
-            Post New Project
-          </button>
 
-          <PostProjectModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            clientId={clientId}
-          />
-        </div>
-      </section>
-
-      <section className="mb-16">
-        <h2 className="text-xl font-bold mb-10 text-[#070415]">
-          Posted Projects
-        </h2>
-
-        {isLoading ? (
-          <p>Loading projects...</p>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-14 gap-y-12">
-              {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                allJobs.map((job: any) => (
-                  <div
-                    key={job?.id}
-                    className="flex flex-col group cursor-pointer"
-                  >
-                    <div className="relative h-[280px] w-full overflow-hidden rounded-xl mb-4">
-                      <Image
-                        src={projectImg}
-                        alt={job?.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="flex justify-between items-start">
-                      <div className="flex flex-col">
-                        <h3 className="text-[#070415] font-bold text-[15px]">
-                          {job?.title}
-                        </h3>
-                        <p className="text-gray-400 text-[12px] uppercase">
-                          RISK
-                        </p>
-                      </div>
-                      <span className="text-[#070415] font-bold text-[15px]">
-                        ${job?.budget}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              }
+          <div className="w-52 p-6 border border-gray-100 rounded-xl">
+            <div className="flex items-center gap-3 mb-4 text-gray-400">
+              <FileText size={22} />
+              <span className="text-sm font-semibold text-[#070415]">
+                Applications
+              </span>
             </div>
-
-            {hasNextPage && (
-              <div className="flex justify-center mt-12">
-                <button
-                  onClick={() => fetchNextPage()}
-                  disabled={isFetchingNextPage}
-                  className="bg-[#070415] text-white px-10 py-4 rounded-full text-[12px] font-bold uppercase tracking-widest hover:bg-gray-800 transition-all disabled:bg-gray-500"
-                >
-                  {isFetchingNextPage ? "Loading..." : "Load More Jobs"}
-                </button>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500">Total</span>
+                <span className="text-lg font-bold text-[#070415]">
+                  {allApplications.length}
+                </span>
               </div>
-            )}
-          </>
-        )}
-      </section>
+              <div className="h-px bg-gray-100" />
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500">Accepted</span>
+                <span className="text-lg font-bold text-green-600">
+                  {acceptedApps.length}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <EditProfileModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        profile={profile}
+        type="client"
+      />
     </div>
   );
 };

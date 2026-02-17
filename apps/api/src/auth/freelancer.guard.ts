@@ -9,6 +9,6 @@ export class FreelancerGuard extends AuthGuard('jwt') {
 
     const { user } = context.switchToHttp().getRequest();
 
-    return user.type === 'FREELANCER';
+    return user.type === 'freelancer';
   }
 }
