@@ -43,7 +43,7 @@ export const Navbar = () => {
     "font-semibold hover:underline underline-offset-8 decoration-2 transition-all duration-200";
 
   return (
-    <nav className="text-black px-15 py-4 flex justify-between items-center bg-white">
+    <nav className="text-black px-15 py-4 flex justify-between items-center bg-white h-[72px]">
       <Link href="/">
         <Image
           src={logo}
@@ -92,12 +92,14 @@ export const Navbar = () => {
           </Link>
         )}
 
-        <Link
-          href={userId ? `/profile/${userId}` : "/login"}
-          className={navItemStyles}
-        >
-          Profile
-        </Link>
+        {isLoggedIn && (
+          <Link
+            href={userId ? `/profile/${userId}` : "/login"}
+            className={navItemStyles}
+          >
+            Profile
+          </Link>
+        )}
 
         {isLoggedIn ? (
           <button
