@@ -1,5 +1,15 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Param,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { FreelancerSkillService } from './freelancer-skill.service';
+import { CreateFreelancerSkillDto } from './dto/create-freelancer-skill.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Freelancer Skill')
@@ -9,10 +19,11 @@ export class FreelancerSkillController {
     private readonly freelancerSkillService: FreelancerSkillService,
   ) {}
 
-  // @Post()
-  // create(@Body() createFreelancerSkillDto: CreateFreelancerSkillDto) {
-  //   return this.freelancerSkillService.create(createFreelancerSkillDto);
-  // }
+  @Post()
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  create(@Body() createFreelancerSkillDto: CreateFreelancerSkillDto) {
+    return this.freelancerSkillService.create(createFreelancerSkillDto);
+  }
 
   @Get()
   findAll() {
@@ -22,5 +33,13 @@ export class FreelancerSkillController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.freelancerSkillService.findSkillsByFreelancerId(id);
+  }
+
+  @Delete(':freelancerId/:skillId')
+  remove(
+    @Param('freelancerId') freelancerId: string,
+    @Param('skillId') skillId: string,
+  ) {
+    return this.freelancerSkillService.remove(freelancerId, skillId);
   }
 }

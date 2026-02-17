@@ -51,6 +51,7 @@ export class AuthService {
       email: loginUser.email,
       name: loginUser.name,
       surname: loginUser.surname,
+      type: loginUser.type,
     });
 
     return { accessToken, userId: loginUser.id, userType: loginUser.type };

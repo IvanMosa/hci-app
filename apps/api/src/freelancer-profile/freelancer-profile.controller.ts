@@ -39,7 +39,7 @@ export class FreelancerProfileController {
   }
 
   @Patch(':id')
-  @UseGuards(FreelancerGuard)
+  @UseGuards(UserGuard)
   update(
     @Param('id') id: string,
     @Body() updateFreelancerProfileDto: UpdateFreelancerProfileDto,

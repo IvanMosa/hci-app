@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useCreateApplication } from "@/api/application/useCreateApplication";
+import { useUpdateApplication } from "@/api/application/useUpdateApplication";
+import { useMyApplications } from "@/api/application/useMyApplications";
 
 interface ApplyModalProps {
   isOpen: boolean;
@@ -19,23 +21,52 @@ export const ApplyModal = ({
   jobTitle,
   freelancerId,
 }: ApplyModalProps) => {
-  const { mutate: createApplication, isPending } =
+  const { mutate: createApplication, isPending: isCreating } =
     useCreateApplication(onClose);
+  const { mutate: updateApplication, isPending: isUpdating } =
+    useUpdateApplication(onClose);
+  const { data: myApplications } = useMyApplications(freelancerId);
+
+  const existingApplication = myApplications?.find(
+    (app) => app.jobId === jobId,
+  );
+
   const [formData, setFormData] = useState({
     proposal: "",
     bidAmount: "",
   });
 
+  useEffect(() => {
+    if (existingApplication) {
+      setFormData({
+        proposal: existingApplication.proposal || "",
+        bidAmount: existingApplication.bidAmount
+          ? String(existingApplication.bidAmount)
+          : "",
+      });
+    }
+  }, [existingApplication]);
+
   if (!isOpen) return null;
+
+  const isPending = isCreating || isUpdating;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createApplication({
-      jobId,
-      freelancerId,
-      proposal: formData.proposal,
-      bidAmount: formData.bidAmount ? Number(formData.bidAmount) : undefined,
-    });
+    if (existingApplication) {
+      updateApplication({
+        applicationId: existingApplication.id,
+        proposal: formData.proposal,
+        bidAmount: formData.bidAmount ? Number(formData.bidAmount) : undefined,
+      });
+    } else {
+      createApplication({
+        jobId,
+        freelancerId,
+        proposal: formData.proposal,
+        bidAmount: formData.bidAmount ? Number(formData.bidAmount) : undefined,
+      });
+    }
   };
 
   const inputStyles =
@@ -53,7 +84,7 @@ export const ApplyModal = ({
         </button>
 
         <h2 className="text-2xl font-bold mb-2 text-[#070415]">
-          Apply for Project
+          {existingApplication ? "Update Application" : "Apply for Project"}
         </h2>
         <p className="text-gray-500 text-sm mb-8">{jobTitle}</p>
 
@@ -97,7 +128,11 @@ export const ApplyModal = ({
               disabled={isPending}
               className="px-12 py-3 rounded-full bg-[#070415] text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all disabled:bg-gray-400 cursor-pointer"
             >
-              {isPending ? "Submitting..." : "Submit"}
+              {isPending
+                ? "Submitting..."
+                : existingApplication
+                  ? "Update"
+                  : "Submit"}
             </button>
           </div>
         </form>

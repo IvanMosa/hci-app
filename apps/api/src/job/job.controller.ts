@@ -32,6 +32,11 @@ export class JobController {
     return this.jobService.findOne(id);
   }
 
+  @Patch(':id/status')
+  updateStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.jobService.updateStatus(id, status);
+  }
+
   @Patch(':id')
   @UseGuards(FreelancerGuard)
   update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
@@ -39,7 +44,6 @@ export class JobController {
   }
 
   @Delete(':id')
-  @UseGuards(FreelancerGuard)
   remove(@Param('id') id: string) {
     return this.jobService.remove(id);
   }

@@ -7,6 +7,7 @@ export interface ClientApplication {
   freelancerId: string;
   proposal: string | null;
   bidAmount: number | null;
+  status: "pending" | "accepted" | "rejected";
   createdAt: string;
   job: {
     id: string;

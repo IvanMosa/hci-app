@@ -2,10 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Briefcase, FileText, DollarSign, Clock } from "lucide-react";
+import {
+  Loader2,
+  Briefcase,
+  FileText,
+  DollarSign,
+  Clock,
+  Pencil,
+  Check as CheckIcon,
+} from "lucide-react";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";
 import { useMyApplications } from "@/api/application/useMyApplications";
 import { useAllClientJobs } from "@/api/job/useAllClientJobs";
+import { useUpdateFreelancerProfile } from "@/api/freelancer/useUpdateFreelancerProfile";
 import { Footer } from "@/components/Footer";
 
 export default function DashboardPage() {
@@ -191,10 +200,28 @@ function ClientDashboard({ userId }: { userId: string }) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FreelancerDashboard({ profile }: { profile: any }) {
   const { data: applications, isLoading } = useMyApplications(profile?.id);
-
-  const pendingApps = applications?.filter(
-    (app) => app.job?.status === "active",
+  const { mutate: updateProfile, isPending: isUpdatingRate } =
+    useUpdateFreelancerProfile();
+  const [isEditingRate, setIsEditingRate] = useState(false);
+  const [rateValue, setRateValue] = useState(
+    profile?.hourlyRate ? String(profile.hourlyRate) : "",
   );
+
+  const pendingApps = applications?.filter((app) => app.status === "pending");
+  const acceptedApps = applications?.filter((app) => app.status === "accepted");
+
+  const handleSaveRate = () => {
+    if (!profile?.id) return;
+    updateProfile(
+      {
+        profileId: profile.id,
+        data: { hourlyRate: rateValue ? Number(rateValue) : undefined },
+      },
+      {
+        onSuccess: () => setIsEditingRate(false),
+      },
+    );
+  };
 
   return (
     <>
@@ -211,14 +238,54 @@ function FreelancerDashboard({ profile }: { profile: any }) {
         />
         <StatCard
           icon={<Briefcase size={24} />}
-          label="Skills"
-          value={(profile?.skills?.length || 0).toString()}
+          label="Accepted"
+          value={(acceptedApps?.length || 0).toString()}
         />
-        <StatCard
-          icon={<DollarSign size={24} />}
-          label="Hourly Rate"
-          value={profile?.hourlyRate ? `$${profile.hourlyRate}/hr` : "Not set"}
-        />
+        <div className="p-6 border border-gray-100 rounded-xl">
+          <div className="flex items-center gap-3 mb-3 text-gray-400">
+            <DollarSign size={24} />
+          </div>
+          {isEditingRate ? (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                <span className="pl-3 text-gray-400 text-lg font-bold">$</span>
+                <input
+                  type="number"
+                  value={rateValue}
+                  onChange={(e) => setRateValue(e.target.value)}
+                  className="w-20 px-2 py-1.5 text-lg font-bold text-[#070415] focus:outline-none"
+                  autoFocus
+                  min={1}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSaveRate();
+                    if (e.key === "Escape") setIsEditingRate(false);
+                  }}
+                />
+                <span className="pr-3 text-gray-400 text-sm">/hr</span>
+              </div>
+              <button
+                onClick={handleSaveRate}
+                disabled={isUpdatingRate}
+                className="p-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                <CheckIcon size={16} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-bold text-[#070415]">
+                {profile?.hourlyRate ? `$${profile.hourlyRate}/hr` : "Not set"}
+              </p>
+              <button
+                onClick={() => setIsEditingRate(true)}
+                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+              >
+                <Pencil size={14} className="text-gray-400" />
+              </button>
+            </div>
+          )}
+          <p className="text-sm text-gray-500 mt-1">Hourly Rate</p>
+        </div>
       </div>
 
       <section>
@@ -255,12 +322,18 @@ function FreelancerDashboard({ profile }: { profile: any }) {
                   )}
                   <span
                     className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
-                      app.job?.status === "active"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-600"
+                      app.status === "accepted"
+                        ? "bg-green-100 text-green-700"
+                        : app.status === "rejected"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-yellow-100 text-yellow-700"
                     }`}
                   >
-                    {app.job?.status === "active" ? "Pending" : "Completed"}
+                    {app.status === "accepted"
+                      ? "Accepted"
+                      : app.status === "rejected"
+                        ? "Rejected"
+                        : "Pending"}
                   </span>
                 </div>
               </div>

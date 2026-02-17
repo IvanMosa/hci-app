@@ -6,6 +6,7 @@ import Image from "next/image";
 import projectImg from "../../../public/image 7.png";
 import { useJobDetails } from "@/api/job/useJobDetails";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";
+import { useMyApplications } from "@/api/application/useMyApplications";
 import { ApplyModal } from "./ApplyModal";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -34,6 +35,13 @@ export const ProjectDetailsModal = ({
   const isLoggedIn = !!userId;
   const isFreelancer = profile?.userDetails?.type === "freelancer";
   const freelancerProfileId = profile?.id || null;
+
+  const { data: myApplications } = useMyApplications(
+    isFreelancer ? freelancerProfileId : null,
+  );
+  const hasExistingApplication = myApplications?.some(
+    (app) => app.jobId === jobId,
+  );
 
   const handleApplyClick = () => {
     if (!isLoggedIn) {
@@ -83,7 +91,9 @@ export const ProjectDetailsModal = ({
                   ? "Sign In to Apply"
                   : !isFreelancer
                     ? "Freelancers Only"
-                    : "Apply"}
+                    : hasExistingApplication
+                      ? "Update Application"
+                      : "Apply"}
               </button>
             </div>
 

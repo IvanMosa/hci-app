@@ -7,11 +7,12 @@ type UserJwtPayload = {
   email: string;
   firstName: string;
   lastName: string;
+  type: string;
   role: 'user';
 };
 
 @Injectable()
-export class UserJwtStrategy extends PassportStrategy(Strategy, 'user') {
+export class UserJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
