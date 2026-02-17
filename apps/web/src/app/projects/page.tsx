@@ -82,7 +82,7 @@ function ClientProjects({ userId }: { userId: string }) {
         allJobs.filter((job: any) => job?.status === filter);
 
   return (
-    <div className="w-full px-15 py-12">
+    <div className="w-full px-15 py-6">
       <div className="flex justify-between items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-[#070415] mb-2">
@@ -190,12 +190,10 @@ function FreelancerProjects({ profile }: { profile: any }) {
   const { data: applications, isLoading } = useMyApplications(profile?.id);
 
   return (
-    <div className="w-full px-15 py-12">
+    <div className="w-full px-15 py-6">
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-[#070415] mb-2">My Projects</h1>
-        <p className="text-gray-500 text-sm">
-          Projects you&apos;ve applied to
-        </p>
+        <p className="text-gray-500 text-sm">Projects you&apos;ve applied to</p>
       </div>
 
       {isLoading ? (

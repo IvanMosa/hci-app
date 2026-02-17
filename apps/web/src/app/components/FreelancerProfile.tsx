@@ -23,7 +23,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
   ];
 
   return (
-    <div className="w-full px-15 py-12 bg-white">
+    <div className="w-full px-15 py-6 bg-white">
       <div className="flex items-center justify-between mb-16">
         <div className="flex items-center gap-6">
           <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100">

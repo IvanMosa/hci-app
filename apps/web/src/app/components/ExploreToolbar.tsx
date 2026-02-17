@@ -32,7 +32,7 @@ export const ExploreToolbar = ({
   };
 
   return (
-    <div className="px-15 pb-6 w-full">
+    <div className="px-15 pt-6 pb-6 w-full">
       <div className="flex flex-col md:flex-row items-center gap-4">
         <div className="flex flex-1 items-center gap-4 w-full">
           <div className="flex bg-gray-100 p-1 rounded-lg shrink-0">

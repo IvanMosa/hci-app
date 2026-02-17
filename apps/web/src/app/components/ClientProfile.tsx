@@ -17,7 +17,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
   const allJobs = data?.pages.flatMap((page) => page) || [];
 
   return (
-    <div className="w-full px-15">
+    <div className="w-full px-15 py-6">
       <div className="flex items-center gap-4 mb-12">
         <div className="w-16 h-16 bg-[#525fba] rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
           <span className="text-[10px]">PHOTO</span>
