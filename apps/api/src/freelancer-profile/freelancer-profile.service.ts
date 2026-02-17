@@ -53,6 +53,23 @@ export class FreelancerProfileService {
   async findByUserId(userId: string) {
     const profile = await this.prisma.freelancerProfile.findUnique({
       where: { userId: userId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+            type: true,
+          },
+        },
+        skills: {
+          include: {
+            skill: true,
+          },
+        },
+        portfolio: true,
+      },
     });
     return { data: profile };
   }

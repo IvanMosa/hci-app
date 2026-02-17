@@ -17,7 +17,7 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  const tokenItem = localStorage.getItem("jwt");
+  const tokenItem = localStorage.getItem("accessToken");
   if (tokenItem) {
     const token = tokenItem;
     config.headers.Authorization = `Bearer ${token}`;
@@ -32,5 +32,5 @@ api.interceptors.response.use(
       return Promise.reject(error.response.data.message || error.message);
 
     return Promise.reject("Network error");
-  }
+  },
 );

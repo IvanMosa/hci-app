@@ -15,6 +15,12 @@ export interface FreelancerWithUser {
   skills: {
     skill: { name: string };
   }[];
+  portfolio?: {
+    id: string;
+    title: string;
+    description: string | null;
+    url: string | null;
+  }[];
 }
 
 const getAllFreelancers = async ({

@@ -5,7 +5,10 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import projectImg from "../../../public/image 7.png";
 import { useJobDetails } from "@/api/job/useJobDetails";
+import { useFreelancer } from "@/api/freelancer/useFreelancer";
 import { ApplyModal } from "./ApplyModal";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface ProjectDetailsModalProps {
   jobId: string | null;
@@ -18,14 +21,33 @@ export const ProjectDetailsModal = ({
 }: ProjectDetailsModalProps) => {
   const { data: job, isLoading } = useJobDetails(jobId);
   const [applyOpen, setApplyOpen] = useState(false);
-  const [freelancerProfileId, setFreelancerProfileId] = useState<string | null>(
-    null,
-  );
+  const [userId, setUserId] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const profileId = localStorage.getItem("freelancerProfileId");
-    setFreelancerProfileId(profileId);
+    const storedUserId = localStorage.getItem("userId");
+    setUserId(storedUserId);
   }, []);
+
+  const { data: profile } = useFreelancer(userId || "");
+
+  const isLoggedIn = !!userId;
+  const isFreelancer = profile?.userDetails?.type === "freelancer";
+  const freelancerProfileId = profile?.id || null;
+
+  const handleApplyClick = () => {
+    if (!isLoggedIn) {
+      toast.info("Please sign in to apply for projects.");
+      onClose();
+      router.push("/login");
+      return;
+    }
+    if (!isFreelancer) {
+      toast.warning("Only freelancers can apply for projects.");
+      return;
+    }
+    setApplyOpen(true);
+  };
 
   if (!jobId) return null;
 
@@ -50,10 +72,18 @@ export const ProjectDetailsModal = ({
                 {job.title}
               </h2>
               <button
-                onClick={() => setApplyOpen(true)}
-                className="bg-[#070415] text-white px-10 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all cursor-pointer"
+                onClick={handleApplyClick}
+                className={`px-10 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all cursor-pointer ${
+                  isLoggedIn && isFreelancer
+                    ? "bg-[#070415] text-white hover:bg-gray-800"
+                    : "bg-gray-300 text-gray-600 hover:bg-gray-400"
+                }`}
               >
-                Apply
+                {!isLoggedIn
+                  ? "Sign In to Apply"
+                  : !isFreelancer
+                    ? "Freelancers Only"
+                    : "Apply"}
               </button>
             </div>
 
