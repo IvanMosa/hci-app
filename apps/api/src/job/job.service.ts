@@ -71,6 +71,13 @@ export class JobService {
     });
   }
 
+  updateStatus(id: string, status: string) {
+    return this.prisma.job.update({
+      where: { id },
+      data: { status: status as any },
+    });
+  }
+
   async findByClient(clientId: string, skip: number, take: number) {
     return this.prisma.job.findMany({
       where: { clientId },

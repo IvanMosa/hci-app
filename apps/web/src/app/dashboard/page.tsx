@@ -192,9 +192,8 @@ function ClientDashboard({ userId }: { userId: string }) {
 function FreelancerDashboard({ profile }: { profile: any }) {
   const { data: applications, isLoading } = useMyApplications(profile?.id);
 
-  const pendingApps = applications?.filter(
-    (app) => app.job?.status === "active",
-  );
+  const pendingApps = applications?.filter((app) => app.status === "pending");
+  const acceptedApps = applications?.filter((app) => app.status === "accepted");
 
   return (
     <>
@@ -211,8 +210,8 @@ function FreelancerDashboard({ profile }: { profile: any }) {
         />
         <StatCard
           icon={<Briefcase size={24} />}
-          label="Skills"
-          value={(profile?.skills?.length || 0).toString()}
+          label="Accepted"
+          value={(acceptedApps?.length || 0).toString()}
         />
         <StatCard
           icon={<DollarSign size={24} />}
@@ -255,12 +254,18 @@ function FreelancerDashboard({ profile }: { profile: any }) {
                   )}
                   <span
                     className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
-                      app.job?.status === "active"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-600"
+                      app.status === "accepted"
+                        ? "bg-green-100 text-green-700"
+                        : app.status === "rejected"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-yellow-100 text-yellow-700"
                     }`}
                   >
-                    {app.job?.status === "active" ? "Pending" : "Completed"}
+                    {app.status === "accepted"
+                      ? "Accepted"
+                      : app.status === "rejected"
+                        ? "Rejected"
+                        : "Pending"}
                   </span>
                 </div>
               </div>
