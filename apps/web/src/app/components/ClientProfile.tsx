@@ -63,7 +63,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
           <p>Loading projects...</p>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[23px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-14 gap-y-12">
               {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 allJobs.map((job: any) => (
@@ -71,7 +71,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
                     key={job?.id}
                     className="flex flex-col group cursor-pointer"
                   >
-                    <div className="relative h-[360px] w-full overflow-hidden rounded-xl mb-4">
+                    <div className="relative h-[280px] w-full overflow-hidden rounded-xl mb-4">
                       <Image
                         src={projectImg}
                         alt={job?.title}

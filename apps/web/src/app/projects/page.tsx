@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";
 import { useClientJobs } from "@/api/job/useClientJobs";
 import { useMyApplications } from "@/api/application/useMyApplications";
@@ -71,6 +71,7 @@ function ProjectsContent({ userId }: { userId: string }) {
 function ClientProjects({ userId }: { userId: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useClientJobs(userId);
 
@@ -80,6 +81,30 @@ function ClientProjects({ userId }: { userId: string }) {
       ? allJobs
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
         allJobs.filter((job: any) => job?.status === filter);
+
+  const visibleCards = 5;
+  const maxIndex = Math.max(0, filteredJobs.length - visibleCards);
+
+  const nextSlide = () => {
+    if (currentIndex < maxIndex) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setCurrentIndex(0);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else {
+      setCurrentIndex(maxIndex);
+    }
+  };
+
+  // Reset index when filter changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [filter]);
 
   return (
     <div className="w-full px-15 py-6">
@@ -123,44 +148,73 @@ function ClientProjects({ userId }: { userId: string }) {
       ) : filteredJobs.length === 0 ? (
         <p className="text-gray-500 text-center py-20">No projects found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {filteredJobs.map((job: any) => (
-            <div key={job?.id} className="flex flex-col group cursor-pointer">
-              <div className="relative overflow-hidden rounded-xl mb-4 h-[360px]">
-                <Image
-                  src={projectImg}
-                  alt={job?.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute top-4 right-4">
-                  <span
-                    className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
-                      job?.status === "active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    {job?.status}
-                  </span>
+        <div className="flex items-center -mx-12">
+          <button
+            onClick={prevSlide}
+            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+          >
+            <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
+          </button>
+
+          <div className="overflow-hidden flex-1">
+            <div
+              className="flex transition-transform duration-500 ease-in-out gap-6"
+              style={{
+                transform: `translateX(-${currentIndex * (100 / visibleCards)}%)`,
+              }}
+            >
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {filteredJobs.map((job: any) => (
+                <div
+                  key={job?.id}
+                  className="flex flex-col group cursor-pointer"
+                  style={{
+                    minWidth: `calc((100% - ${(visibleCards - 1) * 24}px) / ${visibleCards})`,
+                  }}
+                >
+                  <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
+                    <Image
+                      src={projectImg}
+                      alt={job?.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <span
+                        className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
+                          job?.status === "active"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        {job?.status}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <div className="flex flex-col">
+                      <h3 className="text-[#070415] font-bold text-[15px]">
+                        {job?.title}
+                      </h3>
+                      <p className="text-gray-400 text-[12px] mt-1">
+                        {job?.category?.replace("_", " ")}
+                      </p>
+                    </div>
+                    <span className="text-[#070415] font-bold text-[15px]">
+                      ${Number(job?.budget).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-between items-start">
-                <div className="flex flex-col">
-                  <h3 className="text-[#070415] font-bold text-[15px]">
-                    {job?.title}
-                  </h3>
-                  <p className="text-gray-400 text-[12px] mt-1">
-                    {job?.category?.replace("_", " ")}
-                  </p>
-                </div>
-                <span className="text-[#070415] font-bold text-[15px]">
-                  ${Number(job?.budget).toLocaleString()}
-                </span>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <button
+            onClick={nextSlide}
+            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+          >
+            <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
+          </button>
         </div>
       )}
 
@@ -188,6 +242,26 @@ function ClientProjects({ userId }: { userId: string }) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FreelancerProjects({ profile }: { profile: any }) {
   const { data: applications, isLoading } = useMyApplications(profile?.id);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const visibleCards = 5;
+  const maxIndex = Math.max(0, (applications?.length || 0) - visibleCards);
+
+  const nextSlide = () => {
+    if (currentIndex < maxIndex) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setCurrentIndex(0);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else {
+      setCurrentIndex(maxIndex);
+    }
+  };
 
   return (
     <div className="w-full px-15 py-6">
@@ -209,45 +283,74 @@ function FreelancerProjects({ profile }: { profile: any }) {
           to find opportunities.
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          {applications.map((app) => (
-            <div key={app.id} className="flex flex-col group cursor-pointer">
-              <div className="relative overflow-hidden rounded-xl mb-4 h-[360px]">
-                <Image
-                  src={projectImg}
-                  alt={app.job?.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute top-4 right-4">
-                  <span
-                    className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
-                      app.job?.status === "active"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    {app.job?.status === "active" ? "Pending" : "Completed"}
-                  </span>
+        <div className="flex items-center -mx-12">
+          <button
+            onClick={prevSlide}
+            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+          >
+            <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
+          </button>
+
+          <div className="overflow-hidden flex-1">
+            <div
+              className="flex transition-transform duration-500 ease-in-out gap-6"
+              style={{
+                transform: `translateX(-${currentIndex * (100 / visibleCards)}%)`,
+              }}
+            >
+              {applications.map((app) => (
+                <div
+                  key={app.id}
+                  className="flex flex-col group cursor-pointer"
+                  style={{
+                    minWidth: `calc((100% - ${(visibleCards - 1) * 24}px) / ${visibleCards})`,
+                  }}
+                >
+                  <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
+                    <Image
+                      src={projectImg}
+                      alt={app.job?.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute top-4 right-4">
+                      <span
+                        className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${
+                          app.job?.status === "active"
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        {app.job?.status === "active" ? "Pending" : "Completed"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <div className="flex flex-col">
+                      <h3 className="text-[#070415] font-bold text-[15px]">
+                        {app.job?.title}
+                      </h3>
+                      <p className="text-gray-400 text-[12px] mt-1 uppercase">
+                        {app.job?.client?.name} {app.job?.client?.surname}
+                      </p>
+                    </div>
+                    {app.bidAmount && (
+                      <span className="text-[#070415] font-bold text-[15px]">
+                        ${Number(app.bidAmount).toLocaleString()}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-between items-start">
-                <div className="flex flex-col">
-                  <h3 className="text-[#070415] font-bold text-[15px]">
-                    {app.job?.title}
-                  </h3>
-                  <p className="text-gray-400 text-[12px] mt-1 uppercase">
-                    {app.job?.client?.name} {app.job?.client?.surname}
-                  </p>
-                </div>
-                {app.bidAmount && (
-                  <span className="text-[#070415] font-bold text-[15px]">
-                    ${Number(app.bidAmount).toLocaleString()}
-                  </span>
-                )}
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <button
+            onClick={nextSlide}
+            className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+          >
+            <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
+          </button>
         </div>
       )}
     </div>
