@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://web-production-d12e1.up.railway.app',
-      'https://web-production-2aeb9.up.railway.app/',
+      'https://web-production-2aeb9.up.railway.app',
     ],
     credentials: true,
   });
