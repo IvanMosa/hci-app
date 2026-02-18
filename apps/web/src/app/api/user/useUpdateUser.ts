@@ -5,6 +5,7 @@ interface UpdateUserData {
   name?: string;
   surname?: string;
   email?: string;
+  phone?: string;
 }
 
 export const useUpdateUser = () => {

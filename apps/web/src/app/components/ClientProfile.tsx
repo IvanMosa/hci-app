@@ -52,7 +52,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
           <div className="text-gray-500 text-[15px] space-y-1 font-medium leading-relaxed">
             <p>{profile?.location || "Split, Croatia"}</p>
             <p>{profile.userDetails?.email}</p>
-            <p>+385 95 123 4567</p>
+            <p>{profile.userDetails?.phone || "No phone number"}</p>
           </div>
         </section>
 

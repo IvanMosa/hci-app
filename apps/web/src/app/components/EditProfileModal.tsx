@@ -22,9 +22,11 @@ export const EditProfileModal = ({
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [bio, setBio] = useState("");
   const [hourlyRate, setHourlyRate] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { mutate: updateUser, isPending: isUpdatingUser } = useUpdateUser();
   const { mutate: updateFreelancer, isPending: isUpdatingFreelancer } =
@@ -35,6 +37,7 @@ export const EditProfileModal = ({
       setName(profile.userDetails?.name || "");
       setSurname(profile.userDetails?.surname || "");
       setEmail(profile.userDetails?.email || "");
+      setPhone(profile.userDetails?.phone || "");
       setLocation(profile?.location || "");
       setBio(profile?.bio || "");
       setHourlyRate(profile?.hourlyRate?.toString() || "");
@@ -43,13 +46,33 @@ export const EditProfileModal = ({
 
   if (!isOpen) return null;
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!name.trim()) newErrors.name = "First name is required";
+    if (!surname.trim()) newErrors.surname = "Last name is required";
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      newErrors.email = "Enter a valid email address";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = () => {
+    if (!validate()) return;
+
     const userId = profile.userDetails?.id || profile?.userId;
 
     updateUser(
       {
         userId,
-        data: { name, surname, email },
+        data: {
+          name: name.trim(),
+          surname: surname.trim(),
+          email: email.trim(),
+          phone: phone.trim() || undefined,
+        },
       },
       {
         onSuccess: () => {
@@ -104,9 +127,19 @@ export const EditProfileModal = ({
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-[#070415] focus:outline-none focus:border-[#070415] transition-colors"
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
+                }}
+                className={`w-full px-4 py-2.5 border rounded-xl text-sm text-[#070415] focus:outline-none transition-colors ${
+                  errors.name
+                    ? "border-red-400 focus:border-red-400"
+                    : "border-gray-200 focus:border-[#070415]"
+                }`}
               />
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1.5">
@@ -115,9 +148,20 @@ export const EditProfileModal = ({
               <input
                 type="text"
                 value={surname}
-                onChange={(e) => setSurname(e.target.value)}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-[#070415] focus:outline-none focus:border-[#070415] transition-colors"
+                onChange={(e) => {
+                  setSurname(e.target.value);
+                  if (errors.surname)
+                    setErrors((prev) => ({ ...prev, surname: "" }));
+                }}
+                className={`w-full px-4 py-2.5 border rounded-xl text-sm text-[#070415] focus:outline-none transition-colors ${
+                  errors.surname
+                    ? "border-red-400 focus:border-red-400"
+                    : "border-gray-200 focus:border-[#070415]"
+                }`}
               />
+              {errors.surname && (
+                <p className="text-red-500 text-xs mt-1">{errors.surname}</p>
+              )}
             </div>
           </div>
 
@@ -128,7 +172,30 @@ export const EditProfileModal = ({
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
+              }}
+              className={`w-full px-4 py-2.5 border rounded-xl text-sm text-[#070415] focus:outline-none transition-colors ${
+                errors.email
+                  ? "border-red-400 focus:border-red-400"
+                  : "border-gray-200 focus:border-[#070415]"
+              }`}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1.5">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="e.g. +385 95 123 4567"
               className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-[#070415] focus:outline-none focus:border-[#070415] transition-colors"
             />
           </div>

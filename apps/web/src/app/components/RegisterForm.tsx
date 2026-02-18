@@ -21,6 +21,7 @@ export const RegisterForm = ({
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { mutate: register, isPending } = useRegister(() => {
     setIsLogin(true);
@@ -29,6 +30,7 @@ export const RegisterForm = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setRegisterData((prev) => ({ ...prev, [id]: value }));
+    if (errors[id]) setErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
   const handleUserTypeChange = (type: "FREELANCER" | "CLIENT") => {
@@ -38,12 +40,46 @@ export const RegisterForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (registerData.password !== registerData.confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
+    const newErrors: Record<string, string> = {};
+    if (!registerData.name.trim()) newErrors.name = "Name is required";
+    if (!registerData.surname.trim()) newErrors.surname = "Surname is required";
+    if (!registerData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerData.email.trim())) {
+      newErrors.email = "Enter a valid email address";
+    }
+    if (!registerData.dateOfBirth) {
+      newErrors.dateOfBirth = "Date of birth is required";
+    } else {
+      const dob = new Date(registerData.dateOfBirth);
+      const today = new Date();
+      const age = today.getFullYear() - dob.getFullYear();
+      if (dob > today) {
+        newErrors.dateOfBirth = "Date of birth cannot be in the future";
+      } else if (age < 16) {
+        newErrors.dateOfBirth = "You must be at least 16 years old";
+      }
+    }
+    if (!registerData.password) {
+      newErrors.password = "Password is required";
+    } else if (registerData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    if (!registerData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (registerData.password !== registerData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
-    register(registerData);
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    register({
+      ...registerData,
+      name: registerData.name.trim(),
+      surname: registerData.surname.trim(),
+      email: registerData.email.trim(),
+    });
   };
 
   return (
@@ -67,9 +103,15 @@ export const RegisterForm = ({
             onChange={handleChange}
             placeholder="John"
             disabled={isPending}
-            className="w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all disabled:opacity-50"
-            required
+            className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent transition-all disabled:opacity-50 ${
+              errors.name
+                ? "border-red-400 focus:ring-red-400"
+                : "border-zinc-300 focus:ring-black"
+            }`}
           />
+          {errors.name && (
+            <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+          )}
         </div>
 
         <div className="w-1/2 space-y-2">
@@ -87,9 +129,15 @@ export const RegisterForm = ({
             onChange={handleChange}
             placeholder="Doe"
             disabled={isPending}
-            className="w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all disabled:opacity-50"
-            required
+            className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent transition-all disabled:opacity-50 ${
+              errors.surname
+                ? "border-red-400 focus:ring-red-400"
+                : "border-zinc-300 focus:ring-black"
+            }`}
           />
+          {errors.surname && (
+            <p className="text-red-500 text-xs mt-1">{errors.surname}</p>
+          )}
         </div>
       </div>
 
@@ -108,9 +156,15 @@ export const RegisterForm = ({
           onChange={handleChange}
           placeholder="john@example.com"
           disabled={isPending}
-          className="w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all disabled:opacity-50"
-          required
+          className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent transition-all disabled:opacity-50 ${
+            errors.email
+              ? "border-red-400 focus:ring-red-400"
+              : "border-zinc-300 focus:ring-black"
+          }`}
         />
+        {errors.email && (
+          <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -127,9 +181,15 @@ export const RegisterForm = ({
           value={registerData.dateOfBirth}
           onChange={handleChange}
           disabled={isPending}
-          className="w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all text-zinc-700 disabled:opacity-50"
-          required
+          className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent transition-all text-zinc-700 disabled:opacity-50 ${
+            errors.dateOfBirth
+              ? "border-red-400 focus:ring-red-400"
+              : "border-zinc-300 focus:ring-black"
+          }`}
         />
+        {errors.dateOfBirth && (
+          <p className="text-red-500 text-xs mt-1">{errors.dateOfBirth}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -186,9 +246,11 @@ export const RegisterForm = ({
             onChange={handleChange}
             placeholder="••••••••"
             disabled={isPending}
-            className="w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent pr-10 transition-all disabled:opacity-50"
-            required
-            minLength={6}
+            className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent pr-10 transition-all disabled:opacity-50 ${
+              errors.password
+                ? "border-red-400 focus:ring-red-400"
+                : "border-zinc-300 focus:ring-black"
+            }`}
           />
 
           <button
@@ -199,6 +261,9 @@ export const RegisterForm = ({
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
+        {errors.password && (
+          <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -216,9 +281,15 @@ export const RegisterForm = ({
           onChange={handleChange}
           placeholder="••••••••"
           disabled={isPending}
-          className="w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all disabled:opacity-50"
-          required
+          className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent transition-all disabled:opacity-50 ${
+            errors.confirmPassword
+              ? "border-red-400 focus:ring-red-400"
+              : "border-zinc-300 focus:ring-black"
+          }`}
         />
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
+        )}
       </div>
 
       <button
