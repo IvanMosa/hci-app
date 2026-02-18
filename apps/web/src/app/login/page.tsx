@@ -10,7 +10,6 @@ export default function Home() {
         <AuthForm />
       </div>
 
-      {/* Footer Area */}
       <Footer />
     </main>
   );

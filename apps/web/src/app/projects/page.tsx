@@ -10,6 +10,12 @@ import {
   X,
   Trash2,
   CheckCircle,
+  Briefcase,
+  FileText,
+  DollarSign,
+  Clock,
+  Pencil,
+  Check as CheckIcon,
 } from "lucide-react";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";
 import { useAllClientJobs } from "@/api/job/useAllClientJobs";
@@ -18,6 +24,7 @@ import { useDeleteJob } from "@/api/job/useDeleteJob";
 import { useMyApplications } from "@/api/application/useMyApplications";
 import { useJobApplications } from "@/api/application/useJobApplications";
 import { useUpdateApplicationStatus } from "@/api/application/useUpdateApplicationStatus";
+import { useUpdateFreelancerProfile } from "@/api/freelancer/useUpdateFreelancerProfile";
 import { PostProjectModal } from "@/components/PostProjectModal";
 import { Footer } from "@/components/Footer";
 import Image from "next/image";
@@ -70,6 +77,18 @@ function ProjectsContent({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
+      <div className="w-full px-15 py-6">
+        <div className="mb-12">
+          <h1 className="text-3xl font-bold text-[#070415] mb-2">
+            Welcome back, {profile.userDetails?.name}!
+          </h1>
+          <p className="text-gray-500 text-sm">
+            {isClient
+              ? "Manage your projects and review applications"
+              : "Track your applications and find new opportunities"}
+          </p>
+        </div>
+      </div>
       {isClient ? (
         <ClientProjects userId={userId} />
       ) : (
@@ -101,6 +120,20 @@ function ClientProjects({ userId }: { userId: string }) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const selectedJob = allJobs.find((j: any) => j?.id === selectedJobId);
+
+  const activeJobs = allJobs.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (job: any) => job?.status === "active",
+  );
+  const completedJobs = allJobs.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (job: any) => job?.status === "completed",
+  );
+  const totalBudget = allJobs.reduce(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (sum: number, job: any) => sum + Number(job?.budget || 0),
+    0,
+  );
 
   const visibleCards = 5;
   const maxIndex = Math.max(0, filteredJobs.length - visibleCards);
@@ -134,11 +167,27 @@ function ClientProjects({ userId }: { userId: string }) {
 
   return (
     <div className="w-full px-15 py-6">
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-[#070415] mb-2">My Projects</h1>
-        <p className="text-gray-500 text-sm">
-          Manage and track your posted projects
-        </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <StatCard
+          icon={<Briefcase size={24} />}
+          label="Total Projects"
+          value={allJobs.length.toString()}
+        />
+        <StatCard
+          icon={<Clock size={24} />}
+          label="Active Projects"
+          value={activeJobs.length.toString()}
+        />
+        <StatCard
+          icon={<FileText size={24} />}
+          label="Completed"
+          value={completedJobs.length.toString()}
+        />
+        <StatCard
+          icon={<DollarSign size={24} />}
+          label="Total Budget"
+          value={`$${totalBudget.toLocaleString()}`}
+        />
       </div>
 
       <div className="flex items-center justify-between mb-8">
@@ -293,7 +342,29 @@ function ClientProjects({ userId }: { userId: string }) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FreelancerProjects({ profile }: { profile: any }) {
   const { data: applications, isLoading } = useMyApplications(profile?.id);
+  const { mutate: updateProfile, isPending: isUpdatingRate } =
+    useUpdateFreelancerProfile();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isEditingRate, setIsEditingRate] = useState(false);
+  const [rateValue, setRateValue] = useState(
+    profile?.hourlyRate ? String(profile.hourlyRate) : "",
+  );
+
+  const pendingApps = applications?.filter((app) => app.status === "pending");
+  const acceptedApps = applications?.filter((app) => app.status === "accepted");
+
+  const handleSaveRate = () => {
+    if (!profile?.id) return;
+    updateProfile(
+      {
+        profileId: profile.id,
+        data: { hourlyRate: rateValue ? Number(rateValue) : undefined },
+      },
+      {
+        onSuccess: () => setIsEditingRate(false),
+      },
+    );
+  };
 
   const visibleCards = 5;
   const maxIndex = Math.max(0, (applications?.length || 0) - visibleCards);
@@ -316,8 +387,73 @@ function FreelancerProjects({ profile }: { profile: any }) {
 
   return (
     <div className="w-full px-15 py-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <StatCard
+          icon={<FileText size={24} />}
+          label="Applications"
+          value={(applications?.length || 0).toString()}
+        />
+        <StatCard
+          icon={<Clock size={24} />}
+          label="Pending"
+          value={(pendingApps?.length || 0).toString()}
+        />
+        <StatCard
+          icon={<Briefcase size={24} />}
+          label="Accepted"
+          value={(acceptedApps?.length || 0).toString()}
+        />
+        <div className="p-6 border border-gray-100 rounded-xl">
+          <div className="flex items-center gap-3 mb-3 text-gray-400">
+            <DollarSign size={24} />
+          </div>
+          {isEditingRate ? (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                <span className="pl-3 text-gray-400 text-lg font-bold">$</span>
+                <input
+                  type="number"
+                  value={rateValue}
+                  onChange={(e) => setRateValue(e.target.value)}
+                  className="w-20 px-2 py-1.5 text-lg font-bold text-[#070415] focus:outline-none"
+                  autoFocus
+                  min={1}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSaveRate();
+                    if (e.key === "Escape") setIsEditingRate(false);
+                  }}
+                />
+                <span className="pr-3 text-gray-400 text-sm">/hr</span>
+              </div>
+              <button
+                onClick={handleSaveRate}
+                disabled={isUpdatingRate}
+                className="p-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                <CheckIcon size={16} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-bold text-[#070415]">
+                {profile?.hourlyRate ? `$${profile.hourlyRate}/hr` : "Not set"}
+              </p>
+              <button
+                onClick={() => setIsEditingRate(true)}
+                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+              >
+                <Pencil size={14} className="text-gray-400" />
+              </button>
+            </div>
+          )}
+          <p className="text-sm text-gray-500 mt-1">Hourly Rate</p>
+        </div>
+      </div>
+
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-[#070415] mb-2">My Projects</h1>
+        <h2 className="text-xl font-bold text-[#070415] mb-2">
+          My Applications
+        </h2>
         <p className="text-gray-500 text-sm">Projects you&apos;ve applied to</p>
       </div>
 
@@ -586,5 +722,23 @@ function ProjectApplicationsSection({
         )}
       </div>
     </section>
+  );
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="p-6 border border-gray-100 rounded-xl">
+      <div className="flex items-center gap-3 mb-3 text-gray-400">{icon}</div>
+      <p className="text-2xl font-bold text-[#070415]">{value}</p>
+      <p className="text-sm text-gray-500 mt-1">{label}</p>
+    </div>
   );
 }

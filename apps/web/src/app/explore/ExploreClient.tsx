@@ -18,6 +18,7 @@ export interface ProjectFilters {
 export default function ExploreClient() {
   const searchParams = useSearchParams();
   const typeParam = searchParams.get("type");
+  const searchParam = searchParams.get("search");
 
   const [view, setView] = useState<"projects" | "freelancers">("freelancers");
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,6 +35,12 @@ export default function ExploreClient() {
       setView(typeParam);
     }
   }, [typeParam]);
+
+  useEffect(() => {
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    }
+  }, [searchParam]);
 
   return (
     <>
