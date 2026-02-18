@@ -38,12 +38,12 @@ export class AuthService {
     });
 
     if (!loginUser) {
-      throw new UnauthorizedException('Wrong username or password');
+      throw new UnauthorizedException('Wrong email or password');
     }
 
     const passwordsMatch = await compare(password, loginUser.password);
     if (!passwordsMatch) {
-      throw new UnauthorizedException('Wrong username or password');
+      throw new UnauthorizedException('Wrong email or password');
     }
 
     const accessToken = this.jwtService.sign({

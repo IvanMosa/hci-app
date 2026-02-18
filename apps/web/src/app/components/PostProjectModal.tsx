@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { useCreateJob } from "@/api/job/useCreateJob";
+import { toast } from "react-toastify";
 
 const JOB_CATEGORIES = [
   { id: "web_development", label: "Web Development" },
@@ -31,13 +32,52 @@ export const PostProjectModal = ({
     description: "",
     budget: "",
   });
+  const [errors, setErrors] = useState<{
+    title?: string;
+    description?: string;
+  }>({});
 
   if (!isOpen) return null;
 
+  const validate = () => {
+    const newErrors: { title?: string; description?: string } = {};
+    const trimmedTitle = formData.title.trim();
+    const trimmedDesc = formData.description.trim();
+
+    if (!trimmedTitle) {
+      newErrors.title = "Title is required";
+    } else if (trimmedTitle.length < 3) {
+      newErrors.title = "Title must be at least 3 characters";
+    } else if (trimmedTitle.length > 100) {
+      newErrors.title = "Title must be at most 100 characters";
+    }
+
+    if (!trimmedDesc) {
+      newErrors.description = "Description is required";
+    } else if (trimmedDesc.length < 50) {
+      newErrors.description = `Description must be at least 50 characters (${trimmedDesc.length}/50)`;
+    } else if (trimmedDesc.length > 500) {
+      newErrors.description = "Description must be at most 500 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validate()) return;
+
+    if (!formData.budget) {
+      toast.error("Please enter a budget");
+      return;
+    }
+
     createJob({
-      ...formData,
+      title: formData.title.trim(),
+      category: formData.category,
+      description: formData.description.trim(),
       budget: Number(formData.budget),
       clientId,
     });
@@ -66,13 +106,19 @@ export const PostProjectModal = ({
               <input
                 type="text"
                 placeholder="Project title"
-                className={inputStyles}
+                className={`${inputStyles} ${errors.title ? "border-red-400 focus:ring-red-400" : ""}`}
                 value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, title: e.target.value });
+                  if (errors.title)
+                    setErrors((prev) => ({ ...prev, title: undefined }));
+                }}
+                maxLength={100}
                 required
               />
+              {errors.title && (
+                <p className="text-red-500 text-xs mt-1">{errors.title}</p>
+              )}
             </div>
 
             <div>
@@ -122,14 +168,29 @@ export const PostProjectModal = ({
           <div>
             <label className={labelStyles}>About project</label>
             <textarea
-              placeholder="Write in max. 100 words"
-              className={`${inputStyles} h-32 resize-none`}
+              placeholder="Describe your project (50–500 characters)"
+              className={`${inputStyles} h-32 resize-none ${errors.description ? "border-red-400 focus:ring-red-400" : ""}`}
               value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
+              onChange={(e) => {
+                setFormData({ ...formData, description: e.target.value });
+                if (errors.description)
+                  setErrors((prev) => ({ ...prev, description: undefined }));
+              }}
+              maxLength={500}
               required
             />
+            <div className="flex justify-between mt-1">
+              {errors.description ? (
+                <p className="text-red-500 text-xs">{errors.description}</p>
+              ) : (
+                <span />
+              )}
+              <span
+                className={`text-xs ${formData.description.trim().length > 500 ? "text-red-500" : "text-gray-400"}`}
+              >
+                {formData.description.trim().length}/500
+              </span>
+            </div>
           </div>
 
           <div className="flex justify-end gap-4 pt-4">

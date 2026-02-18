@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
 export const JoinCommunity = () => {
+  const token = localStorage.getItem("accessToken");
+  const isLoggedIn = !!token;
+
   return (
     <section
       className="relative w-full flex flex-col items-center justify-center overflow-hidden px-6"
@@ -39,7 +44,7 @@ export const JoinCommunity = () => {
         </h2>
 
         <Link
-          href="/login"
+          href={isLoggedIn ? "/dashboard" : "/login"}
           className="inline-block bg-white text-[#070415] px-14 py-4 rounded-full font-bold uppercase text-sm tracking-widest hover:bg-gray-200 transition-all shadow-lg"
         >
           Join Now

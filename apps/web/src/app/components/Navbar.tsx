@@ -13,14 +13,17 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userType, setUserType] = useState<string | null>(null);
   const router = useRouter();
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("accessToken");
     const storedUserId = localStorage.getItem("userId");
+    const storedUserType = localStorage.getItem("userType");
 
     setIsLoggedIn(!!token);
     setUserId(storedUserId);
+    setUserType(storedUserType);
   };
 
   useEffect(() => {
@@ -43,7 +46,7 @@ export const Navbar = () => {
     "font-semibold hover:underline underline-offset-8 decoration-2 transition-all duration-200";
 
   return (
-    <nav className="text-black px-15 py-4 flex justify-between items-center bg-white h-[72px]">
+    <nav className="text-black px-15 py-4 flex justify-between items-center bg-white h-[72px] fixed top-0 left-0 w-full z-50 shadow-sm">
       <Link href="/">
         <Image
           src={logo}
@@ -80,15 +83,15 @@ export const Navbar = () => {
           <ExploreModal open={open} onClose={() => setOpen(false)} />
         </div>
 
-        {isLoggedIn && (
+        {isLoggedIn && userType === "freelancer" && (
           <Link href="/dashboard" className={navItemStyles}>
             Dashboard
           </Link>
         )}
 
-        {isLoggedIn && (
+        {isLoggedIn && userType === "client" && (
           <Link href="/projects" className={navItemStyles}>
-            Projects
+            Dashboard
           </Link>
         )}
 

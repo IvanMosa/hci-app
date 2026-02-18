@@ -46,8 +46,11 @@ export const useLogin = (onSuccessCallback?: () => void) => {
       }
     },
     onError(error: unknown) {
-      const apiError = error as ApiError;
-      toast.error(apiError?.response?.data?.message || "Error logging in");
+      const message =
+        typeof error === "string"
+          ? error
+          : (error as ApiError)?.response?.data?.message || "Error logging in";
+      toast.error(message);
     },
   });
 };
