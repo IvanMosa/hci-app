@@ -14,9 +14,9 @@ export const JoinCommunity = () => {
 
   return (
     <section
-      className="relative w-full flex flex-col items-center justify-center overflow-hidden px-6"
+      className="relative w-full flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6 py-24 md:py-0"
       style={{
-        height: "963.81px",
+        minHeight: "min(963.81px, 100vh)",
       }}
     >
       <div className="absolute inset-0 z-0">
@@ -35,11 +35,11 @@ export const JoinCommunity = () => {
 
       <div className="relative z-10 text-center max-w-5xl">
         <h2
-          className="text-white font-medium mb-12 tracking-normal"
+          className="text-white font-medium mb-8 md:mb-12 tracking-normal"
           style={{
             fontFamily: "Inter, sans-serif",
-            fontSize: "clamp(40px, 8vw, 64px)",
-            lineHeight: "67px",
+            fontSize: "clamp(28px, 6vw, 64px)",
+            lineHeight: "1.15",
             fontWeight: 500,
           }}
         >

@@ -11,13 +11,13 @@ import { JobWithClient } from "./ProjectList";
 export const FeaturedProjects = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(1200);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const updateWidth = () => setScreenWidth(window.innerWidth);
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   const { data, isLoading } = useJobs();
@@ -25,9 +25,21 @@ export const FeaturedProjects = () => {
   const allProjects =
     (data?.pages.flatMap((page) => page) as JobWithClient[])?.slice(0, 5) || [];
 
-  const cardWidth = isMobile ? 300 : 340;
-  const gap = isMobile ? 16 : 32;
-  const visibleCards = isMobile ? 1 : 3;
+  // Fully responsive: calculate visible cards and sizes from screen width
+  const arrowSpace = 80;
+  const availableWidth = screenWidth - arrowSpace;
+  const gap = screenWidth < 768 ? 16 : 24;
+  const minCardWidth = 240;
+  const maxCardWidth = 340;
+  const visibleCards = Math.max(
+    1,
+    Math.min(3, Math.floor((availableWidth + gap) / (minCardWidth + gap))),
+  );
+  const cardWidth = Math.min(
+    maxCardWidth,
+    Math.floor((availableWidth - (visibleCards - 1) * gap) / visibleCards),
+  );
+  const containerWidth = visibleCards * cardWidth + (visibleCards - 1) * gap;
 
   const nextSlide = () => {
     const limit = allProjects.length - visibleCards;
@@ -50,15 +62,12 @@ export const FeaturedProjects = () => {
   if (isLoading) return null;
 
   return (
-    <section
-      className="bg-white w-full flex flex-col items-center justify-center relative px-4 md:px-6 overflow-hidden py-20"
-      style={{ minHeight: "960.47px" }}
-    >
-      <div className="text-center mb-16 z-10">
-        <h2 className="text-[#070415] text-4xl md:text-6xl font-semibold mb-6 tracking-tight">
+    <section className="bg-white w-full flex flex-col items-center justify-center relative px-2 sm:px-4 md:px-6 overflow-hidden py-12 sm:py-16 md:py-20">
+      <div className="text-center mb-8 sm:mb-12 md:mb-16 z-10">
+        <h2 className="text-[#070415] text-2xl sm:text-4xl md:text-6xl font-semibold mb-4 sm:mb-6 tracking-tight">
           Featured projects
         </h2>
-        <p className="text-[#070415] text-lg max-w-2xl mx-auto opacity-80">
+        <p className="text-[#070415] text-sm sm:text-lg max-w-2xl mx-auto opacity-80">
           Apply to projects that best match your skills and interests.
         </p>
       </div>
@@ -72,8 +81,8 @@ export const FeaturedProjects = () => {
         </button>
 
         <div
-          className="overflow-hidden"
-          style={{ width: isMobile ? `${cardWidth}px` : "1084px" }}
+          className="overflow-x-clip overflow-y-visible pb-2"
+          style={{ width: `${containerWidth}px` }}
         >
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -89,7 +98,7 @@ export const FeaturedProjects = () => {
                 style={{ width: `${cardWidth}px` }}
                 onClick={() => setSelectedJobId(p.id)}
               >
-                <div className="relative overflow-hidden rounded-xl mb-4 aspect-[340/380]">
+                <div className="relative overflow-hidden rounded-xl mb-3 sm:mb-4 aspect-[4/3] sm:aspect-[340/380]">
                   <Image
                     src={projectImg}
                     alt={p.title}

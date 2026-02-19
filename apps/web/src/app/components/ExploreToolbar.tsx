@@ -62,55 +62,63 @@ export const ExploreToolbar = ({
     projectFilters.clientName !== "";
 
   return (
-    <div className="px-15 pt-6 pb-2 w-full">
-      <div className="flex flex-col md:flex-row items-center gap-4">
-        <div className="flex flex-1 items-center gap-4 w-full">
+    <div className="px-4 sm:px-8 md:px-10 lg:px-15 pt-6 pb-2 w-full">
+      <div className="flex flex-col gap-3 md:gap-4">
+        <div className="flex flex-wrap items-center gap-3 md:gap-4 w-full">
           <div className="flex bg-gray-100 p-1 rounded-lg shrink-0">
             <button
               onClick={() => handleViewChange("projects")}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all rounded-md cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium transition-all rounded-md cursor-pointer ${
                 view === "projects"
                   ? "bg-[#070415] text-white shadow-sm"
                   : "text-gray-500"
               }`}
             >
-              <Briefcase size={18} /> Projects
+              <Briefcase size={16} className="sm:w-[18px] sm:h-[18px]" />{" "}
+              Projects
             </button>
             <button
               onClick={() => handleViewChange("freelancers")}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all rounded-md cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium transition-all rounded-md cursor-pointer ${
                 view === "freelancers"
                   ? "bg-[#070415] text-white shadow-sm"
                   : "text-gray-500"
               }`}
             >
-              <Users size={18} /> Freelancers
+              <Users size={16} className="sm:w-[18px] sm:h-[18px]" />{" "}
+              Freelancers
             </button>
           </div>
 
-          <div className="relative w-full max-w-sm">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search ${view === "projects" ? "projects" : "freelancers"}`}
-              className="w-full bg-gray-100 py-3 px-6 pr-12 rounded-full text-sm focus:outline-none"
-            />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#070415] p-2 rounded-full text-white">
-              <Search size={16} />
+          {view === "projects" && (
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2.5 border border-gray-200 rounded-[46px] text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-colors shrink-0 cursor-pointer ml-auto md:ml-0 md:order-last"
+            >
+              <Image
+                src={filterIcon}
+                alt="Filter"
+                width={16}
+                height={16}
+                className="sm:w-[18px] sm:h-[18px]"
+              />
+              Filters
             </button>
-          </div>
+          )}
         </div>
 
-        {view === "projects" && (
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-[46px] text-sm font-semibold hover:bg-gray-50 transition-colors shrink-0 cursor-pointer"
-          >
-            <Image src={filterIcon} alt="Filter" width={18} height={18} />
-            Filters
+        <div className="relative w-full md:max-w-sm">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={`Search ${view === "projects" ? "projects" : "freelancers"}`}
+            className="w-full bg-gray-100 py-2.5 sm:py-3 px-5 sm:px-6 pr-12 rounded-full text-sm focus:outline-none"
+          />
+          <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#070415] p-2 rounded-full text-white">
+            <Search size={16} />
           </button>
-        )}
+        </div>
       </div>
 
       {/* Project Filters Panel */}

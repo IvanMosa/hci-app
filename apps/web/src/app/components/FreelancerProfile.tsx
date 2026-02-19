@@ -94,10 +94,10 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
   };
 
   return (
-    <div className="w-full px-15 py-6 bg-white">
-      <div className="flex items-center justify-between mb-16">
-        <div className="flex items-center gap-6">
-          <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100">
+    <div className="w-full px-4 sm:px-8 md:px-10 lg:px-15 py-6 bg-white">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 gap-4">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-gray-100 shrink-0">
             <Image
               src={johnDoeImg}
               alt="Profile"
@@ -105,7 +105,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
               className="object-cover"
             />
           </div>
-          <h1 className="text-3xl font-bold text-[#070415]">
+          <h1 className="text-xl sm:text-3xl font-bold text-[#070415]">
             {profile.userDetails?.name} {profile.userDetails?.surname}
           </h1>
           <button
@@ -116,8 +116,8 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
           </button>
         </div>
 
-        <div className="text-right space-y-1">
-          <p className="text-3xl font-light text-[#070415]">
+        <div className="text-left sm:text-right space-y-1">
+          <p className="text-xl sm:text-3xl font-light text-[#070415]">
             Balance:{" "}
             <span className="font-bold">
               ${balance != null ? balance.toLocaleString() : "0"}
@@ -131,7 +131,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
         </div>
       </div>
 
-      <div className="flex justify-between items-start mb-16">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-16">
         <section>
           <h2 className="text-2xl font-bold mb-8 text-[#070415]">
             Personal Information
