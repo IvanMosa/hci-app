@@ -13,25 +13,35 @@ import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
 
 export const FeaturedFreelancers = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(1200);
   const { data, isLoading } = useAllFreelancers();
   const [selectedFreelancer, setSelectedFreelancer] =
     useState<FreelancerWithUser | null>(null);
 
-  // Provjera širine ekrana za klijentsku logiku
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const updateWidth = () => setScreenWidth(window.innerWidth);
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   const allFreelancers = data?.pages.flatMap((page) => page).slice(0, 5) || [];
 
-  // Dinamičke vrijednosti ovisno o ekranu
-  const cardWidth = isMobile ? 300 : 340; // Malo uža kartica na mobitelu da stane uz strelice
-  const gap = isMobile ? 16 : 32; // Manji razmak na mobitelu
-  const visibleCards = isMobile ? 1 : 3;
+  // Fully responsive: calculate visible cards and sizes from screen width
+  const arrowSpace = 80; // space for both arrows
+  const availableWidth = screenWidth - arrowSpace;
+  const gap = screenWidth < 768 ? 16 : 24;
+  const minCardWidth = 240;
+  const maxCardWidth = 340;
+  const visibleCards = Math.max(
+    1,
+    Math.min(3, Math.floor((availableWidth + gap) / (minCardWidth + gap))),
+  );
+  const cardWidth = Math.min(
+    maxCardWidth,
+    Math.floor((availableWidth - (visibleCards - 1) * gap) / visibleCards),
+  );
+  const containerWidth = visibleCards * cardWidth + (visibleCards - 1) * gap;
 
   const nextSlide = () => {
     const limit = allFreelancers.length - visibleCards;
@@ -54,12 +64,9 @@ export const FeaturedFreelancers = () => {
   if (isLoading) return null;
 
   return (
-    <section
-      className="bg-[#05050C] w-full flex flex-col items-center justify-center relative px-4 md:px-6 overflow-hidden py-20"
-      style={{ minHeight: "960.47px" }}
-    >
-      <div className="text-center mb-16 z-10">
-        <h2 className="text-white text-3xl md:text-6xl font-semibold mb-4">
+    <section className="bg-[#05050C] w-full flex flex-col items-center justify-center relative px-2 sm:px-4 md:px-6 overflow-hidden py-12 sm:py-16 md:py-20">
+      <div className="text-center mb-8 sm:mb-12 md:mb-16 z-10">
+        <h2 className="text-white text-2xl sm:text-3xl md:text-6xl font-semibold mb-3 md:mb-4">
           Featured freelancers
         </h2>
         <p className="text-white text-base md:text-lg max-w-2xl mx-auto opacity-80">
@@ -77,8 +84,8 @@ export const FeaturedFreelancers = () => {
         </button>
 
         <div
-          className="overflow-hidden"
-          style={{ width: isMobile ? `${cardWidth}px` : "1084px" }}
+          className="overflow-x-clip overflow-y-visible pb-2"
+          style={{ width: `${containerWidth}px` }}
         >
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -94,7 +101,7 @@ export const FeaturedFreelancers = () => {
                 style={{ width: `${cardWidth}px` }}
                 onClick={() => setSelectedFreelancer(f)}
               >
-                <div className="relative overflow-hidden rounded-xl mb-4 aspect-[340/380]">
+                <div className="relative overflow-hidden rounded-xl mb-3 sm:mb-4 aspect-[4/3] sm:aspect-[340/380]">
                   <Image
                     src={freelancer1}
                     alt={f.user?.name || "Freelancer"}

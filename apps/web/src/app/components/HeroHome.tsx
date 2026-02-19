@@ -23,13 +23,13 @@ const HeroHome = () => {
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
-        <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight leading-[1.1] max-w-5xl">
+        <h1 className="text-white text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight leading-[1.1] max-w-5xl">
           Find the right freelancer.
           <br />
           Faster than ever.
         </h1>
 
-        <p className="text-gray-300 text-lg md:text-xl mb-12 max-w-xl font-light">
+        <p className="text-gray-300 text-base sm:text-lg md:text-xl mb-8 sm:mb-12 max-w-xl font-light">
           A platform that connects talented freelancers with clients ready to
           collaborate.
         </p>

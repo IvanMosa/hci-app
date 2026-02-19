@@ -25,8 +25,8 @@ export const SearchSection = () => {
   };
 
   return (
-    <section className="w-full min-h-screen flex flex-col items-center justify-center py-24 lg:py-32">
-      <h2 className="text-[#070415] mb-4 text-center text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight">
+    <section className="w-full min-h-screen flex flex-col items-center justify-center py-16 sm:py-24 lg:py-32 px-4 sm:px-6">
+      <h2 className="text-[#070415] mb-4 text-center text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight">
         What are you looking for?
       </h2>
       <p className="text-gray-400 text-base md:text-lg mb-10">

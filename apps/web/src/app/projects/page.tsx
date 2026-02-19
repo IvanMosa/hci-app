@@ -77,9 +77,9 @@ function ProjectsContent({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <div className="w-full px-15 py-6">
+      <div className="w-full px-4 sm:px-8 md:px-10 lg:px-15 py-6">
         <div className="mb-12">
-          <h1 className="text-3xl font-bold text-[#070415] mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#070415] mb-2">
             Welcome back, {profile.userDetails?.name}!
           </h1>
           <p className="text-gray-500 text-sm">
@@ -104,6 +104,7 @@ function ClientProjects({ userId }: { userId: string }) {
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [screenWidth, setScreenWidth] = useState(1200);
   const { data: allJobs = [], isLoading } = useAllClientJobs(userId);
   const filteredJobs =
     filter === "all"
@@ -117,6 +118,13 @@ function ClientProjects({ userId }: { userId: string }) {
       setSelectedJobId(filteredJobs[0]?.id);
     }
   }, [filteredJobs, selectedJobId]);
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const selectedJob = allJobs.find((j: any) => j?.id === selectedJobId);
@@ -135,7 +143,8 @@ function ClientProjects({ userId }: { userId: string }) {
     0,
   );
 
-  const visibleCards = 5;
+  const visibleCards =
+    screenWidth < 640 ? 1 : screenWidth < 1024 ? 2 : screenWidth < 1280 ? 3 : 5;
   const maxIndex = Math.max(0, filteredJobs.length - visibleCards);
 
   const nextSlide = () => {
@@ -166,8 +175,8 @@ function ClientProjects({ userId }: { userId: string }) {
   }, [filter]);
 
   return (
-    <div className="w-full px-15 py-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div className="w-full px-4 sm:px-8 md:px-10 lg:px-15 py-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
         <StatCard
           icon={<Briefcase size={24} />}
           label="Total Projects"
@@ -190,13 +199,13 @@ function ClientProjects({ userId }: { userId: string }) {
         />
       </div>
 
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
         <div className="flex gap-3">
           {(["all", "active", "completed"] as const).map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${
+              className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                 filter === status
                   ? "bg-[#070415] text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -222,12 +231,12 @@ function ClientProjects({ userId }: { userId: string }) {
         <p className="text-gray-500 text-center py-20">No projects found.</p>
       ) : (
         <div
-          className={`flex items-center ${filteredJobs.length > visibleCards ? "-mx-12" : ""}`}
+          className={`flex items-center ${filteredJobs.length > visibleCards ? "sm:-mx-12" : ""}`}
         >
           {filteredJobs.length > visibleCards && (
             <button
               onClick={prevSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
             >
               <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -261,7 +270,7 @@ function ClientProjects({ userId }: { userId: string }) {
                   onClick={() => setSelectedJobId(job?.id)}
                 >
                   <div
-                    className={`relative overflow-hidden rounded-xl mb-4 h-[280px] transition-shadow duration-300 ${
+                    className={`relative overflow-hidden rounded-xl mb-4 h-[200px] sm:h-[280px] transition-shadow duration-300 ${
                       selectedJobId === job?.id
                         ? "shadow-[0_4px_15px_rgba(7,4,21,0.15)]"
                         : ""
@@ -306,7 +315,7 @@ function ClientProjects({ userId }: { userId: string }) {
           {filteredJobs.length > visibleCards && (
             <button
               onClick={nextSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
             >
               <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -346,9 +355,17 @@ function FreelancerProjects({ profile }: { profile: any }) {
     useUpdateFreelancerProfile();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditingRate, setIsEditingRate] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(1200);
   const [rateValue, setRateValue] = useState(
     profile?.hourlyRate ? String(profile.hourlyRate) : "",
   );
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const pendingApps = applications?.filter((app) => app.status === "pending");
   const acceptedApps = applications?.filter((app) => app.status === "accepted");
@@ -366,7 +383,8 @@ function FreelancerProjects({ profile }: { profile: any }) {
     );
   };
 
-  const visibleCards = 5;
+  const visibleCards =
+    screenWidth < 640 ? 1 : screenWidth < 1024 ? 2 : screenWidth < 1280 ? 3 : 5;
   const maxIndex = Math.max(0, (applications?.length || 0) - visibleCards);
 
   const nextSlide = () => {
@@ -386,8 +404,8 @@ function FreelancerProjects({ profile }: { profile: any }) {
   };
 
   return (
-    <div className="w-full px-15 py-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div className="w-full px-4 sm:px-8 md:px-10 lg:px-15 py-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
         <StatCard
           icon={<FileText size={24} />}
           label="Applications"
@@ -471,12 +489,12 @@ function FreelancerProjects({ profile }: { profile: any }) {
         </p>
       ) : (
         <div
-          className={`flex items-center ${applications.length > visibleCards ? "-mx-12" : ""}`}
+          className={`flex items-center ${applications.length > visibleCards ? "sm:-mx-12" : ""}`}
         >
           {applications.length > visibleCards && (
             <button
               onClick={prevSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
             >
               <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -503,7 +521,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
                     minWidth: `calc((100% - ${(visibleCards - 1) * 24}px) / ${visibleCards})`,
                   }}
                 >
-                  <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
+                  <div className="relative overflow-hidden rounded-xl mb-4 h-[200px] sm:h-[280px]">
                     <Image
                       src={projectImg}
                       alt={app.job?.title}
@@ -551,7 +569,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
           {applications.length > visibleCards && (
             <button
               onClick={nextSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
             >
               <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -605,13 +623,13 @@ function ProjectApplicationsSection({
   };
 
   return (
-    <section className="mt-16 transition-all duration-500 ease-in-out">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-[#070415]">
+    <section className="mt-10 sm:mt-16 transition-all duration-500 ease-in-out">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+        <h2 className="text-lg sm:text-xl font-bold text-[#070415]">
           Applications on {jobTitle || "..."}
         </h2>
         {jobId && (
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {jobStatus === "active" && (
               <button
                 onClick={handleCompleteProject}
@@ -653,7 +671,7 @@ function ProjectApplicationsSection({
             {applications.map((app) => (
               <div
                 key={app.id}
-                className={`flex items-center justify-between p-6 border rounded-xl transition-all duration-300 ${
+                className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-6 border rounded-xl transition-all duration-300 gap-4 ${
                   app.status === "accepted"
                     ? "border-green-200 bg-green-50/50"
                     : app.status === "rejected"
@@ -689,7 +707,7 @@ function ProjectApplicationsSection({
                     </p>
                   )}
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                   {app.bidAmount && (
                     <span className="text-[#070415] font-bold text-[15px]">
                       ${Number(app.bidAmount).toLocaleString()}

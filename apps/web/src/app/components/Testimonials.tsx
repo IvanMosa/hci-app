@@ -51,10 +51,10 @@ export const Testimonials = () => {
 
   return (
     <section
-      className="bg-[#05050C] w-full min-h-screen flex flex-col items-center justify-center relative px-6 overflow-hidden text-center"
-      style={{ minHeight: "960.47px" }}
+      className="bg-[#05050C] w-full min-h-screen flex flex-col items-center justify-center relative px-4 sm:px-6 overflow-hidden text-center py-20 md:py-0"
+      style={{ minHeight: "min(960.47px, 100vh)" }}
     >
-      <h2 className="text-white text-5xl md:text-7xl font-semibold mb-20 tracking-tight">
+      <h2 className="text-white text-3xl sm:text-5xl md:text-7xl font-semibold mb-10 md:mb-20 tracking-tight">
         What our users say
       </h2>
 
@@ -67,7 +67,7 @@ export const Testimonials = () => {
           <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" strokeWidth={1.5} />
         </button>
 
-        <p className="text-gray-300 text-xl md:text-3xl font-light italic leading-relaxed flex-1">
+        <p className="text-gray-300 text-base sm:text-xl md:text-3xl font-light italic leading-relaxed flex-1">
           &quot;{t.quote}&quot;
         </p>
 

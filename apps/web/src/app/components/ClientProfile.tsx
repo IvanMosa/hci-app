@@ -21,10 +21,10 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
   const acceptedApps = allApplications.filter((a) => a?.status === "accepted");
 
   return (
-    <div className="w-full px-15 py-6">
-      <div className="flex items-center justify-between mb-16">
-        <div className="flex items-center gap-6">
-          <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100">
+    <div className="w-full px-4 sm:px-8 md:px-10 lg:px-15 py-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 gap-4">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-gray-100 shrink-0">
             <Image
               src={johnDoeImg}
               alt="Profile"
@@ -32,7 +32,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
               className="object-cover"
             />
           </div>
-          <h1 className="text-3xl font-bold text-[#070415]">
+          <h1 className="text-xl sm:text-3xl font-bold text-[#070415]">
             {profile.userDetails?.name} {profile.userDetails?.surname}
           </h1>
           <button
@@ -44,7 +44,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
         </div>
       </div>
 
-      <div className="flex justify-between items-start mb-16">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-16">
         <section>
           <h2 className="text-2xl font-bold mb-8 text-[#070415]">
             Personal Information
@@ -56,8 +56,8 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
           </div>
         </section>
 
-        <div className="flex gap-6">
-          <div className="w-52 p-6 border border-gray-100 rounded-xl">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
+          <div className="w-full sm:w-52 p-6 border border-gray-100 rounded-xl">
             <div className="flex items-center gap-3 mb-4 text-gray-400">
               <Briefcase size={22} />
               <span className="text-sm font-semibold text-[#070415]">
