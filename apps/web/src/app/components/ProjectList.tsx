@@ -69,7 +69,7 @@ export const ProjectList = ({
     return <div className="text-center py-20 font-bold">Loading...</div>;
   return (
     <section className="bg-white pb-20 min-h-[80vh]">
-      <div className="px-4 sm:px-8 md:px-10 lg:px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-8 sm:gap-x-8 lg:gap-x-10 xl:gap-x-14 lg:gap-y-12 mt-10 md:mt-16">
+      <div className="px-8 sm:px-8 md:px-10 lg:px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-6 gap-y-8 sm:gap-x-8 lg:gap-x-10 xl:gap-x-14 lg:gap-y-12 mt-10 md:mt-16 justify-items-center sm:justify-items-stretch">
         {filteredJobs.length === 0 && !isLoading && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
             <Briefcase size={48} className="mb-4 text-gray-300" />
@@ -85,7 +85,7 @@ export const ProjectList = ({
         {filteredJobs.map((p) => (
           <div
             key={p.id}
-            className="flex flex-col group cursor-pointer"
+            className="flex flex-col group cursor-pointer max-w-[320px] sm:max-w-none w-full"
             onClick={() => setSelectedJobId(p.id)}
           >
             <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
