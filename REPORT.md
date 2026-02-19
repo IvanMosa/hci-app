@@ -1,8 +1,8 @@
 # Final Report
 
-**Student:**  
-**App:** Freelancia  
-**Repository:** https://github.com/...
+**Students:** Nino Milas, Ivan Mosić  
+**App:** Freelancia - https://web-production-2aeb9.up.railway.app 
+**Repository:** https://github.com/IvanMosa/hci-app
 
 ---
 
@@ -63,6 +63,8 @@ Currently, the freelancing landscape presents several challenges:
 ## 5. User Personas
 
 ### Aisha Rahman — "The Aspiring Freelancer"
+<img width="112" height="100" alt="image" src="https://github.com/user-attachments/assets/99ec6926-aecd-43d4-9b83-4910d4dc494a" />
+
 
 - **Age:** 22
 - **Location:** Kuala Lumpur
@@ -79,6 +81,7 @@ Currently, the freelancing landscape presents several challenges:
   - Doesn't know how to market herself
 
 ### Daniel Ortiz — "The Multi-Gig Professional"
+<img width="112" height="100" alt="image" src="https://github.com/user-attachments/assets/6ea0fc86-e9b6-4ce9-8a5c-2833619015ca" />
 
 - **Age:** 34
 - **Location:** Manila
@@ -95,6 +98,7 @@ Currently, the freelancing landscape presents several challenges:
   - Too many unqualified client requests
 
 ### Sarah Lim — "The Quick-Hire Client"
+<img width="112" height="100" alt="image" src="https://github.com/user-attachments/assets/8758eb56-33ec-4020-8ca2-2b65de2e486a" />
 
 - **Age:** 29
 - **Location:** Singapore
@@ -198,7 +202,7 @@ The interface follows a modern, clean design with a dark primary color (#070415 
 The landing page introduces the platform with a dynamic hero section featuring the tagline _"Find the right freelancer. Faster than ever."_, a search section, carousels of featured freelancers and projects, testimonials, and a community call-to-action.
 <br>
 
-![Home Page](report_images/home.png)
+<img width="2536" height="1399" alt="image" src="https://github.com/user-attachments/assets/a2aa0d23-985f-4c75-b393-b5edf5998a97" />
 
 ### Explore Page
 
@@ -212,7 +216,8 @@ A unified discovery page where users can toggle between browsing freelancers and
 A split-screen layout with a hero section on the left and an authentication form on the right. Users can toggle between Login and Registration forms, with the registration form including a visual Freelancer/Client role selector.
 <br>
 
-![Login Page](report_images/login.png)
+<img width="2535" height="1394" alt="image" src="https://github.com/user-attachments/assets/2d9ee381-a311-4de5-a6a0-ba0ac8ff01f7" />
+
 
 ### Dashboard
 
