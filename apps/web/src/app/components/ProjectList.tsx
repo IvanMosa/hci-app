@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { Briefcase } from "lucide-react";
 import projectImg from "../../../public/image 4.png";
 import { useJobs } from "@/api/job/useJobs";
 import { Job } from "@/api/job/useClientJobs";
@@ -67,12 +68,16 @@ export const ProjectList = ({
   if (isLoading)
     return <div className="text-center py-20 font-bold">Loading...</div>;
   return (
-    <section className="bg-white pb-20">
-      <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-14 gap-y-12 mt-10">
+    <section className="bg-white pb-20 min-h-[80vh]">
+      <div className="px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-x-14 gap-y-12 mt-16">
         {filteredJobs.length === 0 && !isLoading && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
-            <p className="text-xl font-medium">
-              No projects found for &ldquo;{searchQuery}&rdquo;
+            <Briefcase size={48} className="mb-4 text-gray-300" />
+            <p className="text-xl font-medium">No projects found</p>
+            <p className="text-sm text-gray-400 mt-2">
+              {searchQuery
+                ? `No results matching "${searchQuery}"`
+                : "Try adjusting your filters to find what you're looking for"}
             </p>
           </div>
         )}
@@ -90,6 +95,18 @@ export const ProjectList = ({
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
+
+              <span
+                className={`absolute top-3 right-3 z-10 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider backdrop-blur-sm ${
+                  p.status === "active"
+                    ? "bg-green-100/90 text-green-700"
+                    : p.status === "completed"
+                      ? "bg-blue-100/90 text-blue-700"
+                      : "bg-gray-100/90 text-gray-600"
+                }`}
+              >
+                {p.status}
+              </span>
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
                 <div className="flex justify-between items-center w-full text-white">
