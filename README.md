@@ -29,7 +29,7 @@
 - Link to Assignment 1 - summary: [**Summary**](https://docs.google.com/document/d/1tRaBfkgQQZ3AP3Ky8ZORd5JskpcZToXQ/edit?usp=sharing&ouid=102678437933651756213&rtpof=true&sd=true)
 - Link to Assignment 2 - user personas: [**User personas**](https://docs.google.com/document/d/1KgkgQ_pyACqMcQQcMs-ivyDziDvGW4fj/edit?usp=sharing&ouid=109310263606415648341&rtpof=true&sd=true)
 - Link to Assignment 2 - information architecture & sitemap: [**Information architecture & Sitemap**](https://docs.google.com/document/d/11c7YFMLCirB43WUeXSiQw21DccNiqjXzJvQ6nUUotjM/edit?usp=sharing)
-- Link to Assignment 3 - deploying application: [**Next.js - Deploying application**](https://web-production-d12e1.up.railway.app/)
+- Link to Assignment 3 - deploying application: [**Next.js - Deploying application**](https://web-production-2aeb9.up.railway.app/)
 - Link to Assignment 4 - [LOFI](https://www.figma.com/design/k6CAv5JMG1gl0j35499VXf/Freelanica?node-id=0-1&p=f)
 - Link to Assignment 6 - [HIFI](https://www.figma.com/design/k6CAv5JMG1gl0j35499VXf/Freelanica?m=auto&t=tgStQdr0bOfCjeVb-1)
 <!-- Add more assignments as necessary -->
