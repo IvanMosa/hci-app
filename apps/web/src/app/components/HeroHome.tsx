@@ -1,16 +1,24 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const HeroHome = () => {
   return (
     <section className="relative w-full h-[600px] md:h-[800px] lg:h-[960px] overflow-hidden bg-[#070415]">
       <div
-        className="absolute w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-500"
+        className="absolute w-full h-full"
         style={{
-          backgroundImage: "url('/image 3.png')",
           top: "-56px",
           height: "calc(100% + 56px)",
         }}
       >
+        <Image
+          src="/image 3.png"
+          alt="Hero background"
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+        />
         <div className="absolute inset-0 bg-[#070415]/76"></div>
       </div>
 

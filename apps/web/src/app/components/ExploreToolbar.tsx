@@ -144,15 +144,25 @@ export const ExploreToolbar = ({
               <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
                 Status
               </label>
-              <select
-                value={projectFilters.status}
-                onChange={(e) => handleFilterChange("status", e.target.value)}
-                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#070415]/20 focus:border-[#070415] transition-all cursor-pointer appearance-none"
-              >
-                <option value="all">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="completed">Completed</option>
-              </select>
+              <div className="flex gap-2">
+                {[
+                  { value: "all", label: "All" },
+                  { value: "active", label: "Active" },
+                  { value: "completed", label: "Completed" },
+                ].map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => handleFilterChange("status", opt.value)}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer border ${
+                      projectFilters.status === opt.value
+                        ? "bg-[#070415] text-white border-[#070415]"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-[#070415]/30 hover:bg-gray-50"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Project Name Filter */}
@@ -193,48 +203,59 @@ export const ExploreToolbar = ({
                 Budget Range
               </label>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-400 font-medium">
-                  ${projectFilters.minPrice.toLocaleString()}
-                </span>
-                <div className="flex-1 flex flex-col gap-1">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                    $
+                  </span>
                   <input
-                    type="range"
+                    type="number"
                     min={0}
-                    max={50000}
+                    max={projectFilters.maxPrice}
                     step={500}
                     value={projectFilters.minPrice}
                     onChange={(e) =>
                       handleFilterChange(
                         "minPrice",
-                        Math.min(
-                          Number(e.target.value),
-                          projectFilters.maxPrice,
+                        Math.max(
+                          0,
+                          Math.min(
+                            Number(e.target.value) || 0,
+                            projectFilters.maxPrice,
+                          ),
                         ),
                       )
                     }
-                    className="w-full accent-[#070415] cursor-pointer"
+                    placeholder="Min"
+                    className="w-full bg-white border border-gray-200 rounded-xl pl-7 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#070415]/20 focus:border-[#070415] transition-all"
                   />
+                </div>
+                <span className="text-gray-400 text-sm font-medium">–</span>
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                    $
+                  </span>
                   <input
-                    type="range"
-                    min={0}
+                    type="number"
+                    min={projectFilters.minPrice}
                     max={50000}
                     step={500}
                     value={projectFilters.maxPrice}
                     onChange={(e) =>
                       handleFilterChange(
                         "maxPrice",
-                        Math.max(
-                          Number(e.target.value),
-                          projectFilters.minPrice,
+                        Math.min(
+                          50000,
+                          Math.max(
+                            Number(e.target.value) || 0,
+                            projectFilters.minPrice,
+                          ),
                         ),
                       )
                     }
-                    className="w-full accent-[#070415] cursor-pointer"
+                    placeholder="Max"
+                    className="w-full bg-white border border-gray-200 rounded-xl pl-7 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#070415]/20 focus:border-[#070415] transition-all"
                   />
                 </div>
-                <span className="text-xs text-gray-400 font-medium">
-                  ${projectFilters.maxPrice.toLocaleString()}
-                </span>
               </div>
             </div>
           </div>
