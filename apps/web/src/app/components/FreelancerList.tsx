@@ -33,7 +33,7 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
 
   return (
     <section className="bg-white pb-20">
-      <div className="px-4 sm:px-8 md:px-10 lg:px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 lg:gap-10 xl:gap-14 mt-10">
+      <div className="px-8 sm:px-8 md:px-10 lg:px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 lg:gap-10 xl:gap-14 mt-10 justify-items-center sm:justify-items-stretch">
         {filteredFreelancers.length === 0 && !isLoading && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
             <p className="text-xl font-medium">
@@ -46,7 +46,7 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
           <div
             key={f.id}
             onClick={() => setSelectedFreelancer(f)}
-            className="flex flex-col group cursor-pointer"
+            className="flex flex-col group cursor-pointer max-w-[320px] sm:max-w-none w-full"
           >
             <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
               <Image
