@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import { Search, Briefcase, Users, X } from "lucide-react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";

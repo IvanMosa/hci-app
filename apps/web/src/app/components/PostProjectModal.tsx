@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { X, ImagePlus } from "lucide-react";
 import { useCreateJob } from "@/api/job/useCreateJob";
 import { useUploadJobImage } from "@/api/upload/useUploadImage";
@@ -108,9 +108,7 @@ export const PostProjectModal = ({
       if (imageFile && job?.id) {
         await uploadJobImage({ jobId: job.id, file: imageFile });
       }
-    } catch {
-      // errors handled by the mutation hooks
-    }
+    } catch {}
   };
 
   const inputStyles =

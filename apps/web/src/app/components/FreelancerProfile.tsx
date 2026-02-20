@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import Image, { StaticImageData } from "next/image";
 import {
   Pencil,
@@ -19,10 +19,7 @@ import { useDeletePortfolio } from "@/api/portfolio/useDeletePortfolio";
 import { useAllSkills } from "@/api/skill/useAllSkills";
 import { useAddFreelancerSkill } from "@/api/skill/useAddFreelancerSkill";
 import { useRemoveFreelancerSkill } from "@/api/skill/useRemoveFreelancerSkill";
-import {
-  useUploadProfileImage,
-  useUploadPortfolioImage,
-} from "@/api/upload/useUploadImage";
+import { useUploadPortfolioImage } from "@/api/upload/useUploadImage";
 import { toast } from "react-toastify";
 import johnDoeImg from "../../../public/john-doe.png";
 
@@ -297,7 +294,6 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
         </section>
       </div>
 
-      {/* Portfolio Section */}
       {portfolio.length > 0 && (
         <section className="mb-16">
           <h2 className="text-2xl font-bold mb-6 text-[#070415]">Portfolio</h2>
@@ -420,7 +416,6 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
         )}
       </section>
 
-      {/* Portfolio Upload Modal */}
       {isPortfolioModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
@@ -493,7 +488,6 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                 />
               </div>
 
-              {/* Portfolio Image Upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">
                   Project Image

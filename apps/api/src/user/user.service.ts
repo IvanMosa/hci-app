@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
 
-// Shared select to never return password hashes
 const userSelectWithoutPassword = {
   id: true,
   name: true,

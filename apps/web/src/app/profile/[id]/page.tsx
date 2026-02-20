@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";

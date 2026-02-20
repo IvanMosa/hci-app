@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import { Briefcase } from "lucide-react";
 import projectImg from "../../../public/image 4.png";
@@ -8,6 +7,7 @@ import { useJobs } from "@/api/job/useJobs";
 import { Job } from "@/api/job/useClientJobs";
 import { ProjectDetailsModal } from "./ProjectDetailsModal";
 import { ProjectFilters } from "../explore/ExploreClient";
+import { useState } from "react";
 
 export interface JobWithClient extends Job {
   client: {
@@ -23,7 +23,7 @@ export const ProjectList = ({
   searchQuery: string;
   filters?: ProjectFilters;
 }) => {
-  const [selectedJobId, setSelectedJobId] = React.useState<string | null>(null);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useJobs(searchQuery);
 
@@ -31,7 +31,6 @@ export const ProjectList = ({
     (data?.pages.flatMap((page) => page) as JobWithClient[]) || [];
 
   const filteredJobs = allJobs.filter((p) => {
-    // Search query filter
     if (
       searchQuery &&
       !p.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -40,17 +39,14 @@ export const ProjectList = ({
 
     if (!filters) return true;
 
-    // Status filter
     if (filters.status !== "all" && p.status !== filters.status) return false;
 
-    // Project name filter
     if (
       filters.projectName &&
       !p.title.toLowerCase().includes(filters.projectName.toLowerCase())
     )
       return false;
 
-    // Client name filter
     if (filters.clientName) {
       const clientFullName =
         `${p.client?.name ?? ""} ${p.client?.surname ?? ""}`.toLowerCase();
@@ -58,7 +54,6 @@ export const ProjectList = ({
         return false;
     }
 
-    // Price range filter
     const budget = Number(p.budget || 0);
     if (budget < filters.minPrice || budget > filters.maxPrice) return false;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import projectImg from "../../../public/image 4.png";
@@ -25,7 +25,6 @@ export const FeaturedProjects = () => {
   const allProjects =
     (data?.pages.flatMap((page) => page) as JobWithClient[])?.slice(0, 5) || [];
 
-  // Fully responsive: calculate visible cards and sizes from screen width
   const arrowSpace = 80;
   const availableWidth = screenWidth - arrowSpace;
   const gap = screenWidth < 768 ? 16 : 24;

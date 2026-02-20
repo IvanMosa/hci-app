@@ -12,7 +12,6 @@ export class PortfolioService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreatePortfolioDto) {
-    // dto.freelancerId is the User ID from JWT — resolve to FreelancerProfile
     const profile = await this.prisma.freelancerProfile.findUnique({
       where: { userId: dto.freelancerId },
     });

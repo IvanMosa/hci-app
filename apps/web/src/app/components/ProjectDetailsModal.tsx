@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import projectImg from "../../../public/image 7.png";

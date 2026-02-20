@@ -27,8 +27,7 @@ export const FeaturedFreelancers = () => {
 
   const allFreelancers = data?.pages.flatMap((page) => page).slice(0, 5) || [];
 
-  // Fully responsive: calculate visible cards and sizes from screen width
-  const arrowSpace = 80; // space for both arrows
+  const arrowSpace = 80;
   const availableWidth = screenWidth - arrowSpace;
   const gap = screenWidth < 768 ? 16 : 24;
   const minCardWidth = 240;

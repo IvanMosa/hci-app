@@ -11,7 +11,6 @@ export class FreelancerSkillService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateFreelancerSkillDto) {
-    // dto.freelancerId is the User ID from JWT — resolve to FreelancerProfile
     const profile = await this.prisma.freelancerProfile.findUnique({
       where: { userId: dto.freelancerId },
     });
@@ -49,7 +48,6 @@ export class FreelancerSkillService {
   }
 
   async removeIfOwner(freelancerId: string, skillId: string, userId: string) {
-    // freelancerId is a FreelancerProfile ID — verify it belongs to the user
     const profile = await this.prisma.freelancerProfile.findUnique({
       where: { id: freelancerId },
     });

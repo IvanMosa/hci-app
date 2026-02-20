@@ -11,8 +11,6 @@ export class CloudinaryService {
       return;
     }
 
-    // Parse CLOUDINARY_URL and configure the SDK
-    // Format: cloudinary://<api_key>:<api_secret>@<cloud_name>
     const regex = /cloudinary:\/\/(\d+):([^@]+)@(.+)/;
     const match = cloudinaryUrl.match(regex);
     if (match) {
