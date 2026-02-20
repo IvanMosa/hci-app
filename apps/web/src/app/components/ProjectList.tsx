@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import { Briefcase } from "lucide-react";
 import projectImg from "../../../public/image 4.png";
@@ -8,6 +7,7 @@ import { useJobs } from "@/api/job/useJobs";
 import { Job } from "@/api/job/useClientJobs";
 import { ProjectDetailsModal } from "./ProjectDetailsModal";
 import { ProjectFilters } from "../explore/ExploreClient";
+import { useState } from "react";
 
 export interface JobWithClient extends Job {
   client: {
@@ -23,7 +23,7 @@ export const ProjectList = ({
   searchQuery: string;
   filters?: ProjectFilters;
 }) => {
-  const [selectedJobId, setSelectedJobId] = React.useState<string | null>(null);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useJobs(searchQuery);
 

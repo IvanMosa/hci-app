@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { X, ImagePlus } from "lucide-react";
 import { useCreateJob } from "@/api/job/useCreateJob";
 import { useUploadJobImage } from "@/api/upload/useUploadImage";

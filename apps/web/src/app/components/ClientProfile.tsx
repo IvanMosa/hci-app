@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Pencil, Briefcase, FileText } from "lucide-react";
 import johnDoeImg from "../../../public/john-doe.png";

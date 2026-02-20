@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import {
@@ -13,7 +13,7 @@ import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
 
 export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
   const [selectedFreelancer, setSelectedFreelancer] =
-    React.useState<FreelancerWithUser | null>(null);
+    useState<FreelancerWithUser | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {

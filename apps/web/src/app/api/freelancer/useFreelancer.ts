@@ -35,6 +35,7 @@ const getCombinedProfile = async (userId: string): Promise<CombinedProfile> => {
     api.get(`/freelancer-profile/profile/${userId}`),
   ]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const profileData = (profileRes as any)?.data ?? profileRes;
 
   return {

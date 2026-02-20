@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useCreateApplication } from "@/api/application/useCreateApplication";
 import { useUpdateApplication } from "@/api/application/useUpdateApplication";

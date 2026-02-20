@@ -1,4 +1,3 @@
-import React from "react";
 import bgImage from "../../../public/image 10.png";
 import Image from "next/image";
 
