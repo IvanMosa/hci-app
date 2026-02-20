@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import {
@@ -14,12 +14,19 @@ import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
 export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
   const [selectedFreelancer, setSelectedFreelancer] =
     React.useState<FreelancerWithUser | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCurrentUserId(localStorage.getItem("userId"));
+  }, []);
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useAllFreelancers(searchQuery);
 
   const allFreelancers = data?.pages.flatMap((page) => page) || [];
 
   const filteredFreelancers = allFreelancers.filter((f) => {
+    if (currentUserId && f.user?.id === currentUserId) return false;
     const fullName = `${f.user?.name} ${f.user?.surname}`.toLowerCase();
     return fullName.includes(searchQuery.toLowerCase());
   });

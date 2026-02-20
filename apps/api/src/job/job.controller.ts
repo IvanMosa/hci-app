@@ -7,14 +7,14 @@ import {
   Delete,
   UseGuards,
   Post,
-  UsePipes,
-  ValidationPipe,
   Query,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JobService } from './job.service';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { FreelancerGuard } from 'src/auth/freelancer.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UserGuard } from 'src/auth/user.guard';
 import { CreateJobDto } from './dto/create-job.dto';
 
 @ApiTags('Job')
@@ -33,28 +33,57 @@ export class JobController {
   }
 
   @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Body('status') status: string) {
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  async updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: string,
+    @Req() req: any,
+  ) {
+    const job = await this.jobService.findOne(id);
+    if (job?.clientId !== req.user.id) {
+      throw new ForbiddenException('You can only update your own jobs');
+    }
     return this.jobService.updateStatus(id, status);
   }
 
   @Patch(':id')
-  @UseGuards(FreelancerGuard)
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() updateJobDto: UpdateJobDto,
+    @Req() req: any,
+  ) {
+    const job = await this.jobService.findOne(id);
+    if (job?.clientId !== req.user.id) {
+      throw new ForbiddenException('You can only update your own jobs');
+    }
     return this.jobService.update(id, updateJobDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  async remove(@Param('id') id: string, @Req() req: any) {
+    const job = await this.jobService.findOne(id);
+    if (job?.clientId !== req.user.id) {
+      throw new ForbiddenException('You can only delete your own jobs');
+    }
     return this.jobService.remove(id);
   }
 
   @Post()
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  async create(@Body() createJobDto: CreateJobDto) {
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  async create(@Body() createJobDto: CreateJobDto, @Req() req: any) {
+    createJobDto.clientId = req.user.id;
     return this.jobService.create(createJobDto);
   }
 
   @Get('client/:clientId')
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
   async getClientJobs(
     @Param('clientId') clientId: string,
     @Query('skip') skip: string,

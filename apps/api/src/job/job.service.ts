@@ -43,7 +43,14 @@ export class JobService {
     return this.prisma.job.findUnique({
       where: { id },
       include: {
-        client: true,
+        client: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+          },
+        },
       },
     });
   }

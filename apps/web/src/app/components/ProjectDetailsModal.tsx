@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import projectImg from "../../../public/image 7.png";
 import { useJobDetails } from "@/api/job/useJobDetails";
@@ -50,10 +50,6 @@ export const ProjectDetailsModal = ({
       router.push("/login");
       return;
     }
-    if (!isFreelancer) {
-      toast.warning("Only freelancers can apply for projects.");
-      return;
-    }
     setApplyOpen(true);
   };
 
@@ -79,18 +75,34 @@ export const ProjectDetailsModal = ({
               <h2 className="text-[22px] sm:text-[28px] md:text-[32px] font-bold text-[#070415] tracking-tight">
                 {job.title}
               </h2>
-              <button
-                onClick={handleApplyClick}
-                className="hidden md:block px-6 sm:px-10 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-bold uppercase tracking-widest transition-all cursor-pointer md:w-auto text-center flex-shrink-0 bg-[#070415] text-white hover:bg-gray-800"
-              >
-                {!isLoggedIn
-                  ? "Sign In to Apply"
-                  : !isFreelancer
-                    ? "Freelancers Only"
-                    : hasExistingApplication
-                      ? "Update Application"
-                      : "Apply"}
-              </button>
+              <div className="hidden md:block relative group flex-shrink-0">
+                {hasExistingApplication ? (
+                  <div className="flex items-center gap-2 px-6 sm:px-10 py-2.5 sm:py-3 rounded-full bg-green-50 border border-green-200">
+                    <CheckCircle size={16} className="text-green-600" />
+                    <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-green-700">
+                      Already Applied
+                    </span>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleApplyClick}
+                    disabled={isLoggedIn && !isFreelancer}
+                    className={`px-6 sm:px-10 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-bold uppercase tracking-widest transition-all md:w-auto text-center ${
+                      isLoggedIn && !isFreelancer
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-[#070415] text-white hover:bg-gray-800 cursor-pointer"
+                    }`}
+                  >
+                    {!isLoggedIn ? "Sign In to Apply" : "Apply"}
+                  </button>
+                )}
+                {isLoggedIn && !isFreelancer && !hasExistingApplication && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    Only freelancers can apply for projects
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-2 mb-6 sm:mb-10">
@@ -151,20 +163,36 @@ export const ProjectDetailsModal = ({
               </div>
             </div>
 
-            {/* Mobile sticky bottom button */}
             <div className="md:hidden sticky bottom-0 pt-4 pb-1 -mx-5 px-5 bg-white">
-              <button
-                onClick={handleApplyClick}
-                className="w-full py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all cursor-pointer bg-[#070415] text-white hover:bg-gray-800"
-              >
-                {!isLoggedIn
-                  ? "Sign In to Apply"
-                  : !isFreelancer
-                    ? "Freelancers Only"
-                    : hasExistingApplication
-                      ? "Update Application"
-                      : "Apply"}
-              </button>
+              <div className="relative group">
+                {hasExistingApplication ? (
+                  <div className="flex items-center justify-center gap-2 w-full py-3 rounded-full bg-green-50 border border-green-200">
+                    <CheckCircle size={16} className="text-green-600" />
+                    <span className="text-sm font-bold uppercase tracking-widest text-green-700">
+                      Already Applied
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleApplyClick}
+                      disabled={isLoggedIn && !isFreelancer}
+                      className={`w-full py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${
+                        isLoggedIn && !isFreelancer
+                          ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                          : "bg-[#070415] text-white hover:bg-gray-800 cursor-pointer"
+                      }`}
+                    >
+                      {!isLoggedIn ? "Sign In to Apply" : "Apply"}
+                    </button>
+                    {isLoggedIn && !isFreelancer && (
+                      <p className="text-center text-xs text-gray-500 mt-2">
+                        Only freelancers can apply for projects
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
 
             {applyOpen && freelancerProfileId && (

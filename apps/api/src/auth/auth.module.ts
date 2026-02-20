@@ -12,7 +12,7 @@ import { UserGuard } from './user.guard';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '14d' },
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [AuthController],

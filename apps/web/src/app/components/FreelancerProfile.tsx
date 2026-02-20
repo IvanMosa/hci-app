@@ -166,9 +166,14 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
               />
             )}
           </div>
-          <h1 className="text-xl sm:text-3xl font-bold text-[#070415]">
-            {profile.userDetails?.name} {profile.userDetails?.surname}
-          </h1>
+          <div className="flex flex-col">
+            <h1 className="text-xl sm:text-3xl font-bold text-[#070415]">
+              {profile.userDetails?.name} {profile.userDetails?.surname}
+            </h1>
+            <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full w-fit mt-1">
+              Freelancer
+            </span>
+          </div>
           <button
             onClick={() => setIsEditOpen(true)}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"

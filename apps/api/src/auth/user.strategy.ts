@@ -3,12 +3,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 type UserJwtPayload = {
-  id: number;
+  id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  surname: string;
   type: string;
-  role: 'user';
 };
 
 @Injectable()
@@ -16,7 +15,7 @@ export class UserJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET || 'default_secret',
+      secretOrKey: process.env.JWT_SECRET!,
     });
   }
 
