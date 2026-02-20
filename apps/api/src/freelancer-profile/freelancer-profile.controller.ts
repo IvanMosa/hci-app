@@ -7,12 +7,13 @@ import {
   Delete,
   UseGuards,
   Query,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { FreelancerProfileService } from './freelancer-profile.service';
 import { UpdateFreelancerProfileDto } from './dto/update-freelancer-profile.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserGuard } from 'src/auth/user.guard';
-import { FreelancerGuard } from 'src/auth/freelancer.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
 
 @ApiTags('Freelancer Profile')
@@ -22,28 +23,29 @@ export class FreelancerProfileController {
     private readonly freelancerProfileService: FreelancerProfileService,
   ) {}
 
-  // @Post()
-  // create(@Body() createFreelancerProfileDto: CreateFreelancerProfileDto) {
-  //   return this.freelancerProfileService.create(createFreelancerProfileDto);
-  // }
-
   @Get()
   findAll(@Query('skip') skip: string, @Query('take') take: string) {
     return this.freelancerProfileService.findAll(+skip || 0, +take || 12);
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @UseGuards(UserGuard)
   findOne(@Param('id') id: string) {
     return this.freelancerProfileService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   @UseGuards(UserGuard)
   update(
     @Param('id') id: string,
     @Body() updateFreelancerProfileDto: UpdateFreelancerProfileDto,
+    @Req() req: any,
   ) {
+    if (req.user.id !== id) {
+      throw new ForbiddenException('You can only update your own profile');
+    }
     return this.freelancerProfileService.updateByUserId(
       id,
       updateFreelancerProfileDto,
@@ -51,6 +53,7 @@ export class FreelancerProfileController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @UseGuards(AdminGuard)
   remove(@Param('id') id: string) {
     return this.freelancerProfileService.remove(id);

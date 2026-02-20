@@ -6,9 +6,11 @@ import {
   Param,
   UseGuards,
   BadRequestException,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { CloudinaryService } from './cloudinary.service';
 import { PrismaService } from 'src/prisma.service';
 import { UserGuard } from 'src/auth/user.guard';
@@ -22,6 +24,7 @@ export class UploadController {
   ) {}
 
   @Post('profile-image/:userId')
+  @ApiBearerAuth()
   @UseGuards(UserGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -39,7 +42,14 @@ export class UploadController {
   async uploadProfileImage(
     @Param('userId') userId: string,
     @UploadedFile() file: Express.Multer.File,
+    @Req() req: any,
   ) {
+    if (req.user.id !== userId) {
+      throw new ForbiddenException(
+        'You can only upload your own profile image',
+      );
+    }
+
     if (!file) {
       throw new BadRequestException('No image file provided');
     }
@@ -59,10 +69,11 @@ export class UploadController {
   }
 
   @Post('portfolio-image/:portfolioId')
+  @ApiBearerAuth()
   @UseGuards(UserGuard)
   @UseInterceptors(
     FileInterceptor('image', {
-      limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+      limits: { fileSize: 5 * 1024 * 1024 },
       fileFilter: (_req, file, cb) => {
         if (!file.mimetype.match(/^image\/(jpeg|png|gif|webp)$/)) {
           cb(new BadRequestException('Only image files are allowed'), false);
@@ -76,7 +87,17 @@ export class UploadController {
   async uploadPortfolioImage(
     @Param('portfolioId') portfolioId: string,
     @UploadedFile() file: Express.Multer.File,
+    @Req() req: any,
   ) {
+    const portfolio = await this.prisma.portfolio.findUnique({
+      where: { id: portfolioId },
+    });
+    if (portfolio?.freelancerId !== req.user.id) {
+      throw new ForbiddenException(
+        'You can only upload images to your own portfolio',
+      );
+    }
+
     if (!file) {
       throw new BadRequestException('No image file provided');
     }
@@ -95,6 +116,7 @@ export class UploadController {
   }
 
   @Post('job-image/:jobId')
+  @ApiBearerAuth()
   @UseGuards(UserGuard)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -112,7 +134,17 @@ export class UploadController {
   async uploadJobImage(
     @Param('jobId') jobId: string,
     @UploadedFile() file: Express.Multer.File,
+    @Req() req: any,
   ) {
+    const job = await this.prisma.job.findUnique({
+      where: { id: jobId },
+    });
+    if (job?.clientId !== req.user.id) {
+      throw new ForbiddenException(
+        'You can only upload images to your own jobs',
+      );
+    }
+
     if (!file) {
       throw new BadRequestException('No image file provided');
     }

@@ -7,14 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { FreelancerGuard } from 'src/auth/freelancer.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UserGuard } from 'src/auth/user.guard';
 
 @ApiTags('Portfolio')
 @Controller('portfolio')
@@ -22,9 +22,10 @@ export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
   @Post()
-  @UseGuards(FreelancerGuard)
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  create(@Body() createPortfolioDto: CreatePortfolioDto) {
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  create(@Body() createPortfolioDto: CreatePortfolioDto, @Req() req: any) {
+    createPortfolioDto.freelancerId = req.user.id;
     return this.portfolioService.create(createPortfolioDto);
   }
 
@@ -39,17 +40,24 @@ export class PortfolioController {
   }
 
   @Patch(':id')
-  @UseGuards(FreelancerGuard)
-  update(
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  async update(
     @Param('id') id: string,
     @Body() updatePortfolioDto: UpdatePortfolioDto,
+    @Req() req: any,
   ) {
-    return this.portfolioService.update(id, updatePortfolioDto);
+    return this.portfolioService.updateIfOwner(
+      id,
+      updatePortfolioDto,
+      req.user.id,
+    );
   }
 
   @Delete(':id')
-  @UseGuards(FreelancerGuard)
-  remove(@Param('id') id: string) {
-    return this.portfolioService.remove(id);
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  async remove(@Param('id') id: string, @Req() req: any) {
+    return this.portfolioService.removeIfOwner(id, req.user.id);
   }
 }

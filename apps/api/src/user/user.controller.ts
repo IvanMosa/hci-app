@@ -1,4 +1,13 @@
-import { Controller, Get, Body, Param, Delete, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Param,
+  Delete,
+  Patch,
+  Req,
+  ForbiddenException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -19,13 +28,21 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(UserGuard)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
   @UseGuards(UserGuard)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() req: any,
+  ) {
+    if (req.user.id !== id) {
+      throw new ForbiddenException('You can only update your own account');
+    }
     return this.userService.update(id, updateUserDto);
   }
 

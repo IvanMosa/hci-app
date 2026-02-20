@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
@@ -8,11 +12,21 @@ import { ApplicationStatus, Prisma } from '@prisma/client';
 export class ApplicationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateApplicationDto) {
+  async create(dto: CreateApplicationDto) {
+    const profile = await this.prisma.freelancerProfile.findUnique({
+      where: { userId: dto.freelancerId },
+    });
+
+    if (!profile) {
+      throw new NotFoundException(
+        'No freelancer profile found for this user. Only freelancers can apply.',
+      );
+    }
+
     return this.prisma.application.create({
       data: {
         job: { connect: { id: dto.jobId } },
-        freelancer: { connect: { id: dto.freelancerId } },
+        freelancer: { connect: { id: profile.id } },
         proposal: dto.proposal,
         ...(dto.bidAmount != null && {
           bidAmount: new Prisma.Decimal(dto.bidAmount),
@@ -106,6 +120,16 @@ export class ApplicationService {
     });
   }
 
+  async findByFreelancerIfOwner(freelancerId: string, userId: string) {
+    const profile = await this.prisma.freelancerProfile.findUnique({
+      where: { id: freelancerId },
+    });
+    if (!profile || profile.userId !== userId) {
+      throw new ForbiddenException('You can only view your own applications');
+    }
+    return this.findByFreelancer(freelancerId);
+  }
+
   findByClient(clientId: string) {
     return this.prisma.application.findMany({
       where: {
@@ -123,5 +147,44 @@ export class ApplicationService {
       },
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  async updateIfOwner(id: string, dto: UpdateApplicationDto, userId: string) {
+    const application = await this.prisma.application.findUnique({
+      where: { id },
+      include: { freelancer: true },
+    });
+    if (!application || application.freelancer?.userId !== userId) {
+      throw new ForbiddenException('You can only update your own applications');
+    }
+    return this.update(id, dto);
+  }
+
+  async updateStatusIfJobOwner(
+    id: string,
+    status: 'accepted' | 'rejected',
+    userId: string,
+  ) {
+    const application = await this.prisma.application.findUnique({
+      where: { id },
+      include: { job: true },
+    });
+    if (application?.job?.clientId !== userId) {
+      throw new ForbiddenException(
+        'Only the job owner can accept/reject applications',
+      );
+    }
+    return this.updateStatus(id, status);
+  }
+
+  async removeIfOwner(id: string, userId: string) {
+    const application = await this.prisma.application.findUnique({
+      where: { id },
+      include: { freelancer: true },
+    });
+    if (!application || application.freelancer?.userId !== userId) {
+      throw new ForbiddenException('You can only delete your own applications');
+    }
+    return this.remove(id);
   }
 }

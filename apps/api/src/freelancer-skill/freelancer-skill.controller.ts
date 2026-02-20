@@ -5,12 +5,14 @@ import {
   Delete,
   Param,
   Body,
-  UsePipes,
-  ValidationPipe,
+  UseGuards,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { FreelancerSkillService } from './freelancer-skill.service';
 import { CreateFreelancerSkillDto } from './dto/create-freelancer-skill.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UserGuard } from 'src/auth/user.guard';
 
 @ApiTags('Freelancer Skill')
 @Controller('freelancer-skill')
@@ -20,8 +22,13 @@ export class FreelancerSkillController {
   ) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  create(@Body() createFreelancerSkillDto: CreateFreelancerSkillDto) {
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
+  create(
+    @Body() createFreelancerSkillDto: CreateFreelancerSkillDto,
+    @Req() req: any,
+  ) {
+    createFreelancerSkillDto.freelancerId = req.user.id;
     return this.freelancerSkillService.create(createFreelancerSkillDto);
   }
 
@@ -36,10 +43,17 @@ export class FreelancerSkillController {
   }
 
   @Delete(':freelancerId/:skillId')
+  @ApiBearerAuth()
+  @UseGuards(UserGuard)
   remove(
     @Param('freelancerId') freelancerId: string,
     @Param('skillId') skillId: string,
+    @Req() req: any,
   ) {
-    return this.freelancerSkillService.remove(freelancerId, skillId);
+    return this.freelancerSkillService.removeIfOwner(
+      freelancerId,
+      skillId,
+      req.user.id,
+    );
   }
 }
