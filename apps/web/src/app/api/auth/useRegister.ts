@@ -24,18 +24,18 @@ interface ApiError {
 const registerUser = (registerData: RegisterDataType) => {
   return api.post<RegisterDataType, JwtResponse>(
     "/auth/register",
-    registerData
+    registerData,
   );
 };
 
-export const useRegister = (onSuccessCallback: () => void) =>
+export const useRegister = (onSuccessCallback: (data: JwtResponse) => void) =>
   useMutation({
     mutationKey: ["register-user"],
     mutationFn: registerUser,
-    onSuccess: () => {
+    onSuccess: (data: JwtResponse) => {
       toast.success("You have successfully registered. You can now log in!");
 
-      onSuccessCallback();
+      onSuccessCallback(data);
     },
     onError: (error: unknown) => {
       const apiError = error as ApiError;

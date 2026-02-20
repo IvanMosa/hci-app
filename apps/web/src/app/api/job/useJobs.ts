@@ -12,7 +12,6 @@ export const useJobs = (search?: string) => {
           take: 15,
         },
       });
-      console.log(response);
       return response;
     },
     initialPageParam: 0,

@@ -44,7 +44,10 @@ export class FreelancerProfileController {
     @Param('id') id: string,
     @Body() updateFreelancerProfileDto: UpdateFreelancerProfileDto,
   ) {
-    return this.freelancerProfileService.update(id, updateFreelancerProfileDto);
+    return this.freelancerProfileService.updateByUserId(
+      id,
+      updateFreelancerProfileDto,
+    );
   }
 
   @Delete(':id')

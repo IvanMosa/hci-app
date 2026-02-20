@@ -277,10 +277,11 @@ function ClientProjects({ userId }: { userId: string }) {
                     }`}
                   >
                     <Image
-                      src={projectImg}
+                      src={job?.imageUrl || projectImg}
                       alt={job?.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      unoptimized={!!job?.imageUrl}
                     />
                     <div className="absolute top-4 right-4">
                       <span

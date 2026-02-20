@@ -11,4 +11,8 @@ export class CreateFreelancerProfileDto {
   @IsString()
   @IsOptional()
   location?: string;
+
+  @IsString()
+  @IsOptional()
+  imageUrl?: string;
 }

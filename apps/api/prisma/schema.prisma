@@ -60,6 +60,7 @@ model FreelancerProfile {
   bio        String?
   location   String?
   hourlyRate Decimal?
+  imageUrl   String?
 
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   skills     FreelancerSkill[]
@@ -90,6 +91,7 @@ model Portfolio {
   title        String
   description  String?
   url          String?
+  imageUrl     String?
 
   freelancer   FreelancerProfile @relation(fields: [freelancerId], references: [id], onDelete: Cascade)
 }
@@ -101,6 +103,7 @@ model Job {
   description String
   category  JobCategory?
   budget    Decimal?   
+  imageUrl  String?
   status    JobStatus   @default(active)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @default(now())

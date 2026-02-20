@@ -1,8 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image, { StaticImageData } from "next/image";
-import { Pencil, ExternalLink, Trash2, Plus, X, Loader2 } from "lucide-react";
+import {
+  Pencil,
+  ExternalLink,
+  Trash2,
+  Plus,
+  X,
+  Loader2,
+  Camera,
+  ImageIcon,
+} from "lucide-react";
 import { EditProfileModal } from "./EditProfileModal";
 import { useMyApplications } from "@/api/application/useMyApplications";
 import { useCreatePortfolio } from "@/api/portfolio/useCreatePortfolio";
@@ -10,6 +19,10 @@ import { useDeletePortfolio } from "@/api/portfolio/useDeletePortfolio";
 import { useAllSkills } from "@/api/skill/useAllSkills";
 import { useAddFreelancerSkill } from "@/api/skill/useAddFreelancerSkill";
 import { useRemoveFreelancerSkill } from "@/api/skill/useRemoveFreelancerSkill";
+import {
+  useUploadProfileImage,
+  useUploadPortfolioImage,
+} from "@/api/upload/useUploadImage";
 import johnDoeImg from "../../../public/john-doe.png";
 
 import nodejsImg from "../../../public/nodejs-original.png";
@@ -40,6 +53,13 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
     description: "",
     url: "",
   });
+  const [portfolioImageFile, setPortfolioImageFile] = useState<File | null>(
+    null,
+  );
+  const [portfolioImagePreview, setPortfolioImagePreview] = useState<
+    string | null
+  >(null);
+  const portfolioImageRef = useRef<HTMLInputElement>(null);
 
   const { data: applications } = useMyApplications(profile?.id || null);
   const createPortfolio = useCreatePortfolio();
@@ -47,6 +67,8 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
   const { data: allSkills } = useAllSkills();
   const addSkill = useAddFreelancerSkill();
   const removeSkill = useRemoveFreelancerSkill();
+  const uploadProfileImage = useUploadProfileImage();
+  const uploadPortfolioImage = useUploadPortfolioImage();
 
   const acceptedApps = applications?.filter((app) => app.status === "accepted");
   const balance = acceptedApps?.reduce(
@@ -75,6 +97,17 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
     removeSkill.mutate({ freelancerId: profile.id, skillId });
   };
 
+  const handlePortfolioImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) return;
+      setPortfolioImageFile(file);
+      setPortfolioImagePreview(URL.createObjectURL(file));
+    }
+  };
+
   const handlePortfolioSubmit = () => {
     if (!portfolioForm.title.trim()) return;
     createPortfolio.mutate(
@@ -85,9 +118,27 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
         url: portfolioForm.url || undefined,
       },
       {
-        onSuccess: () => {
-          setPortfolioForm({ title: "", description: "", url: "" });
-          setIsPortfolioModalOpen(false);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onSuccess: (data: any) => {
+          const portfolioId = data?.id || data?.data?.id;
+          if (portfolioImageFile && portfolioId) {
+            uploadPortfolioImage.mutate(
+              { portfolioId, file: portfolioImageFile },
+              {
+                onSuccess: () => {
+                  setPortfolioForm({ title: "", description: "", url: "" });
+                  setPortfolioImageFile(null);
+                  setPortfolioImagePreview(null);
+                  setIsPortfolioModalOpen(false);
+                },
+              },
+            );
+          } else {
+            setPortfolioForm({ title: "", description: "", url: "" });
+            setPortfolioImageFile(null);
+            setPortfolioImagePreview(null);
+            setIsPortfolioModalOpen(false);
+          }
         },
       },
     );
@@ -98,12 +149,22 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 gap-4">
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-gray-100 shrink-0">
-            <Image
-              src={johnDoeImg}
-              alt="Profile"
-              fill
-              className="object-cover"
-            />
+            {profile?.imageUrl ? (
+              <Image
+                src={profile.imageUrl}
+                alt="Profile"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <Image
+                src={johnDoeImg}
+                alt="Profile"
+                fill
+                className="object-cover"
+              />
+            )}
           </div>
           <h1 className="text-xl sm:text-3xl font-bold text-[#070415]">
             {profile.userDetails?.name} {profile.userDetails?.surname}
@@ -174,44 +235,58 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                 title: string;
                 description?: string;
                 url?: string;
+                imageUrl?: string;
               }) => (
                 <div
                   key={item.id}
-                  className="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow bg-white group relative"
+                  className="border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-shadow bg-white group relative"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-bold text-[#070415] text-base">
-                      {item.title}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      {item.url && (
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-[#070415] transition-colors"
-                        >
-                          <ExternalLink size={16} />
-                        </a>
-                      )}
-                      <button
-                        onClick={() => deletePortfolio.mutate(item.id)}
-                        className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                  {item.imageUrl && (
+                    <div className="relative w-full h-40">
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
                     </div>
+                  )}
+                  <div className="p-5">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-bold text-[#070415] text-base">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        {item.url && (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-[#070415] transition-colors"
+                          >
+                            <ExternalLink size={16} />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => deletePortfolio.mutate(item.id)}
+                          className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                    {item.description && (
+                      <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">
+                        {item.description}
+                      </p>
+                    )}
+                    {item.url && (
+                      <p className="text-xs text-gray-400 mt-2 truncate">
+                        {item.url}
+                      </p>
+                    )}
                   </div>
-                  {item.description && (
-                    <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">
-                      {item.description}
-                    </p>
-                  )}
-                  {item.url && (
-                    <p className="text-xs text-gray-400 mt-2 truncate">
-                      {item.url}
-                    </p>
-                  )}
                 </div>
               ),
             )}
@@ -333,6 +408,57 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                   placeholder="https://example.com"
                 />
               </div>
+
+              {/* Portfolio Image Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Project Image
+                </label>
+                <div
+                  className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-[#070415] transition-colors"
+                  onClick={() => portfolioImageRef.current?.click()}
+                >
+                  {portfolioImagePreview ? (
+                    <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                      <Image
+                        src={portfolioImagePreview}
+                        alt="Preview"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <ImageIcon size={32} className="text-gray-300" />
+                      <p className="text-sm text-gray-400">
+                        Click to upload an image
+                      </p>
+                      <p className="text-xs text-gray-300">
+                        JPEG, PNG, GIF, WebP (max 5MB)
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={portfolioImageRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  onChange={handlePortfolioImageChange}
+                  className="hidden"
+                />
+                {portfolioImagePreview && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPortfolioImageFile(null);
+                      setPortfolioImagePreview(null);
+                    }}
+                    className="mt-2 text-xs text-red-500 hover:text-red-700"
+                  >
+                    Remove image
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="flex justify-end gap-3 mt-8">
@@ -345,11 +471,13 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
               <button
                 onClick={handlePortfolioSubmit}
                 disabled={
-                  !portfolioForm.title.trim() || createPortfolio.isPending
+                  !portfolioForm.title.trim() ||
+                  createPortfolio.isPending ||
+                  uploadPortfolioImage.isPending
                 }
                 className="bg-[#070415] text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
               >
-                {createPortfolio.isPending ? (
+                {createPortfolio.isPending || uploadPortfolioImage.isPending ? (
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <Plus size={16} />

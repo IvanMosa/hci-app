@@ -20,7 +20,7 @@ interface ApiError {
 
 const createJob = async (data: CreateJobInput) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return api.post<CreateJobInput, any>("/job", data);
+  return api.post<CreateJobInput, any>("/job", data) as Promise<{ id: string }>;
 };
 
 export const useCreateJob = (onSuccessCallback?: () => void) => {
@@ -32,6 +32,8 @@ export const useCreateJob = (onSuccessCallback?: () => void) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["freelancer-combined"] });
       queryClient.invalidateQueries({ queryKey: ["client-jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["all-client-jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["explore-jobs"] });
 
       toast.success("Project posted successfully!");
 

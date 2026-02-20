@@ -32,7 +32,7 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
     );
 
   return (
-    <section className="bg-white pb-20">
+    <section className="bg-white pb-20 min-h-[80vh]">
       <div className="px-8 sm:px-8 md:px-10 lg:px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 lg:gap-10 xl:gap-14 mt-10 justify-items-center sm:justify-items-stretch">
         {filteredFreelancers.length === 0 && !isLoading && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
@@ -50,10 +50,11 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
           >
             <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
               <Image
-                src={defaultFreelancerImg}
+                src={f.imageUrl || defaultFreelancerImg}
                 alt={f.user?.name || "Freelancer"}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                unoptimized={!!f.imageUrl}
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">

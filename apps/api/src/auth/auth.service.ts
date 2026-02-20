@@ -100,6 +100,6 @@ export class AuthService {
       surname: newUser.surname,
     });
 
-    return { accessToken };
+    return { accessToken, userId: newUser.id, userType: newUser.type };
   }
 }

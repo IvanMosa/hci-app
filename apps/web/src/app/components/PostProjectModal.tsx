@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { X } from "lucide-react";
+import { X, ImagePlus } from "lucide-react";
 import { useCreateJob } from "@/api/job/useCreateJob";
+import { useUploadJobImage } from "@/api/upload/useUploadImage";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 const JOB_CATEGORIES = [
   { id: "web_development", label: "Web Development" },
@@ -25,7 +27,11 @@ export const PostProjectModal = ({
   onClose,
   clientId,
 }: PostProjectModalProps) => {
-  const { mutate: createJob, isPending } = useCreateJob(onClose);
+  const { mutateAsync: createJob, isPending } = useCreateJob(onClose);
+  const { mutateAsync: uploadJobImage, isPending: isUploading } =
+    useUploadJobImage();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     category: "web_development",
@@ -64,7 +70,23 @@ export const PostProjectModal = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.match(/^image\/(jpeg|png|gif|webp)$/)) {
+        toast.error("Only image files (JPEG, PNG, GIF, WebP) are allowed");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image must be less than 5MB");
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
@@ -74,13 +96,21 @@ export const PostProjectModal = ({
       return;
     }
 
-    createJob({
-      title: formData.title.trim(),
-      category: formData.category,
-      description: formData.description.trim(),
-      budget: Number(formData.budget),
-      clientId,
-    });
+    try {
+      const job = await createJob({
+        title: formData.title.trim(),
+        category: formData.category,
+        description: formData.description.trim(),
+        budget: Number(formData.budget),
+        clientId,
+      });
+
+      if (imageFile && job?.id) {
+        await uploadJobImage({ jobId: job.id, file: imageFile });
+      }
+    } catch {
+      // errors handled by the mutation hooks
+    }
   };
 
   const inputStyles =
@@ -88,8 +118,8 @@ export const PostProjectModal = ({
   const labelStyles = "block text-sm font-bold mb-2 text-[#070415]";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-[20px] w-full max-w-[800px] p-10 relative shadow-2xl overflow-y-auto max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-[20px] w-full max-w-[800px] p-5 sm:p-8 md:p-10 relative shadow-2xl overflow-y-auto max-h-[90vh]">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 text-gray-400 hover:text-black"
@@ -97,10 +127,12 @@ export const PostProjectModal = ({
           <X size={24} />
         </button>
 
-        <h2 className="text-3xl font-bold mb-8 text-[#070415]">New project</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-[#070415]">
+          New project
+        </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-8">
+        <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
             <div>
               <label className={labelStyles}>Title</label>
               <input
@@ -193,7 +225,49 @@ export const PostProjectModal = ({
             </div>
           </div>
 
-          <div className="flex justify-end gap-4 pt-4">
+          <div>
+            <label className={labelStyles}>Project Image</label>
+            <div className="mt-2">
+              {imagePreview ? (
+                <div className="relative w-full h-48 rounded-xl overflow-hidden border border-gray-200">
+                  <Image
+                    src={imagePreview}
+                    alt="Project preview"
+                    fill
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageFile(null);
+                      setImagePreview(null);
+                    }}
+                    className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-all"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-gray-400 transition-all bg-gray-50">
+                  <ImagePlus size={32} className="text-gray-400 mb-2" />
+                  <span className="text-sm text-gray-500 font-medium">
+                    Click to upload an image
+                  </span>
+                  <span className="text-xs text-gray-400 mt-1">
+                    JPEG, PNG, GIF or WebP (max 5MB)
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 pt-4">
             <button
               type="button"
               onClick={onClose}
@@ -203,10 +277,10 @@ export const PostProjectModal = ({
             </button>
             <button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || isUploading}
               className="px-12 py-3 rounded-full bg-[#070415] text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all disabled:bg-gray-400"
             >
-              {isPending ? "Posting..." : "Post"}
+              {isPending || isUploading ? "Posting..." : "Post"}
             </button>
           </div>
         </form>
