@@ -14,6 +14,7 @@ export class JobService {
         description: dto.description,
         category: dto.category as any,
         budget: new Prisma.Decimal(dto.budget),
+        imageUrl: dto.imageUrl,
         client: {
           connect: { id: dto.clientId },
         },

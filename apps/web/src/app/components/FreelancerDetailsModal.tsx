@@ -108,10 +108,11 @@ export const FreelancerDetailsModal = ({
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-gray-100 flex-shrink-0">
                 <Image
-                  src={defaultFreelancerImg}
+                  src={freelancer.imageUrl || defaultFreelancerImg}
                   alt="Avatar"
                   fill
                   className="object-cover"
+                  unoptimized={!!freelancer.imageUrl}
                 />
               </div>
 
@@ -150,11 +151,21 @@ export const FreelancerDetailsModal = ({
             }}
           >
             <Image
-              src={portfolioImg}
+              src={
+                freelancer.portfolio?.find((p) => p.imageUrl)?.imageUrl ||
+                freelancer.imageUrl ||
+                portfolioImg
+              }
               alt="Portfolio work"
               fill
               className="object-cover"
               priority
+              unoptimized={
+                !!(
+                  freelancer.portfolio?.find((p) => p.imageUrl)?.imageUrl ||
+                  freelancer.imageUrl
+                )
+              }
             />
           </div>
 
@@ -168,26 +179,39 @@ export const FreelancerDetailsModal = ({
                 {freelancer.portfolio.map((item) => (
                   <div
                     key={item.id}
-                    className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all"
+                    className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all"
                   >
-                    <h4 className="font-bold text-[#070415] text-sm">
-                      {item.title}
-                    </h4>
-                    {item.description && (
-                      <p className="text-gray-500 text-xs mt-1 line-clamp-2">
-                        {item.description}
-                      </p>
+                    {item.imageUrl && (
+                      <div className="relative w-full h-32">
+                        <Image
+                          src={item.imageUrl}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
                     )}
-                    {item.url && (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 text-xs mt-2 inline-block hover:underline"
-                      >
-                        View project →
-                      </a>
-                    )}
+                    <div className="p-4">
+                      <h4 className="font-bold text-[#070415] text-sm">
+                        {item.title}
+                      </h4>
+                      {item.description && (
+                        <p className="text-gray-500 text-xs mt-1 line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
+                      {item.url && (
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 text-xs mt-2 inline-block hover:underline"
+                        >
+                          View project →
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

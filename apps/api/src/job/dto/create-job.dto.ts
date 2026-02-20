@@ -30,4 +30,8 @@ export class CreateJobDto {
   @IsString()
   @IsNotEmpty()
   clientId: string;
+
+  @IsString()
+  @IsOptional()
+  imageUrl?: string;
 }

@@ -90,10 +90,11 @@ export const ProjectList = ({
           >
             <div className="relative overflow-hidden rounded-xl mb-4 h-[280px]">
               <Image
-                src={projectImg}
+                src={p.imageUrl || projectImg}
                 alt={p?.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                unoptimized={!!p.imageUrl}
               />
 
               <span

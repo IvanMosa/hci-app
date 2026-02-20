@@ -1,9 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { User, Briefcase, Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  User,
+  Briefcase,
+  Eye,
+  EyeOff,
+  Loader2,
+  ImagePlus,
+  X,
+} from "lucide-react";
 import { useRegister, RegisterDataType } from "@/api/index";
+import { useUploadProfileImage } from "@/api/upload/useUploadImage";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 export const RegisterForm = ({
   setIsLogin,
@@ -22,8 +32,21 @@ export const RegisterForm = ({
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { mutateAsync: uploadProfileImage, isPending: isUploading } =
+    useUploadProfileImage();
 
-  const { mutate: register, isPending } = useRegister(() => {
+  const { mutate: register, isPending } = useRegister(async (data) => {
+    if (imageFile && data.userId) {
+      try {
+        localStorage.setItem("accessToken", data.accessToken);
+        await uploadProfileImage({ userId: data.userId, file: imageFile });
+        localStorage.removeItem("accessToken");
+      } catch {
+        console.error("Failed to upload profile image");
+      }
+    }
     setIsLogin(true);
   });
 
@@ -35,6 +58,22 @@ export const RegisterForm = ({
 
   const handleUserTypeChange = (type: "FREELANCER" | "CLIENT") => {
     setRegisterData((prev) => ({ ...prev, type: type }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.match(/^image\/(jpeg|png|gif|webp)$/)) {
+        toast.error("Only image files (JPEG, PNG, GIF, WebP) are allowed");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image must be less than 5MB");
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -231,6 +270,48 @@ export const RegisterForm = ({
       </div>
 
       <div className="space-y-2">
+        <label className="block text-sm font-bold text-zinc-700">
+          Profile Photo
+        </label>
+        <div className="flex items-center gap-4">
+          {imagePreview ? (
+            <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-zinc-200">
+              <Image
+                src={imagePreview}
+                alt="Profile preview"
+                fill
+                className="object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setImageFile(null);
+                  setImagePreview(null);
+                }}
+                className="absolute top-0 right-0 bg-black/60 text-white rounded-full p-0.5 hover:bg-black/80 transition-all"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          ) : (
+            <label className="flex flex-col items-center justify-center w-20 h-20 border-2 border-dashed border-zinc-300 rounded-full cursor-pointer hover:border-zinc-400 transition-all bg-zinc-50">
+              <ImagePlus size={20} className="text-zinc-400" />
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
+          )}
+          <div className="text-xs text-zinc-400">
+            <p>Optional. JPEG, PNG, GIF or WebP.</p>
+            <p>Max 5MB.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
         <label
           htmlFor="password"
           className="block text-sm font-bold text-zinc-700"
@@ -294,10 +375,10 @@ export const RegisterForm = ({
 
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || isUploading}
         className="w-full flex justify-center items-center gap-2 bg-[#070415] text-white font-bold py-4 px-4 mt-10 rounded-full tracking-wide hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:bg-zinc-600 disabled:cursor-not-allowed"
       >
-        {isPending ? (
+        {isPending || isUploading ? (
           <>
             <Loader2 size={20} className="animate-spin" />
             SIGNING UP...

@@ -103,10 +103,11 @@ export const FeaturedFreelancers = () => {
               >
                 <div className="relative overflow-hidden rounded-xl mb-3 sm:mb-4 aspect-[4/3] sm:aspect-[340/380]">
                   <Image
-                    src={freelancer1}
+                    src={f.imageUrl || freelancer1}
                     alt={f.user?.name || "Freelancer"}
                     fill
                     className="object-cover transition-all duration-500 group-hover:scale-105"
+                    unoptimized={!!f.imageUrl}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
                     <div className="flex justify-between items-center w-full text-white">

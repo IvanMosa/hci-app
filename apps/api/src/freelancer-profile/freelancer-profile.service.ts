@@ -10,6 +10,11 @@ export class FreelancerProfileService {
     return this.prisma.freelancerProfile.findMany({
       skip,
       take,
+      where: {
+        user: {
+          type: 'freelancer',
+        },
+      },
       include: {
         user: {
           select: {
@@ -41,6 +46,17 @@ export class FreelancerProfileService {
     return this.prisma.freelancerProfile.update({
       where: { id: id },
       data: updateFreelancerProfileDto,
+    });
+  }
+
+  updateByUserId(
+    userId: string,
+    updateFreelancerProfileDto: UpdateFreelancerProfileDto,
+  ) {
+    return this.prisma.freelancerProfile.upsert({
+      where: { userId: userId },
+      update: updateFreelancerProfileDto,
+      create: { userId, ...updateFreelancerProfileDto },
     });
   }
 

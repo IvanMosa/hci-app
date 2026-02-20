@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { X, Camera, Loader2 } from "lucide-react";
 import { useUpdateUser } from "@/api/user/useUpdateUser";
 import { useUpdateFreelancerProfile } from "@/api/freelancer/useUpdateFreelancerProfile";
+import { useUploadProfileImage } from "@/api/upload/useUploadImage";
+import Image from "next/image";
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -27,13 +29,21 @@ export const EditProfileModal = ({
   const [bio, setBio] = useState("");
   const [hourlyRate, setHourlyRate] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { mutate: updateUser, isPending: isUpdatingUser } = useUpdateUser();
-  const { mutate: updateFreelancer, isPending: isUpdatingFreelancer } =
-    useUpdateFreelancerProfile();
+  const { mutateAsync: updateUserAsync, isPending: isUpdatingUser } =
+    useUpdateUser();
+  const {
+    mutateAsync: updateFreelancerAsync,
+    isPending: isUpdatingFreelancer,
+  } = useUpdateFreelancerProfile();
+  const { mutateAsync: uploadProfileImageAsync, isPending: isUploadingImage } =
+    useUploadProfileImage();
 
   useEffect(() => {
-    if (profile) {
+    if (isOpen && profile) {
       setName(profile.userDetails?.name || "");
       setSurname(profile.userDetails?.surname || "");
       setEmail(profile.userDetails?.email || "");
@@ -41,8 +51,27 @@ export const EditProfileModal = ({
       setLocation(profile?.location || "");
       setBio(profile?.bio || "");
       setHourlyRate(profile?.hourlyRate?.toString() || "");
+      setImagePreview(profile?.imageUrl || null);
+      setImageFile(null);
     }
-  }, [profile, isOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors((prev) => ({
+          ...prev,
+          image: "Image must be less than 5MB",
+        }));
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setErrors((prev) => ({ ...prev, image: "" }));
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -59,13 +88,14 @@ export const EditProfileModal = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validate()) return;
 
     const userId = profile.userDetails?.id || profile?.userId;
+    const fileToUpload = imageFile;
 
-    updateUser(
-      {
+    try {
+      await updateUserAsync({
         userId,
         data: {
           name: name.trim(),
@@ -73,32 +103,41 @@ export const EditProfileModal = ({
           email: email.trim(),
           phone: phone.trim() || undefined,
         },
-      },
-      {
-        onSuccess: () => {
-          if (type === "freelancer" && profile?.id) {
-            updateFreelancer(
-              {
-                profileId: profile.id,
-                data: {
-                  bio: bio || undefined,
-                  location: location || undefined,
-                  ...(hourlyRate ? { hourlyRate: parseFloat(hourlyRate) } : {}),
-                },
-              },
-              {
-                onSuccess: () => onClose(),
-              },
-            );
-          } else {
-            onClose();
-          }
-        },
-      },
-    );
+      });
+    } catch (e) {
+      console.error("Update user failed:", e);
+    }
+
+    try {
+      if (type === "freelancer" && userId) {
+        await updateFreelancerAsync({
+          profileId: userId,
+          data: {
+            bio: bio || undefined,
+            location: location || undefined,
+            ...(hourlyRate ? { hourlyRate: parseFloat(hourlyRate) } : {}),
+          },
+        });
+      }
+    } catch (e) {
+      console.error("Update freelancer failed:", e);
+    }
+
+    try {
+      if (fileToUpload && userId) {
+        await uploadProfileImageAsync({
+          userId,
+          file: fileToUpload,
+        });
+      }
+    } catch (e) {
+      console.error("Upload image failed:", e);
+    }
+
+    onClose();
   };
 
-  const isPending = isUpdatingUser || isUpdatingFreelancer;
+  const isPending = isUpdatingUser || isUpdatingFreelancer || isUploadingImage;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -119,6 +158,53 @@ export const EditProfileModal = ({
         </div>
 
         <div className="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
+          {/* Profile Image Upload */}
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 cursor-pointer group"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {imagePreview ? (
+                <Image
+                  src={imagePreview}
+                  alt="Profile preview"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <Camera size={28} className="text-gray-400" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <Camera size={20} className="text-white" />
+              </div>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="text-sm text-gray-500 hover:text-[#070415] transition-colors"
+            >
+              {imagePreview ? "Change Photo" : "Upload Photo"}
+            </button>
+            {isUploadingImage && (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Loader2 size={14} className="animate-spin" />
+                Uploading...
+              </div>
+            )}
+            {errors.image && (
+              <p className="text-red-500 text-xs">{errors.image}</p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1.5">

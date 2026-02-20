@@ -25,12 +25,22 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 sm:mb-16 gap-4">
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-gray-100 shrink-0">
-            <Image
-              src={johnDoeImg}
-              alt="Profile"
-              fill
-              className="object-cover"
-            />
+            {profile?.imageUrl ? (
+              <Image
+                src={profile.imageUrl}
+                alt="Profile"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            ) : (
+              <Image
+                src={johnDoeImg}
+                alt="Profile"
+                fill
+                className="object-cover"
+              />
+            )}
           </div>
           <h1 className="text-xl sm:text-3xl font-bold text-[#070415]">
             {profile.userDetails?.name} {profile.userDetails?.surname}

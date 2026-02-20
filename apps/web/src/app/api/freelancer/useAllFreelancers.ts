@@ -5,6 +5,7 @@ export interface FreelancerWithUser {
   id: string;
   bio: string | null;
   location: string | null;
+  imageUrl: string | null;
   user: {
     id: string;
     name: string;
@@ -20,6 +21,7 @@ export interface FreelancerWithUser {
     title: string;
     description: string | null;
     url: string | null;
+    imageUrl: string | null;
   }[];
 }
 

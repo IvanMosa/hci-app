@@ -22,6 +22,7 @@ export interface Job {
   description: string;
   category: JobCategory | null;
   budget: number;
+  imageUrl: string | null;
   status: JobStatus;
   createdAt: string;
   updatedAt: string;
