@@ -112,7 +112,6 @@ function ClientProjects({ userId }: { userId: string }) {
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
         allJobs.filter((job: any) => job?.status === filter);
 
-  // Auto-select first job
   useEffect(() => {
     if (filteredJobs.length > 0 && !selectedJobId) {
       setSelectedJobId(filteredJobs[0]?.id);

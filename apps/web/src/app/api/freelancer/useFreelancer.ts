@@ -35,8 +35,6 @@ const getCombinedProfile = async (userId: string): Promise<CombinedProfile> => {
     api.get(`/freelancer-profile/profile/${userId}`),
   ]);
 
-  // profileRes is the response body: { data: profile }
-  // After the axios interceptor (response.data), profileRes = { data: profile }
   const profileData = (profileRes as any)?.data ?? profileRes;
 
   return {

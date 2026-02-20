@@ -17,11 +17,6 @@ import { AdminGuard } from 'src/auth/admin.guard';
 export class SkillController {
   constructor(private readonly skillService: SkillService) {}
 
-  // @Post()
-  // create(@Body() createSkillDto: CreateSkillDto) {
-  //   return this.skillService.create(createSkillDto);
-  // }
-
   @Get()
   findAll() {
     return this.skillService.findAll();

@@ -5,11 +5,6 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class SkillService {
   constructor(private readonly prisma: PrismaService) {}
-  // create(createSkillDto: CreateSkillDto) {
-  //   return this.prisma.skill.create({
-  //     data: createSkillDto,
-  //   });
-  // }
 
   findAll() {
     return this.prisma.skill.findMany();

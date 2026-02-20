@@ -5,8 +5,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting seed...');
 
-  // 1. Clean up existing data (Order matters if you didn't have Cascade delete)
-  // Since you have Cascade, deleting Users and Skills cleans up most things.
   await prisma.application.deleteMany();
   await prisma.freelancerSkill.deleteMany();
   await prisma.portfolio.deleteMany();
@@ -17,7 +15,6 @@ async function main() {
 
   console.log('🧹 Database cleaned.');
 
-  // 2. Create Skills
   const skillsData = [
     'TypeScript',
     'React',
@@ -31,20 +28,18 @@ async function main() {
     'Data Analysis',
   ];
 
-  // We map them to promises to create them all
   const skills = await Promise.all(
     skillsData.map((name) => prisma.skill.create({ data: { name } })),
   );
 
   console.log(`✅ Created ${skills.length} skills.`);
 
-  // 3. Create Clients
   const clientUser = await prisma.user.create({
     data: {
       name: 'Alice',
       surname: 'Clientson',
       email: 'alice@client.com',
-      password: 'hashed_password_123', // In real app, hash this!
+      password: 'hashed_password_123',
       type: UserType.client,
       dateOfBirth: new Date('1985-04-12'),
       jobs: {
@@ -67,14 +62,11 @@ async function main() {
         ],
       },
     },
-    include: { jobs: true }, // Return jobs so we can link applications later
+    include: { jobs: true },
   });
 
   console.log(`✅ Created Client: ${clientUser.name}`);
 
-  // 4. Create Freelancers
-
-  // Freelancer 1: Web Developer
   const devFreelancer = await prisma.user.create({
     data: {
       name: 'Bob',
@@ -110,7 +102,6 @@ async function main() {
     include: { freelancerProfile: true },
   });
 
-  // Freelancer 2: Designer
   const designFreelancer = await prisma.user.create({
     data: {
       name: 'Charlie',
@@ -146,8 +137,6 @@ async function main() {
     `✅ Created Freelancers: ${devFreelancer.name}, ${designFreelancer.name}`,
   );
 
-  // 5. Create Applications
-  // Bob applies to Alice's "Corporate Website" job
   const jobToApply = clientUser.jobs[0]; // The first job we created for Alice
 
   if (jobToApply && devFreelancer.freelancerProfile) {

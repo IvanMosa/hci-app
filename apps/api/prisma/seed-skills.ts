@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Skills that have images in the frontend
   const skillNames = [
     'Node.js',
     'React',

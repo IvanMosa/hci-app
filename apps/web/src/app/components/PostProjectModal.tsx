@@ -108,9 +108,7 @@ export const PostProjectModal = ({
       if (imageFile && job?.id) {
         await uploadJobImage({ jobId: job.id, file: imageFile });
       }
-    } catch {
-      // errors handled by the mutation hooks
-    }
+    } catch {}
   };
 
   const inputStyles =
