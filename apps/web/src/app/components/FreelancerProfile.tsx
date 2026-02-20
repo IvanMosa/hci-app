@@ -9,12 +9,12 @@ import {
   Plus,
   X,
   Loader2,
-  Camera,
   ImageIcon,
 } from "lucide-react";
 import { EditProfileModal } from "./EditProfileModal";
 import { useMyApplications } from "@/api/application/useMyApplications";
 import { useCreatePortfolio } from "@/api/portfolio/useCreatePortfolio";
+import { useUpdatePortfolio } from "@/api/portfolio/useUpdatePortfolio";
 import { useDeletePortfolio } from "@/api/portfolio/useDeletePortfolio";
 import { useAllSkills } from "@/api/skill/useAllSkills";
 import { useAddFreelancerSkill } from "@/api/skill/useAddFreelancerSkill";
@@ -23,6 +23,7 @@ import {
   useUploadProfileImage,
   useUploadPortfolioImage,
 } from "@/api/upload/useUploadImage";
+import { toast } from "react-toastify";
 import johnDoeImg from "../../../public/john-doe.png";
 
 import nodejsImg from "../../../public/nodejs-original.png";
@@ -47,6 +48,9 @@ const AVAILABLE_SKILL_NAMES = Object.keys(SKILL_IMAGES);
 export const FreelancerProfile = ({ profile }: { profile: any }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState(false);
+  const [editingPortfolioId, setEditingPortfolioId] = useState<string | null>(
+    null,
+  );
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [portfolioForm, setPortfolioForm] = useState({
     title: "",
@@ -63,11 +67,11 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
 
   const { data: applications } = useMyApplications(profile?.id || null);
   const createPortfolio = useCreatePortfolio();
+  const updatePortfolio = useUpdatePortfolio();
   const deletePortfolio = useDeletePortfolio();
   const { data: allSkills } = useAllSkills();
   const addSkill = useAddFreelancerSkill();
   const removeSkill = useRemoveFreelancerSkill();
-  const uploadProfileImage = useUploadProfileImage();
   const uploadPortfolioImage = useUploadPortfolioImage();
 
   const acceptedApps = applications?.filter((app) => app.status === "accepted");
@@ -81,7 +85,6 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
     profile?.skills || [];
   const profileSkillIds = profileSkills.map((s) => s.skill.id);
 
-  // Filter all skills: only those that have images and are not already added
   const availableToAdd =
     allSkills?.filter(
       (s) =>
@@ -108,40 +111,105 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
     }
   };
 
+  const resetPortfolioModal = () => {
+    setPortfolioForm({ title: "", description: "", url: "" });
+    setPortfolioImageFile(null);
+    setPortfolioImagePreview(null);
+    setEditingPortfolioId(null);
+    setIsPortfolioModalOpen(false);
+  };
+
+  const openEditPortfolio = (item: {
+    id: string;
+    title: string;
+    description?: string;
+    url?: string;
+    imageUrl?: string;
+  }) => {
+    setEditingPortfolioId(item.id);
+    setPortfolioForm({
+      title: item.title,
+      description: item.description || "",
+      url: item.url || "",
+    });
+    setPortfolioImageFile(null);
+    setPortfolioImagePreview(item.imageUrl || null);
+    setIsPortfolioModalOpen(true);
+  };
+
+  const openAddPortfolio = () => {
+    setEditingPortfolioId(null);
+    setPortfolioForm({ title: "", description: "", url: "" });
+    setPortfolioImageFile(null);
+    setPortfolioImagePreview(null);
+    setIsPortfolioModalOpen(true);
+  };
+
   const handlePortfolioSubmit = () => {
     if (!portfolioForm.title.trim()) return;
-    createPortfolio.mutate(
-      {
-        freelancerId: profile.id,
-        title: portfolioForm.title,
-        description: portfolioForm.description || undefined,
-        url: portfolioForm.url || undefined,
-      },
-      {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onSuccess: (data: any) => {
-          const portfolioId = data?.id || data?.data?.id;
-          if (portfolioImageFile && portfolioId) {
-            uploadPortfolioImage.mutate(
-              { portfolioId, file: portfolioImageFile },
-              {
-                onSuccess: () => {
-                  setPortfolioForm({ title: "", description: "", url: "" });
-                  setPortfolioImageFile(null);
-                  setPortfolioImagePreview(null);
-                  setIsPortfolioModalOpen(false);
-                },
-              },
-            );
-          } else {
-            setPortfolioForm({ title: "", description: "", url: "" });
-            setPortfolioImageFile(null);
-            setPortfolioImagePreview(null);
-            setIsPortfolioModalOpen(false);
-          }
+    if (portfolioForm.url && !/^https?:\/\/.+/.test(portfolioForm.url)) {
+      toast.error("URL must start with http:// or https://");
+      return;
+    }
+
+    if (editingPortfolioId) {
+      updatePortfolio.mutate(
+        {
+          id: editingPortfolioId,
+          title: portfolioForm.title,
+          description: portfolioForm.description || undefined,
+          url: portfolioForm.url || undefined,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            if (portfolioImageFile) {
+              uploadPortfolioImage.mutate(
+                { portfolioId: editingPortfolioId, file: portfolioImageFile },
+                { onSuccess: resetPortfolioModal },
+              );
+            } else {
+              resetPortfolioModal();
+            }
+          },
+        },
+      );
+    } else {
+      createPortfolio.mutate(
+        {
+          freelancerId: profile.id,
+          title: portfolioForm.title,
+          description: portfolioForm.description || undefined,
+          url: portfolioForm.url || undefined,
+        },
+        {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onSuccess: (data: any) => {
+            const portfolioId = data?.id || data?.data?.id;
+            if (portfolioImageFile && portfolioId) {
+              uploadPortfolioImage.mutate(
+                { portfolioId, file: portfolioImageFile },
+                {
+                  onSettled: () => {
+                    resetPortfolioModal();
+                  },
+                },
+              );
+            } else {
+              resetPortfolioModal();
+            }
+            toast.success("Portfolio item added!");
+          },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onError: (error: any) => {
+            const msg = Array.isArray(error?.response?.data?.message)
+              ? error.response.data.message[0]
+              : error?.response?.data?.message ||
+                "Failed to add portfolio item";
+            toast.error(msg);
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -221,7 +289,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
             </span>
           )}
           <button
-            onClick={() => setIsPortfolioModalOpen(true)}
+            onClick={openAddPortfolio}
             className="bg-[#070415] text-white px-8 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-gray-800 transition-all cursor-pointer"
           >
             Upload Portfolio
@@ -273,6 +341,15 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                             <ExternalLink size={16} />
                           </a>
                         )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openEditPortfolio(item);
+                          }}
+                          className="text-gray-300 hover:text-[#070415] transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                        >
+                          <Pencil size={14} />
+                        </button>
                         <button
                           onClick={() => deletePortfolio.mutate(item.id)}
                           className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
@@ -348,18 +425,20 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setIsPortfolioModalOpen(false)}
+            onClick={resetPortfolioModal}
           />
           <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
             <button
-              onClick={() => setIsPortfolioModalOpen(false)}
+              onClick={resetPortfolioModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
             >
               <X size={20} />
             </button>
 
             <h2 className="text-2xl font-bold text-[#070415] mb-6">
-              Add Portfolio Item
+              {editingPortfolioId
+                ? "Edit Portfolio Item"
+                : "Add Portfolio Item"}
             </h2>
 
             <div className="space-y-4">
@@ -468,7 +547,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
 
             <div className="flex justify-end gap-3 mt-8">
               <button
-                onClick={() => setIsPortfolioModalOpen(false)}
+                onClick={resetPortfolioModal}
                 className="px-6 py-2.5 rounded-full text-sm font-medium text-gray-500 hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 Cancel
@@ -478,16 +557,21 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                 disabled={
                   !portfolioForm.title.trim() ||
                   createPortfolio.isPending ||
+                  updatePortfolio.isPending ||
                   uploadPortfolioImage.isPending
                 }
                 className="bg-[#070415] text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-2"
               >
-                {createPortfolio.isPending || uploadPortfolioImage.isPending ? (
+                {createPortfolio.isPending ||
+                updatePortfolio.isPending ||
+                uploadPortfolioImage.isPending ? (
                   <Loader2 size={16} className="animate-spin" />
+                ) : editingPortfolioId ? (
+                  <Pencil size={16} />
                 ) : (
                   <Plus size={16} />
                 )}
-                Add
+                {editingPortfolioId ? "Save" : "Add"}
               </button>
             </div>
           </div>

@@ -47,21 +47,17 @@ export class PortfolioController {
     @Body() updatePortfolioDto: UpdatePortfolioDto,
     @Req() req: any,
   ) {
-    const portfolio = await this.portfolioService.findOne(id);
-    if (portfolio?.freelancerId !== req.user.id) {
-      throw new ForbiddenException('You can only update your own portfolio');
-    }
-    return this.portfolioService.update(id, updatePortfolioDto);
+    return this.portfolioService.updateIfOwner(
+      id,
+      updatePortfolioDto,
+      req.user.id,
+    );
   }
 
   @Delete(':id')
   @ApiBearerAuth()
   @UseGuards(UserGuard)
   async remove(@Param('id') id: string, @Req() req: any) {
-    const portfolio = await this.portfolioService.findOne(id);
-    if (portfolio?.freelancerId !== req.user.id) {
-      throw new ForbiddenException('You can only delete your own portfolio');
-    }
-    return this.portfolioService.remove(id);
+    return this.portfolioService.removeIfOwner(id, req.user.id);
   }
 }
