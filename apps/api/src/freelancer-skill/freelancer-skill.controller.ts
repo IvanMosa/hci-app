@@ -50,9 +50,10 @@ export class FreelancerSkillController {
     @Param('skillId') skillId: string,
     @Req() req: any,
   ) {
-    if (req.user.id !== freelancerId) {
-      throw new ForbiddenException('You can only manage your own skills');
-    }
-    return this.freelancerSkillService.remove(freelancerId, skillId);
+    return this.freelancerSkillService.removeIfOwner(
+      freelancerId,
+      skillId,
+      req.user.id,
+    );
   }
 }

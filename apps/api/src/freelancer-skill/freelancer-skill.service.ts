@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateFreelancerSkillDto } from './dto/create-freelancer-skill.dto';
 
@@ -6,10 +10,17 @@ import { CreateFreelancerSkillDto } from './dto/create-freelancer-skill.dto';
 export class FreelancerSkillService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateFreelancerSkillDto) {
+  async create(dto: CreateFreelancerSkillDto) {
+    // dto.freelancerId is the User ID from JWT — resolve to FreelancerProfile
+    const profile = await this.prisma.freelancerProfile.findUnique({
+      where: { userId: dto.freelancerId },
+    });
+    if (!profile) {
+      throw new NotFoundException('No freelancer profile found for this user');
+    }
     return this.prisma.freelancerSkill.create({
       data: {
-        freelancer: { connect: { id: dto.freelancerId } },
+        freelancer: { connect: { id: profile.id } },
         skill: { connect: { id: dto.skillId } },
       },
       include: { skill: true },
@@ -35,5 +46,16 @@ export class FreelancerSkillService {
         freelancerId_skillId: { freelancerId, skillId },
       },
     });
+  }
+
+  async removeIfOwner(freelancerId: string, skillId: string, userId: string) {
+    // freelancerId is a FreelancerProfile ID — verify it belongs to the user
+    const profile = await this.prisma.freelancerProfile.findUnique({
+      where: { id: freelancerId },
+    });
+    if (!profile || profile.userId !== userId) {
+      throw new ForbiddenException('You can only manage your own skills');
+    }
+    return this.remove(freelancerId, skillId);
   }
 }
