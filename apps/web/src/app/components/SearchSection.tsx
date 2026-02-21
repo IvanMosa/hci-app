@@ -29,7 +29,7 @@ export const SearchSection = () => {
       <h2 className="text-[#070415] mb-4 text-center text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight">
         What are you looking for?
       </h2>
-      <p className="text-gray-400 text-base md:text-lg mb-10">
+      <p className="text-gray-600 text-base md:text-lg mb-10">
         Find the perfect freelancer or project for you
       </p>
 
@@ -87,6 +87,7 @@ export const SearchSection = () => {
         <button
           onClick={handleSearch}
           className="absolute right-7 top-1/2 -translate-y-1/2 bg-[#070415] p-2.5 rounded-full hover:bg-gray-800 transition cursor-pointer"
+          aria-label="Search"
         >
           <Search className="text-white w-4 h-4" />
         </button>
