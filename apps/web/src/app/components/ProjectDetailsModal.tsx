@@ -124,7 +124,6 @@ export const ProjectDetailsModal = ({
                 )}
               </div>
               <p className="text-[12px] sm:text-[14px] font-bold text-[#070415]">
-                {job.title}{" "}
                 <span className="text-gray-400 font-normal ml-1">
                   By {job.client?.name} {job.client?.surname}
                 </span>
