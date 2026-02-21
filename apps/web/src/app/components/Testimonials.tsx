@@ -70,7 +70,7 @@ export const Testimonials = () => {
       <div className="relative w-full max-w-4xl mx-auto mb-16 px-4 flex items-center">
         <button
           onClick={prev}
-          className="absolute -left-4 md:-left-16 text-gray-500 hover:text-white transition-colors cursor-pointer p-2"
+          className="absolute -left-4 md:-left-16 text-gray-300 hover:text-white transition-colors cursor-pointer p-2"
           aria-label="Previous testimonial"
         >
           <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" strokeWidth={1.5} />
@@ -82,7 +82,7 @@ export const Testimonials = () => {
 
         <button
           onClick={next}
-          className="absolute -right-4 md:-right-16 text-gray-500 hover:text-white transition-colors cursor-pointer p-2"
+          className="absolute -right-4 md:-right-16 text-gray-300 hover:text-white transition-colors cursor-pointer p-2"
           aria-label="Next testimonial"
         >
           <ChevronRight className="w-8 h-8 md:w-10 md:h-10" strokeWidth={1.5} />
@@ -99,23 +99,27 @@ export const Testimonials = () => {
           />
         </div>
         <div>
-          <h4 className="text-white font-bold text-lg md:text-xl">{t.name}</h4>
+          <h3 className="text-white font-bold text-lg md:text-xl">{t.name}</h3>
           <p className="text-gray-400 text-sm md:text-base">{t.role}</p>
         </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-1">
         {testimonials.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${
-              i === current
-                ? "bg-white scale-110"
-                : "bg-gray-600 hover:bg-gray-400"
-            }`}
+            className="p-3 cursor-pointer group"
             aria-label={`Go to testimonial ${i + 1}`}
-          />
+          >
+            <div
+              className={`w-2.5 h-2.5 rounded-full transition-all ${
+                i === current
+                  ? "bg-white scale-110"
+                  : "bg-gray-600 group-hover:bg-gray-400"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>

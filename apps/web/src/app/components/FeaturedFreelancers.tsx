@@ -78,6 +78,7 @@ export const FeaturedFreelancers = () => {
         <button
           onClick={prevSlide}
           className="text-white p-2 hover:opacity-70 transition cursor-pointer z-30 shrink-0"
+          aria-label="previous button"
         >
           <ChevronLeft className="w-6 h-6 md:w-12 md:h-12" strokeWidth={1} />
         </button>
@@ -143,6 +144,7 @@ export const FeaturedFreelancers = () => {
         <button
           onClick={nextSlide}
           className="text-white p-2 hover:opacity-70 transition cursor-pointer z-30 shrink-0"
+          aria-label="next button"
         >
           <ChevronRight className="w-6 h-6 md:w-12 md:h-12" strokeWidth={1} />
         </button>

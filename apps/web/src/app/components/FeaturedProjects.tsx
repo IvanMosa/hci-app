@@ -75,6 +75,7 @@ export const FeaturedProjects = () => {
         <button
           onClick={prevSlide}
           className="text-[#070415] p-1 md:p-2 hover:opacity-70 transition cursor-pointer z-20 shrink-0"
+          aria-label="previous button"
         >
           <ChevronLeft className="w-8 h-8 md:w-12 md:h-12" strokeWidth={1} />
         </button>
@@ -133,6 +134,7 @@ export const FeaturedProjects = () => {
         <button
           onClick={nextSlide}
           className="text-[#070415] p-1 md:p-2 hover:opacity-70 transition cursor-pointer z-20 shrink-0"
+          aria-label="next button"
         >
           <ChevronRight className="w-8 h-8 md:w-12 md:h-12" strokeWidth={1} />
         </button>

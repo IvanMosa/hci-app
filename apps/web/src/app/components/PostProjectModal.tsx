@@ -121,6 +121,7 @@ export const PostProjectModal = ({
         <button
           onClick={onClose}
           className="absolute top-6 right-6 text-gray-400 hover:text-black"
+          aria-label="close button"
         >
           <X size={24} />
         </button>
