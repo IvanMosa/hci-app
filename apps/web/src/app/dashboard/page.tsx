@@ -78,7 +78,7 @@ function ProjectsContent({ userId }: { userId: string }) {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <div className="w-full px-4 sm:px-8 md:px-10 lg:px-15 py-6">
-        <div className="mb-12">
+        <div>
           <h1 className="text-2xl md:text-3xl font-bold text-[#070415] mb-2">
             Welcome back, {profile.userDetails?.name}!
           </h1>
