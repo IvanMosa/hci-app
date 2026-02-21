@@ -129,7 +129,7 @@ export const Navbar = () => {
           )}
 
           {isLoggedIn && userType === "client" && (
-            <Link href="/projects" className={navItemStyles}>
+            <Link href="/dashboard" className={navItemStyles}>
               Dashboard
             </Link>
           )}
