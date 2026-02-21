@@ -115,7 +115,10 @@ export const ExploreToolbar = ({
             placeholder={`Search ${view === "projects" ? "projects" : "freelancers"}`}
             className="w-full bg-gray-100 py-2.5 sm:py-3 px-5 sm:px-6 pr-12 rounded-full text-sm focus:outline-none"
           />
-          <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#070415] p-2 rounded-full text-white">
+          <button
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#070415] p-2 rounded-full text-white"
+            aria-label="search button"
+          >
             <Search size={16} />
           </button>
         </div>
@@ -140,6 +143,7 @@ export const ExploreToolbar = ({
               <button
                 onClick={() => setShowFilters(false)}
                 className="text-gray-400 hover:text-[#070415] transition-colors cursor-pointer"
+                aria-label="close button"
               >
                 <X size={18} />
               </button>

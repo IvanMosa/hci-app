@@ -242,6 +242,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
           <button
             onClick={() => setIsEditOpen(true)}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+            aria-label="edit button"
           >
             <Pencil size={18} className="text-gray-400" />
           </button>
@@ -349,6 +350,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                         <button
                           onClick={() => deletePortfolio.mutate(item.id)}
                           className="text-gray-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                          aria-label="delete portfolio item"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -406,6 +408,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                   <button
                     onClick={() => handleRemoveSkill(s.skill.id)}
                     className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    aria-label="remove skill"
                   >
                     <X size={10} />
                   </button>
@@ -426,6 +429,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
             <button
               onClick={resetPortfolioModal}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
+              aria-label="close button"
             >
               <X size={20} />
             </button>
@@ -583,6 +587,7 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
             <button
               onClick={() => setIsSkillsModalOpen(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
+              aria-label="close button"
             >
               <X size={20} />
             </button>

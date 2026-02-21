@@ -236,6 +236,7 @@ function ClientProjects({ userId }: { userId: string }) {
             <button
               onClick={prevSlide}
               className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              aria-label="previous button"
             >
               <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -316,6 +317,7 @@ function ClientProjects({ userId }: { userId: string }) {
             <button
               onClick={nextSlide}
               className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              aria-label="next button"
             >
               <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -447,6 +449,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
                 onClick={handleSaveRate}
                 disabled={isUpdatingRate}
                 className="p-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer disabled:opacity-50"
+                aria-label="save hourly rate"
               >
                 <CheckIcon size={16} />
               </button>
@@ -459,6 +462,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
               <button
                 onClick={() => setIsEditingRate(true)}
                 className="p-1.5 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+                aria-label="edit hourly rate"
               >
                 <Pencil size={14} className="text-gray-400" />
               </button>
@@ -495,6 +499,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
             <button
               onClick={prevSlide}
               className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              aria-label="previous slide"
             >
               <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -570,6 +575,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
             <button
               onClick={nextSlide}
               className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              aria-label="next slide"
             >
               <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
             </button>
@@ -727,6 +733,7 @@ function ProjectApplicationsSection({
                         onClick={() => handleStatusChange(app.id, "rejected")}
                         disabled={isPending}
                         className="flex items-center gap-1.5 px-4 py-2 bg-white text-red-600 text-xs font-bold uppercase tracking-wider rounded-full border border-red-200 hover:bg-red-50 transition-colors disabled:opacity-50 cursor-pointer"
+                        aria-label="Reject application"
                       >
                         <X size={14} strokeWidth={2.5} />
                         Reject

@@ -87,7 +87,6 @@ export const Navbar = () => {
           />
         </Link>
 
-        {/* Hamburger button – visible on mobile */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer"

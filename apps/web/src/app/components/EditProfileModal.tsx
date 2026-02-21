@@ -152,6 +152,7 @@ export const EditProfileModal = ({
           <button
             onClick={onClose}
             className="p-1 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+            aria-label="close button"
           >
             <X size={20} />
           </button>
