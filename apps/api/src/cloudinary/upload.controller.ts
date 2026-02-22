@@ -91,8 +91,11 @@ export class UploadController {
   ) {
     const portfolio = await this.prisma.portfolio.findUnique({
       where: { id: portfolioId },
+      include: { freelancer: true },
     });
-    if (portfolio?.freelancerId !== req.user.id) {
+    // portfolio.freelancerId is the FreelancerProfile.id; req.user.id is the User.id
+    // check that the portfolio belongs to the currently authenticated user
+    if (!portfolio || portfolio.freelancer.userId !== req.user.id) {
       throw new ForbiddenException(
         'You can only upload images to your own portfolio',
       );
