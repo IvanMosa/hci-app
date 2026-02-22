@@ -394,19 +394,13 @@ function FreelancerProjects({ profile }: { profile: any }) {
   const maxIndex = Math.max(0, (applications?.length || 0) - visibleCards);
 
   const nextSlide = () => {
-    if (currentIndex < maxIndex) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0);
-    }
+    const newIndex = currentIndex < maxIndex ? currentIndex + 1 : 0;
+    setCurrentIndex(newIndex);
   };
 
   const prevSlide = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      setCurrentIndex(maxIndex);
-    }
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : maxIndex;
+    setCurrentIndex(newIndex);
   };
 
   return (
@@ -497,12 +491,13 @@ function FreelancerProjects({ profile }: { profile: any }) {
         </p>
       ) : (
         <div
-          className={`flex items-center ${applications.length > visibleCards ? "sm:-mx-12" : ""}`}
+          className={`flex items-center ${applications.length > visibleCards || (screenWidth < 640 && applications.length > 1) ? "sm:-mx-12" : ""}`}
         >
-          {applications.length > visibleCards && (
+          {(applications.length > visibleCards ||
+            (screenWidth < 640 && applications.length > 1)) && (
             <button
               onClick={prevSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
               aria-label="previous slide"
             >
               <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
@@ -511,7 +506,8 @@ function FreelancerProjects({ profile }: { profile: any }) {
 
           <div
             className={`flex-1 py-4 ${
-              applications.length > visibleCards
+              applications.length > visibleCards ||
+              (screenWidth < 640 && applications.length > 1)
                 ? "overflow-x-clip overflow-y-visible -mx-5 px-5"
                 : "overflow-visible"
             }`}
@@ -519,7 +515,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
             <div
               className="flex transition-transform duration-500 ease-in-out gap-6"
               style={{
-                transform: `translateX(-${currentIndex * (100 / visibleCards)}%)`,
+                transform: `translateX(calc(-${currentIndex * (100 / visibleCards)}% - ${currentIndex * 24}px))`,
               }}
             >
               {applications.map((app) => (
@@ -536,6 +532,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
                       alt={app.job?.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      unoptimized={!!app.job?.imageUrl}
                     />
                     <div className="absolute top-4 right-4">
                       <span
@@ -575,10 +572,11 @@ function FreelancerProjects({ profile }: { profile: any }) {
             </div>
           </div>
 
-          {applications.length > visibleCards && (
+          {(applications.length > visibleCards ||
+            (screenWidth < 640 && applications.length > 1)) && (
             <button
               onClick={nextSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
               aria-label="next slide"
             >
               <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
