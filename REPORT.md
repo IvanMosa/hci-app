@@ -332,11 +332,12 @@ Performance testing was conducted using Google PageSpeed Insights to ensure opti
 
 ### Mobile Result
 
-![Mobile Speed Test](report_images/mobile_performance.png)
+![Mobile Speed Test]
 
 ### Desktop Result
 
-![Desktop Speed Test](report_images/desktop_performance.png)
+![Desktop Speed Test](https://github.com/user-attachments/assets/1ae2978b-8c9a-45af-ad2a-9bfd401fbcbe)
+
 
 The application achieves high performance scores, ensuring fast load times and responsiveness across both mobile and desktop devices.
 
