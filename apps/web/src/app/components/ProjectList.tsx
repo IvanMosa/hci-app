@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Briefcase } from "lucide-react";
-import projectImg from "../../../public/image 4.png";
+import projectImg from "../../../public/project-default.png";
 import { useJobs } from "@/api/job/useJobs";
 import { Job } from "@/api/job/useClientJobs";
 import { ProjectDetailsModal } from "./ProjectDetailsModal";

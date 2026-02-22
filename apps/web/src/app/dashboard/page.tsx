@@ -28,7 +28,7 @@ import { useUpdateFreelancerProfile } from "@/api/freelancer/useUpdateFreelancer
 import { PostProjectModal } from "@/components/PostProjectModal";
 import { Footer } from "@/components/Footer";
 import Image from "next/image";
-import projectImg from "../../../public/image 4.png";
+import projectImg from "../../../public/project-default.png";
 
 export default function ProjectsPage() {
   const [userId, setUserId] = useState<string | null>(null);
