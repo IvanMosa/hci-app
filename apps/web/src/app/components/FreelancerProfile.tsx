@@ -21,8 +21,9 @@ import { useAddFreelancerSkill } from "@/api/skill/useAddFreelancerSkill";
 import { useRemoveFreelancerSkill } from "@/api/skill/useRemoveFreelancerSkill";
 import { useUploadPortfolioImage } from "@/api/upload/useUploadImage";
 import { toast } from "react-toastify";
-import johnDoeImg from "../../../public/user-default.png";
 
+import johnDoeImg from "../../../public/user-default.png";
+import projectDefaultImg from "../../../public/project-default.png";
 import nodejsImg from "../../../public/nodejs-original.png";
 import reactImg from "../../../public/react-original.png";
 import javaImg from "../../../public/java-original.png";
@@ -311,17 +312,15 @@ export const FreelancerProfile = ({ profile }: { profile: any }) => {
                   key={item.id}
                   className="border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-shadow bg-white group relative"
                 >
-                  {item.imageUrl && (
-                    <div className="relative w-full h-40">
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    </div>
-                  )}
+                  <div className="relative w-full h-40">
+                    <Image
+                      src={item.imageUrl ? item.imageUrl : projectDefaultImg}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      unoptimized={!!item.imageUrl}
+                    />
+                  </div>
                   <div className="p-5">
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="font-bold text-[#070415] text-base">

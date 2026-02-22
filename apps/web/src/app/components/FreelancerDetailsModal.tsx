@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import defaultFreelancerImg from "../../../public/user-default.png";
 import portfolioImg from "../../../public/image 6.png";
+import defaultProjectImg from "../../../public/project-default.png";
 import { FreelancerWithUser } from "@/api/freelancer/useAllFreelancers";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -182,17 +183,15 @@ export const FreelancerDetailsModal = ({
                     key={item.id}
                     className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all"
                   >
-                    {item.imageUrl && (
-                      <div className="relative w-full h-32">
-                        <Image
-                          src={item.imageUrl}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                          unoptimized
-                        />
-                      </div>
-                    )}
+                    <div className="relative w-full h-32">
+                      <Image
+                        src={item.imageUrl || defaultProjectImg}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
                     <div className="p-4">
                       <h4 className="font-bold text-[#070415] text-sm">
                         {item.title}
