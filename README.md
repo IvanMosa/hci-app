@@ -18,7 +18,7 @@
 
 ### Semester Project
 
-- Link to your production version: [**Production Version**](https://web-production-2aeb9.up.railway.app/)
+- Link to your production version: [**Production Version**](https://freelancia.up.railway.app/)
 - Link to your final report: [**Final Report**](https://github.com/IvanMosa/hci-app/blob/main/REPORT.md)
 
 <!-- Add more as necessary -->
