@@ -100,7 +100,7 @@ export const FeaturedProjects = () => {
               >
                 <div className="relative overflow-hidden rounded-xl mb-3 sm:mb-4 aspect-[4/3] sm:aspect-[340/380]">
                   <Image
-                    src={projectImg}
+                    src={p.imageUrl || projectImg}
                     alt={p.title}
                     fill
                     className="object-cover transition-all duration-500 group-hover:scale-105"
