@@ -159,7 +159,6 @@ export const EditProfileModal = ({
         </div>
 
         <div className="p-6 space-y-5 max-h-[60vh] overflow-y-auto">
-          {/* Profile Image Upload */}
           <div className="flex flex-col items-center gap-3">
             <div
               className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 cursor-pointer group"
@@ -281,23 +280,28 @@ export const EditProfileModal = ({
             <input
               type="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+                const validChars = e.target.value.replace(/[^0-9+\s-]/g, "");
+                setPhone(validChars);
+              }}
               placeholder="e.g. +385 95 123 4567"
               className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-[#070415] focus:outline-none focus:border-[#070415] transition-colors"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">
-              Location
-            </label>
-            <input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-[#070415] focus:outline-none focus:border-[#070415] transition-colors"
-            />
-          </div>
+          {type === "freelancer" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1.5">
+                Location
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm text-[#070415] focus:outline-none focus:border-[#070415] transition-colors"
+              />
+            </div>
+          )}
 
           {type === "freelancer" && (
             <>

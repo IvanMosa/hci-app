@@ -43,6 +43,7 @@ export class UserController {
     if (req.user.id !== id) {
       throw new ForbiddenException('You can only update your own account');
     }
+
     return this.userService.update(id, updateUserDto);
   }
 
