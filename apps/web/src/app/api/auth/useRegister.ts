@@ -8,7 +8,7 @@ export type RegisterDataType = {
   surname: string;
   email: string;
   dateOfBirth: string;
-  type: "FREELANCER" | "CLIENT";
+  type: "freelancer" | "client";
   password: string;
   confirmPassword: string;
 };

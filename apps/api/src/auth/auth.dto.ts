@@ -65,6 +65,10 @@ export class RegistrationDto {
   @ApiProperty({ example: 'password123' })
   password: string;
 
+  @IsString()
+  @MinLength(8)
+  confirmPassword: string;
+
   @IsEnum(UserType)
   @ApiProperty({
     example: UserType.freelancer,

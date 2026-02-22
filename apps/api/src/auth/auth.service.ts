@@ -68,6 +68,10 @@ export class AuthService {
       throw new BadRequestException('User with this email already exists!');
     }
 
+    if (register.password !== register.confirmPassword) {
+      throw new BadRequestException('Passwords do not match!');
+    }
+
     const saltRounds = 10;
     const hashedPassword = await hash(register.password, saltRounds);
 
