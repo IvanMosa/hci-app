@@ -53,6 +53,7 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
           <button
             onClick={() => setIsEditOpen(true)}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+            aria-label="edit button"
           >
             <Pencil size={18} className="text-gray-400" />
           </button>

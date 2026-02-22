@@ -4,6 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import userImage from "../../../public/Ellipse 2.png";
+import userImage1 from "../../../public/user-image-1.png";
+import userImage2 from "../../../public/user-image-2.png";
+import userImage3 from "../../../public/user-image-3.png";
+import userImage4 from "../../../public/user-image-4.png";
 
 const testimonials = [
   {
@@ -11,30 +15,35 @@ const testimonials = [
       "Freelancia helped me find consistent work within the first week. The clients here actually value quality, and the platform makes everything simple.",
     name: "Ana P.",
     role: "Creative Studio Founder",
+    image: userImage,
   },
   {
     quote:
       "As a developer, I was tired of competing on price. Here, clients actually look at your portfolio and skills. I landed my best contract through Freelancia.",
     name: "Marko S.",
     role: "Full-Stack Developer",
+    image: userImage1,
   },
   {
     quote:
       "I posted a project and had five qualified applicants within 24 hours. The quality of freelancers on this platform is outstanding. Both freelancers and clients win here.",
     name: "Elena R.",
     role: "Marketing Director",
+    image: userImage2,
   },
   {
     quote:
       "The application process is so smooth. I love being able to showcase my portfolio and let my work speak for itself. Highly recommended!",
     name: "David K.",
     role: "UI/UX Designer",
+    image: userImage3,
   },
   {
     quote:
       "We've hired three freelancers through Freelancia and every single one delivered exceptional work. This is now our go-to platform.",
     name: "Sara M.",
     role: "Startup Co-Founder",
+    image: userImage4,
   },
 ];
 
@@ -61,7 +70,7 @@ export const Testimonials = () => {
       <div className="relative w-full max-w-4xl mx-auto mb-16 px-4 flex items-center">
         <button
           onClick={prev}
-          className="absolute -left-4 md:-left-16 text-gray-500 hover:text-white transition-colors cursor-pointer p-2"
+          className="absolute -left-4 md:-left-16 text-gray-300 hover:text-white transition-colors cursor-pointer p-2"
           aria-label="Previous testimonial"
         >
           <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" strokeWidth={1.5} />
@@ -73,7 +82,7 @@ export const Testimonials = () => {
 
         <button
           onClick={next}
-          className="absolute -right-4 md:-right-16 text-gray-500 hover:text-white transition-colors cursor-pointer p-2"
+          className="absolute -right-4 md:-right-16 text-gray-300 hover:text-white transition-colors cursor-pointer p-2"
           aria-label="Next testimonial"
         >
           <ChevronRight className="w-8 h-8 md:w-10 md:h-10" strokeWidth={1.5} />
@@ -82,26 +91,35 @@ export const Testimonials = () => {
 
       <div className="flex flex-col items-center gap-4 mb-12">
         <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-gray-700">
-          <Image src={userImage} alt={t.name} fill className="object-cover" />
+          <Image
+            src={t.image ?? userImage}
+            alt={t.name}
+            fill
+            className="object-cover"
+          />
         </div>
         <div>
-          <h4 className="text-white font-bold text-lg md:text-xl">{t.name}</h4>
+          <h3 className="text-white font-bold text-lg md:text-xl">{t.name}</h3>
           <p className="text-gray-400 text-sm md:text-base">{t.role}</p>
         </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-1">
         {testimonials.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${
-              i === current
-                ? "bg-white scale-110"
-                : "bg-gray-600 hover:bg-gray-400"
-            }`}
+            className="p-3 cursor-pointer group"
             aria-label={`Go to testimonial ${i + 1}`}
-          />
+          >
+            <div
+              className={`w-2.5 h-2.5 rounded-full transition-all ${
+                i === current
+                  ? "bg-white scale-110"
+                  : "bg-gray-600 group-hover:bg-gray-400"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>

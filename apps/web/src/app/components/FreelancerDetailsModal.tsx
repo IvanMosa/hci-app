@@ -99,6 +99,7 @@ export const FreelancerDetailsModal = ({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 sm:top-6 sm:right-8 text-gray-400 hover:text-black z-20"
+          aria-label="close button"
         >
           <X size={28} className="cursor-pointer" />
         </button>

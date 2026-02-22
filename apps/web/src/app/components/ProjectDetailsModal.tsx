@@ -61,6 +61,7 @@ export const ProjectDetailsModal = ({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 sm:top-6 sm:right-8 text-gray-400 hover:text-black z-20 cursor-pointer"
+          aria-label="close button"
         >
           <X size={28} />
         </button>
@@ -106,11 +107,24 @@ export const ProjectDetailsModal = ({
             </div>
 
             <div className="flex items-center gap-2 mb-6 sm:mb-10">
-              <div className="w-6 h-6 bg-red-600 rounded-sm flex items-center justify-center text-[8px] text-white font-bold flex-shrink-0">
-                RISK
+              <div className="w-6 h-6 rounded-sm flex-shrink-0 relative overflow-hidden">
+                {job.imageUrl ? (
+                  <div className="w-6 h-6 rounded-sm flex-shrink-0 relative overflow-hidden">
+                    <Image
+                      src={job.imageUrl || projectImg}
+                      alt={job.title}
+                      fill
+                      className="object-cover"
+                      unoptimized={!!job.imageUrl}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 bg-red-600 rounded-sm flex items-center justify-center text-[8px] text-white font-bold flex-shrink-0">
+                    RISK
+                  </div>
+                )}
               </div>
               <p className="text-[12px] sm:text-[14px] font-bold text-[#070415]">
-                {job.title}{" "}
                 <span className="text-gray-400 font-normal ml-1">
                   By {job.client?.name} {job.client?.surname}
                 </span>

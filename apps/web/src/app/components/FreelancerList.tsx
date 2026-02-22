@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import {
   FreelancerWithUser,
   useAllFreelancers,
@@ -43,8 +43,12 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
       <div className="px-8 sm:px-8 md:px-10 lg:px-15 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-8 lg:gap-10 xl:gap-14 mt-10 justify-items-center sm:justify-items-stretch">
         {filteredFreelancers.length === 0 && !isLoading && (
           <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
-            <p className="text-xl font-medium">
-              No freelancers found for &ldquo;{searchQuery}&rdquo;
+            <Users size={48} className="mb-4 text-gray-300" />
+            <p className="text-xl font-medium">No freelancers found</p>
+            <p className="text-sm text-gray-400 mt-2">
+              {searchQuery
+                ? `No results matching "${searchQuery}"`
+                : "Try adjusting your filters to find what you're looking for"}
             </p>
           </div>
         )}
