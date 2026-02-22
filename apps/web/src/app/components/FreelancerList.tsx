@@ -7,7 +7,7 @@ import {
   FreelancerWithUser,
   useAllFreelancers,
 } from "@/api/freelancer/useAllFreelancers";
-import defaultFreelancerImg from "../../../public/john-doe.png";
+import defaultFreelancerImg from "../../../public/user-default.png";
 import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
 // Na vrhu filea dodaj importove
 import nodejsImg from "../../../public/nodejs-original.png";

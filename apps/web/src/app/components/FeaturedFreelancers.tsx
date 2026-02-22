@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
-import freelancer1 from "../../../public/john-doe.png";
+import freelancer1 from "../../../public/user-default.png";
 import skillsIcon from "../../../public/traits.png";
 import { useState, useEffect } from "react";
 import {

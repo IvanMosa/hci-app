@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
-import defaultFreelancerImg from "../../../public/john-doe.png";
+import defaultFreelancerImg from "../../../public/user-default.png";
 import portfolioImg from "../../../public/image 6.png";
 import { FreelancerWithUser } from "@/api/freelancer/useAllFreelancers";
 import { toast } from "react-toastify";

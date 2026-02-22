@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Pencil, Briefcase, FileText } from "lucide-react";
-import johnDoeImg from "../../../public/john-doe.png";
+import johnDoeImg from "../../../public/user-default.png";
 import { useAllClientJobs } from "@/api/job/useAllClientJobs";
 import { useClientApplications } from "@/api/application/useClientApplications";
 import { EditProfileModal } from "./EditProfileModal";

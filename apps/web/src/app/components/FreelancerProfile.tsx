@@ -21,7 +21,7 @@ import { useAddFreelancerSkill } from "@/api/skill/useAddFreelancerSkill";
 import { useRemoveFreelancerSkill } from "@/api/skill/useRemoveFreelancerSkill";
 import { useUploadPortfolioImage } from "@/api/upload/useUploadImage";
 import { toast } from "react-toastify";
-import johnDoeImg from "../../../public/john-doe.png";
+import johnDoeImg from "../../../public/user-default.png";
 
 import nodejsImg from "../../../public/nodejs-original.png";
 import reactImg from "../../../public/react-original.png";
