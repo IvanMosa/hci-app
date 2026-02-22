@@ -7,9 +7,25 @@ import {
   FreelancerWithUser,
   useAllFreelancers,
 } from "@/api/freelancer/useAllFreelancers";
-import traitsImg from "../../../public/traits.png";
 import defaultFreelancerImg from "../../../public/john-doe.png";
 import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
+// Na vrhu filea dodaj importove
+import nodejsImg from "../../../public/nodejs-original.png";
+import reactImg from "../../../public/react-original.png";
+import javaImg from "../../../public/java-original.png";
+import pgadminImg from "../../../public/pgadmin-original.png";
+import html5Img from "../../../public/html5-original.png";
+import figmaImg from "../../../public/figma-original.png";
+import { StaticImageData } from "next/image";
+
+const SKILL_IMAGES: Record<string, StaticImageData> = {
+  "Node.js": nodejsImg,
+  React: reactImg,
+  Java: javaImg,
+  PostgreSQL: pgadminImg,
+  HTML5: html5Img,
+  Figma: figmaImg,
+};
 
 export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
   const [selectedFreelancer, setSelectedFreelancer] =
@@ -85,15 +101,27 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
                   {f.user?.type}
                 </p>
               </div>
-
-              <div className="pt-1">
-                <Image
-                  src={traitsImg}
-                  alt="Freelancer traits"
-                  width={85}
-                  height={24}
-                  className="object-contain"
-                />
+              <div className="flex pt-1">
+                {f.skills
+                  ?.filter((s) => SKILL_IMAGES[s.skill?.name])
+                  .slice(0, 4)
+                  .map((s, index) => (
+                    <div
+                      key={s.skill.id}
+                      className="w-8 h-8 rounded-full border-2 border-white shadow-sm flex items-center justify-center p-1.5 bg-white"
+                      style={{ marginLeft: index === 0 ? 0 : "-5px" }}
+                      title={s.skill.name}
+                    >
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={SKILL_IMAGES[s.skill.name]}
+                          alt={s.skill.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

@@ -14,7 +14,7 @@ export interface FreelancerWithUser {
     type: string;
   };
   skills: {
-    skill: { name: string };
+    skill: { id: number; name: string };
   }[];
   portfolio?: {
     id: string;
