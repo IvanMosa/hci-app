@@ -528,7 +528,7 @@ function FreelancerProjects({ profile }: { profile: any }) {
                 >
                   <div className="relative overflow-hidden rounded-xl mb-4 h-[200px] sm:h-[280px]">
                     <Image
-                      src={projectImg}
+                      src={app.job?.imageUrl || projectImg}
                       alt={app.job?.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"

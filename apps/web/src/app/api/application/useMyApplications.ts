@@ -17,6 +17,7 @@ export interface ApplicationWithJob {
     status: string;
     category: string | null;
     createdAt: string;
+    imageUrl: string | null;
     client: {
       name: string;
       surname: string;
