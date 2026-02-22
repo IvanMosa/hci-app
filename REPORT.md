@@ -209,7 +209,13 @@ The landing page introduces the platform with a dynamic hero section featuring t
 A unified discovery page where users can toggle between browsing freelancers and projects, with real-time search filtering and infinite scroll pagination. Clicking any card opens a detailed modal overlay.
 <br>
 
-![Explore Page](report_images/explore.png)
+
+- Browse Projects
+<img width="2559" height="1395" alt="Snimka zaslona 2026-02-22 221012" src="https://github.com/user-attachments/assets/bf806663-053b-4072-8ac0-761e18cf58bd" />
+<br>
+
+- Browse Freelancers
+<img width="2559" height="1395" alt="Snimka zaslona 2026-02-22 221023" src="https://github.com/user-attachments/assets/d58b0300-1706-4811-b619-131b396d4ca3" />
 
 ### Login Page
 
@@ -224,21 +230,26 @@ A split-screen layout with a hero section on the left and an authentication form
 Role-specific dashboards showing relevant statistics and activity. Clients see their project stats and project list; freelancers see application stats and their application history.
 <br>
 
-![Dashboard](report_images/dashboard.png)
-
-### Projects Page
-
-Clients manage their projects through a horizontal carousel and review freelancer applications with accept/reject actions. Freelancers see a carousel of projects they've applied to with status indicators.
+- Freelancer
+<img width="2559" height="1397" alt="Snimka zaslona 2026-02-22 220911" src="https://github.com/user-attachments/assets/56857010-59a6-4dbb-a1a0-92e2d14b5821" />
 <br>
 
-![Projects Page](report_images/projects.png)
+- Client
+<img width="2559" height="1394" alt="Snimka zaslona 2026-02-22 220938" src="https://github.com/user-attachments/assets/60e6bfad-b726-4c3a-ad77-34f18b4c63e4" />
+
 
 ### Profile Page
 
 Detailed user profiles showcasing personal information, skills with technology icons, portfolio items, and role-specific content (posted projects for clients, application history for freelancers).
 <br>
 
-![Profile Page](report_images/profile.png)
+- Freelancer
+<img width="2559" height="1395" alt="Snimka zaslona 2026-02-22 220841" src="https://github.com/user-attachments/assets/d210c546-1875-4363-be87-a8d5d24ed256" />
+<br>
+
+- Client
+<img width="2559" height="1396" alt="Snimka zaslona 2026-02-22 220953" src="https://github.com/user-attachments/assets/e6f93e00-6730-4bda-9306-96e27aeb0213" />
+
 
 ---
 
