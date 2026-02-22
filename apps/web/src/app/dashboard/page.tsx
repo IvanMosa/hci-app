@@ -258,6 +258,7 @@ function ClientProjects({ userId }: { userId: string }) {
                 transform: `translateX(calc(-${currentIndex * (100 / visibleCards)}% - ${currentIndex * 24}px))`,
               }}
             >
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {filteredJobs.map((job: any) => (
                 <div
                   key={job?.id}
