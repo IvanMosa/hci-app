@@ -1,4 +1,4 @@
-import { IsString, IsUUID, IsOptional } from 'class-validator';
+import { IsString, IsUUID, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateFreelancerProfileDto {
   @IsUUID()
@@ -15,4 +15,8 @@ export class CreateFreelancerProfileDto {
   @IsString()
   @IsOptional()
   imageUrl?: string;
+
+  @IsNumber()
+  @IsOptional()
+  hourlyRate?: number;
 }

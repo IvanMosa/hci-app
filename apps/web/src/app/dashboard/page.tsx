@@ -373,11 +373,11 @@ function FreelancerProjects({ profile }: { profile: any }) {
   const acceptedApps = applications?.filter((app) => app.status === "accepted");
 
   const handleSaveRate = () => {
-    if (!profile?.id) return;
+    if (!profile?.userId) return;
     updateProfile(
       {
-        profileId: profile.id,
-        data: { hourlyRate: rateValue ? Number(rateValue) : undefined },
+        profileId: profile.userId,
+        data: { ...(rateValue ? { hourlyRate: parseFloat(rateValue) } : {}) },
       },
       {
         onSuccess: () => setIsEditingRate(false),
