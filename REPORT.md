@@ -332,7 +332,8 @@ Performance testing was conducted using Google PageSpeed Insights to ensure opti
 
 ### Mobile Result
 
-![Mobile Speed Test]
+![Mobile Speed Test](<img width="1191" height="1233" alt="Screenshot 2026-02-22 164206" src="https://github.com/user-attachments/assets/ba22a2af-7410-420f-9afa-973c7b5a6f77" />)
+
 
 ### Desktop Result
 
