@@ -25,7 +25,7 @@ export const RegisterForm = ({
     surname: "",
     email: "",
     dateOfBirth: "",
-    type: "CLIENT",
+    type: "client",
     password: "",
     confirmPassword: "",
   });
@@ -56,7 +56,7 @@ export const RegisterForm = ({
     if (errors[id]) setErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
-  const handleUserTypeChange = (type: "FREELANCER" | "CLIENT") => {
+  const handleUserTypeChange = (type: "freelancer" | "client") => {
     setRegisterData((prev) => ({ ...prev, type: type }));
   };
 
@@ -239,10 +239,10 @@ export const RegisterForm = ({
         <div className="grid grid-cols-2 gap-4">
           <button
             type="button"
-            onClick={() => handleUserTypeChange("FREELANCER")}
+            onClick={() => handleUserTypeChange("freelancer")}
             disabled={isPending}
             className={`flex flex-col items-center justify-center p-3 border rounded-xl transition-all ${
-              registerData.type === "FREELANCER"
+              registerData.type === "freelancer"
                 ? "border-black bg-zinc-50 text-black ring-1 ring-black"
                 : "border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
             } disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -254,10 +254,10 @@ export const RegisterForm = ({
 
           <button
             type="button"
-            onClick={() => handleUserTypeChange("CLIENT")}
+            onClick={() => handleUserTypeChange("client")}
             disabled={isPending}
             className={`flex flex-col items-center justify-center p-3 border rounded-xl transition-all ${
-              registerData.type === "CLIENT"
+              registerData.type === "client"
                 ? "border-black bg-zinc-50 text-black ring-1 ring-black"
                 : "border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
             } disabled:opacity-50 disabled:cursor-not-allowed`}
