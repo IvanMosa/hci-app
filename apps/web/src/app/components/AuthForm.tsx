@@ -17,7 +17,7 @@ export const AuthForm = () => {
               !isLogin
                 ? "bg-[#070415] text-white shadow-md"
                 : "text-zinc-500 hover:text-black bg-transparent"
-            }`}
+            } cursor-pointer`}
           >
             Sign Up
           </button>
@@ -27,7 +27,7 @@ export const AuthForm = () => {
               isLogin
                 ? "bg-[#070415] text-white shadow-md"
                 : "text-zinc-500 hover:text-black bg-transparent"
-            }`}
+            } cursor-pointer`}
           >
             Log In
           </button>

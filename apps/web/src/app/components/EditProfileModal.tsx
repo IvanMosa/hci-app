@@ -190,7 +190,7 @@ export const EditProfileModal = ({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="text-sm text-gray-500 hover:text-[#070415] transition-colors"
+              className="text-sm text-gray-500 hover:text-[#070415] transition-colors cursor-pointer"
             >
               {imagePreview ? "Change Photo" : "Upload Photo"}
             </button>

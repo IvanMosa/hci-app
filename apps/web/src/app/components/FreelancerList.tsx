@@ -138,7 +138,7 @@ export const FreelancerList = ({ searchQuery }: { searchQuery: string }) => {
           <button
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
-            className="bg-[#070415] text-white px-8 py-3 rounded-full font-bold text-[12px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-sm disabled:bg-gray-400"
+            className="bg-[#070415] text-white px-8 py-3 rounded-full font-bold text-[12px] uppercase tracking-widest hover:bg-gray-800 transition-all shadow-sm disabled:bg-gray-400 cursor-pointer"
           >
             {isFetchingNextPage ? "Loading..." : "Load More Freelancers"}
           </button>
