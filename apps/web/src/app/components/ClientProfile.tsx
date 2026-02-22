@@ -66,7 +66,6 @@ export const ClientProfile = ({ profile }: { profile: any }) => {
             Personal Information
           </h2>
           <div className="text-gray-500 text-[15px] space-y-1 font-medium leading-relaxed">
-            <p>{profile?.location || "Split, Croatia"}</p>
             <p>{profile.userDetails?.email}</p>
             <p>{profile.userDetails?.phone || "No phone number"}</p>
           </div>
