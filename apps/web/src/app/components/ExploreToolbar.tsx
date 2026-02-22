@@ -255,15 +255,16 @@ export const ExploreToolbar = ({
                     onChange={(e) =>
                       handleFilterChange(
                         "maxPrice",
-                        Math.min(
-                          50000,
-                          Math.max(
-                            Number(e.target.value) || 0,
-                            projectFilters.minPrice,
-                          ),
-                        ),
+                        Number(e.target.value) || 0,
                       )
                     }
+                    onBlur={(e) => {
+                      const val = Number(e.target.value) || 0;
+                      handleFilterChange(
+                        "maxPrice",
+                        Math.min(50000, Math.max(val, projectFilters.minPrice)),
+                      );
+                    }}
                     placeholder="Max"
                     className="w-full bg-white border border-gray-200 rounded-xl pl-7 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#070415]/20 focus:border-[#070415] transition-all"
                   />
