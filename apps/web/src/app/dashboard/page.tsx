@@ -147,18 +147,18 @@ function ClientProjects({ userId }: { userId: string }) {
   const maxIndex = Math.max(0, filteredJobs.length - visibleCards);
 
   const nextSlide = () => {
-    if (currentIndex < maxIndex) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0);
+    const newIndex = currentIndex < maxIndex ? currentIndex + 1 : 0;
+    setCurrentIndex(newIndex);
+    if (screenWidth < 640) {
+      setSelectedJobId(filteredJobs[newIndex]?.id);
     }
   };
 
   const prevSlide = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      setCurrentIndex(maxIndex);
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : maxIndex;
+    setCurrentIndex(newIndex);
+    if (screenWidth < 640) {
+      setSelectedJobId(filteredJobs[newIndex]?.id);
     }
   };
 
@@ -232,10 +232,12 @@ function ClientProjects({ userId }: { userId: string }) {
         <div
           className={`flex items-center ${filteredJobs.length > visibleCards ? "sm:-mx-12" : ""}`}
         >
-          {filteredJobs.length > visibleCards && (
+          {/* Strelica lijevo - na mobitelu uvijek vidljiva ako ima više od 1 */}
+          {(filteredJobs.length > visibleCards ||
+            (screenWidth < 640 && filteredJobs.length > 1)) && (
             <button
               onClick={prevSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
               aria-label="previous button"
             >
               <ChevronLeft className="w-8 h-8" strokeWidth={1.5} />
@@ -244,7 +246,8 @@ function ClientProjects({ userId }: { userId: string }) {
 
           <div
             className={`flex-1 py-4 ${
-              filteredJobs.length > visibleCards
+              filteredJobs.length > visibleCards ||
+              (screenWidth < 640 && filteredJobs.length > 1)
                 ? "overflow-x-clip overflow-y-visible -mx-5 px-5"
                 : "overflow-visible"
             }`}
@@ -252,10 +255,9 @@ function ClientProjects({ userId }: { userId: string }) {
             <div
               className="flex transition-transform duration-500 ease-in-out gap-6"
               style={{
-                transform: `translateX(-${currentIndex * (100 / visibleCards)}%)`,
+                transform: `translateX(calc(-${currentIndex * (100 / visibleCards)}% - ${currentIndex * 24}px))`,
               }}
             >
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {filteredJobs.map((job: any) => (
                 <div
                   key={job?.id}
@@ -313,10 +315,12 @@ function ClientProjects({ userId }: { userId: string }) {
             </div>
           </div>
 
-          {filteredJobs.length > visibleCards && (
+          {/* Strelica desno - na mobitelu uvijek vidljiva ako ima više od 1 */}
+          {(filteredJobs.length > visibleCards ||
+            (screenWidth < 640 && filteredJobs.length > 1)) && (
             <button
               onClick={nextSlide}
-              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0 hidden sm:block"
+              className="text-[#070415] p-2 hover:opacity-70 transition cursor-pointer shrink-0"
               aria-label="next button"
             >
               <ChevronRight className="w-8 h-8" strokeWidth={1.5} />
