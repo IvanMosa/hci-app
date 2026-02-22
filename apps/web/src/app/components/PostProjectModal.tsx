@@ -120,7 +120,7 @@ export const PostProjectModal = ({
       <div className="bg-white rounded-[20px] w-full max-w-[800px] p-5 sm:p-8 md:p-10 relative shadow-2xl overflow-y-auto max-h-[90vh]">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 text-gray-400 hover:text-black"
+          className="absolute top-6 right-6 text-gray-400 hover:text-black cursor-pointer"
           aria-label="close button"
         >
           <X size={24} />
@@ -270,14 +270,14 @@ export const PostProjectModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-10 py-3 rounded-full border border-gray-300 text-sm font-bold uppercase tracking-widest hover:bg-gray-50 transition-all"
+              className="px-10 py-3 rounded-full border border-gray-300 text-sm font-bold uppercase tracking-widest hover:bg-gray-50 transition-all cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isPending || isUploading}
-              className="px-12 py-3 rounded-full bg-[#070415] text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all disabled:bg-gray-400"
+              className="px-12 py-3 rounded-full bg-[#070415] text-white text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all disabled:bg-gray-400 cursor-pointer"
             >
               {isPending || isUploading ? "Posting..." : "Post"}
             </button>
