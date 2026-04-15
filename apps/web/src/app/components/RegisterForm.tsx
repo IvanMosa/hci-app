@@ -42,7 +42,6 @@ export const RegisterForm = ({
       try {
         localStorage.setItem("accessToken", data.accessToken);
         await uploadProfileImage({ userId: data.userId, file: imageFile });
-        localStorage.removeItem("accessToken");
       } catch {
         console.error("Failed to upload profile image");
       }
