@@ -117,6 +117,29 @@ useInfiniteQuery({
 
 ---
 
+## Code style
+
+### No explanatory comments
+
+**Do not add comments when writing or editing code.** This includes:
+
+- Inline `//` or `/* */` comments that explain *why* a change was made or *what* a line does
+- JSX section markers like `{/* Type-first — sets context (Hick's law) */}`
+- Multi-line block comments above decorators, hooks, or function declarations that justify the choice
+- TODO/NOTE/FIXME comments unless the user explicitly asks for one
+- "Removed", "renamed", or "see PR #X" annotations
+
+The code itself, the commit message, and the chat reply are where rationale belongs. Comments in the file become stale, leak prompt context into the codebase, and add noise the user has to delete by hand.
+
+**Exceptions** (apply only when genuinely needed, not by default):
+- A comment that already exists in the file and would be wrong after the edit — update it.
+- The user explicitly asks for a comment ("add a JSDoc here", "leave a TODO").
+- A non-obvious workaround for a real bug or platform quirk where the next reader will reasonably ask "why is this here?" — keep it to one line and reference the underlying issue (e.g. `// Safari <16 strips trailing slash — keep raw`).
+
+When in doubt, omit the comment. Do not add comments to "be helpful" or to summarize what was just done.
+
+---
+
 ## HCI Principles — Refactoring Direction
 
 > **The current UI does not adequately follow HCI best practices. Future work should systematically address these. When touching any UI code, apply the relevant principles below.**

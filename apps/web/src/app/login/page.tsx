@@ -12,6 +12,10 @@ export default function Home() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
+    document.title = "Log In | Freelancia";
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       router.replace("/dashboard");

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useFreelancer } from "@/api/freelancer/useFreelancer";
@@ -11,6 +12,15 @@ export default function ProfilePage() {
   const params = useParams();
   const userId = params.id as string;
   const { data: profile, isLoading, error } = useFreelancer(userId);
+
+  useEffect(() => {
+    const name = profile?.userDetails?.name;
+    const surname = profile?.userDetails?.surname;
+    const fullName = [name, surname].filter(Boolean).join(" ").trim();
+    document.title = fullName
+      ? `${fullName} | Freelancia`
+      : "Profile | Freelancia";
+  }, [profile?.userDetails?.name, profile?.userDetails?.surname]);
 
   if (isLoading)
     return (

@@ -18,8 +18,14 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
   imports: [
     ThrottlerModule.forRoot([
       {
+        name: 'default',
         ttl: 60000,
         limit: 60,
+      },
+      {
+        name: 'auth',
+        ttl: 60000,
+        limit: 5,
       },
     ]),
     UserModule,

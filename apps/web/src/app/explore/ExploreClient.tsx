@@ -42,8 +42,25 @@ export default function ExploreClient() {
     }
   }, [searchParam]);
 
+  const heading = view === "freelancers" ? "Explore Freelancers" : "Explore Projects";
+  const subheading =
+    view === "freelancers"
+      ? "Browse freelancers and find the right talent for your project."
+      : "Browse open projects and find work that matches your skills.";
+
+  useEffect(() => {
+    document.title = `${heading} | Freelancia`;
+  }, [heading]);
+
   return (
     <>
+      <header className="px-4 sm:px-8 md:px-10 lg:px-15 pt-8 pb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#070415]">
+          {heading}
+        </h1>
+        <p className="text-gray-500 mt-2 text-sm md:text-base">{subheading}</p>
+      </header>
+
       <ExploreToolbar
         view={view}
         setView={setView}
