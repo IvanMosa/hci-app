@@ -203,20 +203,29 @@ function ClientProjects({ userId }: { userId: string }) {
       </div>
 
       <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-        <div className="flex gap-3">
-          {(["all", "active", "completed"] as const).map((status) => (
-            <button
-              key={status}
-              onClick={() => setFilter(status)}
-              className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer ${
-                filter === status
-                  ? "bg-[#070415] text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </button>
-          ))}
+        <div
+          role="tablist"
+          aria-label="Filter projects by status"
+          className="flex gap-3"
+        >
+          {(["all", "active", "completed"] as const).map((status) => {
+            const isActive = filter === status;
+            return (
+              <button
+                key={status}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setFilter(status)}
+                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer border ${
+                  isActive
+                    ? "bg-[#070415] text-white border-[#070415] shadow-md"
+                    : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-[#070415] hover:border-gray-300"
+                }`}
+              >
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </button>
+            );
+          })}
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
