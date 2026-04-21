@@ -1,6 +1,5 @@
 import { api } from "../index";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 
 type LoginType = {
   email?: string;
@@ -13,14 +12,6 @@ export type JwtResponse = {
   userId: string;
   userType?: string;
 };
-
-interface ApiError {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
 
 const loginUser = async (loginData: LoginType) => {
   return api.post<LoginType, JwtResponse>("/auth/login", loginData);
@@ -39,18 +30,9 @@ export const useLogin = (onSuccessCallback?: () => void) => {
 
       window.dispatchEvent(new Event("authChange"));
 
-      toast.success("Successfully logged in!");
-
       if (onSuccessCallback) {
         onSuccessCallback();
       }
-    },
-    onError(error: unknown) {
-      const message =
-        typeof error === "string"
-          ? error
-          : (error as ApiError)?.response?.data?.message || "Error logging in";
-      toast.error(message);
     },
   });
 };

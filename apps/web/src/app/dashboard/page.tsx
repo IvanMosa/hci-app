@@ -35,6 +35,10 @@ export default function ProjectsPage() {
   const router = useRouter();
 
   useEffect(() => {
+    document.title = "Dashboard | Freelancia";
+  }, []);
+
+  useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (!storedUserId) {
       router.push("/login");

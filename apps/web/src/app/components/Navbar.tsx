@@ -7,7 +7,7 @@ import Image from "next/image";
 import expand from "../../../public/expand_more.png";
 import { useState, useEffect, useRef } from "react";
 import { ExploreModal } from "./ExploreModal";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 export const Navbar = () => {
@@ -17,7 +17,13 @@ export const Navbar = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [userType, setUserType] = useState<string | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  const isHome = pathname === "/";
+  const isExplore = pathname?.startsWith("/explore") ?? false;
+  const isDashboard = pathname?.startsWith("/dashboard") ?? false;
+  const isProfile = pathname?.startsWith("/profile") ?? false;
 
   const checkLoginStatus = () => {
     const token = localStorage.getItem("accessToken");
@@ -70,8 +76,14 @@ export const Navbar = () => {
   const navItemStyles =
     "font-semibold hover:underline underline-offset-8 decoration-2 transition-all duration-200";
 
+  const activeNavItemStyles =
+    "font-bold underline underline-offset-8 decoration-2 decoration-[#070415] transition-all duration-200";
+
   const mobileNavItemStyles =
     "font-semibold text-lg py-3 border-b border-gray-100 w-full block transition-colors hover:text-gray-500";
+
+  const activeMobileNavItemStyles =
+    "font-bold text-lg py-3 border-b border-gray-100 w-full block text-[#070415] border-l-4 border-l-[#070415] pl-3";
 
   return (
     <>
@@ -97,14 +109,21 @@ export const Navbar = () => {
 
         {/* Desktop nav */}
         <div className="hidden md:flex space-x-8 text-[#070415] items-center">
-          <Link href="/" className={navItemStyles}>
+          <Link
+            href="/"
+            aria-current={isHome ? "page" : undefined}
+            className={isHome ? activeNavItemStyles : navItemStyles}
+          >
             Home
           </Link>
 
           <div className="relative inline-flex items-center">
             <button
               onClick={() => setOpen(!open)}
-              className={`flex items-center gap-1 cursor-pointer ${navItemStyles}`}
+              aria-current={isExplore ? "page" : undefined}
+              className={`flex items-center gap-1 cursor-pointer ${
+                isExplore ? activeNavItemStyles : navItemStyles
+              }`}
             >
               <span>Explore</span>
               <Image
@@ -122,13 +141,21 @@ export const Navbar = () => {
           </div>
 
           {isLoggedIn && userType === "freelancer" && (
-            <Link href="/dashboard" className={navItemStyles}>
+            <Link
+              href="/dashboard"
+              aria-current={isDashboard ? "page" : undefined}
+              className={isDashboard ? activeNavItemStyles : navItemStyles}
+            >
               Dashboard
             </Link>
           )}
 
           {isLoggedIn && userType === "client" && (
-            <Link href="/dashboard" className={navItemStyles}>
+            <Link
+              href="/dashboard"
+              aria-current={isDashboard ? "page" : undefined}
+              className={isDashboard ? activeNavItemStyles : navItemStyles}
+            >
               Dashboard
             </Link>
           )}
@@ -136,7 +163,8 @@ export const Navbar = () => {
           {isLoggedIn && (
             <Link
               href={userId ? `/profile/${userId}` : "/login"}
-              className={navItemStyles}
+              aria-current={isProfile ? "page" : undefined}
+              className={isProfile ? activeNavItemStyles : navItemStyles}
             >
               Profile
             </Link>
@@ -175,13 +203,21 @@ export const Navbar = () => {
         }`}
       >
         <div className="flex flex-col px-6 pt-6 pb-8 flex-1 overflow-y-auto">
-          <Link href="/" className={mobileNavItemStyles} onClick={closeMobile}>
+          <Link
+            href="/"
+            aria-current={isHome ? "page" : undefined}
+            className={isHome ? activeMobileNavItemStyles : mobileNavItemStyles}
+            onClick={closeMobile}
+          >
             Home
           </Link>
 
           <Link
             href="/explore?type=freelancers"
-            className={mobileNavItemStyles}
+            aria-current={isExplore ? "page" : undefined}
+            className={
+              isExplore ? activeMobileNavItemStyles : mobileNavItemStyles
+            }
             onClick={closeMobile}
           >
             Explore Freelancers
@@ -189,7 +225,10 @@ export const Navbar = () => {
 
           <Link
             href="/explore?type=projects"
-            className={mobileNavItemStyles}
+            aria-current={isExplore ? "page" : undefined}
+            className={
+              isExplore ? activeMobileNavItemStyles : mobileNavItemStyles
+            }
             onClick={closeMobile}
           >
             Explore Projects
@@ -198,7 +237,10 @@ export const Navbar = () => {
           {isLoggedIn && userType === "freelancer" && (
             <Link
               href="/dashboard"
-              className={mobileNavItemStyles}
+              aria-current={isDashboard ? "page" : undefined}
+              className={
+                isDashboard ? activeMobileNavItemStyles : mobileNavItemStyles
+              }
               onClick={closeMobile}
             >
               Dashboard
@@ -208,7 +250,10 @@ export const Navbar = () => {
           {isLoggedIn && userType === "client" && (
             <Link
               href="/projects"
-              className={mobileNavItemStyles}
+              aria-current={isDashboard ? "page" : undefined}
+              className={
+                isDashboard ? activeMobileNavItemStyles : mobileNavItemStyles
+              }
               onClick={closeMobile}
             >
               Dashboard
@@ -218,7 +263,10 @@ export const Navbar = () => {
           {isLoggedIn && (
             <Link
               href={userId ? `/profile/${userId}` : "/login"}
-              className={mobileNavItemStyles}
+              aria-current={isProfile ? "page" : undefined}
+              className={
+                isProfile ? activeMobileNavItemStyles : mobileNavItemStyles
+              }
               onClick={closeMobile}
             >
               Profile

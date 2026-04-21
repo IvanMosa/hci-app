@@ -9,6 +9,10 @@ const RegisterPage = () => {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
+    document.title = "Register | Freelancia";
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       router.replace("/dashboard");

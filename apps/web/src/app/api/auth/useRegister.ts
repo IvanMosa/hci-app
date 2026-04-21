@@ -13,14 +13,6 @@ export type RegisterDataType = {
   confirmPassword: string;
 };
 
-interface ApiError {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
-
 const registerUser = (registerData: RegisterDataType) => {
   return api.post<RegisterDataType, JwtResponse>(
     "/auth/register",
@@ -36,9 +28,5 @@ export const useRegister = (onSuccessCallback: (data: JwtResponse) => void) =>
       toast.success("You have successfully registered. You can now log in!");
 
       onSuccessCallback(data);
-    },
-    onError: (error: unknown) => {
-      const apiError = error as ApiError;
-      toast.error(apiError?.response?.data?.message || "Registration failed.");
     },
   });
