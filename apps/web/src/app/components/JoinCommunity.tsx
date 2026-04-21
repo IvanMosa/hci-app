@@ -5,12 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const JoinCommunity = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authState, setAuthState] = useState<{
+    isLoggedIn: boolean;
+    userType: string | null;
+  } | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    setIsLoggedIn(!!token);
+    const userType = localStorage.getItem("userType");
+    setAuthState({ isLoggedIn: !!token, userType });
   }, []);
+
+  if (!authState || authState.isLoggedIn) return null;
 
   return (
     <section
@@ -49,7 +55,7 @@ export const JoinCommunity = () => {
         </h2>
 
         <Link
-          href={isLoggedIn ? "/dashboard" : "/login"}
+          href="/login"
           className="inline-block bg-white text-[#070415] px-14 py-4 rounded-full font-bold uppercase text-sm tracking-widest hover:bg-gray-200 transition-all shadow-lg"
         >
           Join Now

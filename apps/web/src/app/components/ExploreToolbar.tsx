@@ -54,12 +54,43 @@ export const ExploreToolbar = ({
     });
   };
 
-  const hasActiveFilters =
-    projectFilters.status !== "all" ||
-    projectFilters.minPrice > 0 ||
-    projectFilters.maxPrice < 50000 ||
-    projectFilters.projectName !== "" ||
-    projectFilters.clientName !== "";
+  const activeFilterChips: { key: keyof ProjectFilters; label: string; reset: string | number }[] = [];
+  if (projectFilters.status !== "all") {
+    activeFilterChips.push({
+      key: "status",
+      label: `Status: ${projectFilters.status.charAt(0).toUpperCase()}${projectFilters.status.slice(1)}`,
+      reset: "all",
+    });
+  }
+  if (projectFilters.projectName !== "") {
+    activeFilterChips.push({
+      key: "projectName",
+      label: `Name: "${projectFilters.projectName}"`,
+      reset: "",
+    });
+  }
+  if (projectFilters.clientName !== "") {
+    activeFilterChips.push({
+      key: "clientName",
+      label: `Client: "${projectFilters.clientName}"`,
+      reset: "",
+    });
+  }
+  if (projectFilters.minPrice > 0) {
+    activeFilterChips.push({
+      key: "minPrice",
+      label: `Min: $${projectFilters.minPrice.toLocaleString()}`,
+      reset: 0,
+    });
+  }
+  if (projectFilters.maxPrice < 50000) {
+    activeFilterChips.push({
+      key: "maxPrice",
+      label: `Max: $${projectFilters.maxPrice.toLocaleString()}`,
+      reset: 50000,
+    });
+  }
+  const hasActiveFilters = activeFilterChips.length > 0;
 
   return (
     <div className="px-4 sm:px-8 md:px-10 lg:px-15 pt-6 pb-2 w-full">
@@ -93,16 +124,29 @@ export const ExploreToolbar = ({
           {view === "projects" && (
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2.5 border border-gray-200 rounded-[46px] text-xs sm:text-sm font-semibold hover:bg-gray-50 transition-colors shrink-0 cursor-pointer ml-auto md:ml-0 md:order-last"
+              aria-expanded={showFilters}
+              className={`flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2.5 border rounded-[46px] text-xs sm:text-sm font-semibold transition-colors shrink-0 cursor-pointer ml-auto md:ml-0 md:order-last ${
+                hasActiveFilters
+                  ? "border-[#070415] bg-[#070415] text-white hover:bg-gray-800"
+                  : "border-gray-200 hover:bg-gray-50"
+              }`}
             >
               <Image
                 src={filterIcon}
-                alt="Filter"
+                alt=""
                 width={16}
                 height={16}
-                className="sm:w-[18px] sm:h-[18px]"
+                className={`sm:w-[18px] sm:h-[18px] ${hasActiveFilters ? "invert" : ""}`}
               />
               Filters
+              {hasActiveFilters && (
+                <span
+                  className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-white text-[#070415] text-[11px] font-bold"
+                  aria-label={`${activeFilterChips.length} active filters`}
+                >
+                  {activeFilterChips.length}
+                </span>
+              )}
             </button>
           )}
         </div>
@@ -122,6 +166,35 @@ export const ExploreToolbar = ({
             <Search size={16} />
           </button>
         </div>
+
+        {view === "projects" && hasActiveFilters && (
+          <div
+            role="region"
+            aria-label="Active filters"
+            className="flex flex-wrap items-center gap-2"
+          >
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Active filters:
+            </span>
+            {activeFilterChips.map((chip) => (
+              <button
+                key={chip.key}
+                onClick={() => handleFilterChange(chip.key, chip.reset)}
+                className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1 bg-[#070415] text-white rounded-full text-xs font-medium hover:bg-gray-800 transition-colors cursor-pointer"
+                aria-label={`Remove filter ${chip.label}`}
+              >
+                {chip.label}
+                <X size={14} strokeWidth={2.5} />
+              </button>
+            ))}
+            <button
+              onClick={clearFilters}
+              className="text-xs text-gray-500 hover:text-[#070415] font-semibold underline underline-offset-2 transition-colors cursor-pointer"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Project Filters Panel */}
