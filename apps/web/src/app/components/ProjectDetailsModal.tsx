@@ -107,23 +107,23 @@ export const ProjectDetailsModal = ({
             </div>
 
             <div className="flex items-center gap-2 mb-6 sm:mb-10">
-              <div className="w-6 h-6 rounded-sm flex-shrink-0 relative overflow-hidden">
-                {job.imageUrl ? (
-                  <div className="w-6 h-6 rounded-sm flex-shrink-0 relative overflow-hidden">
-                    <Image
-                      src={job.imageUrl || projectImg}
-                      alt={job.title}
-                      fill
-                      className="object-cover"
-                      unoptimized={!!job.imageUrl}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-6 h-6 bg-red-600 rounded-sm flex items-center justify-center text-[8px] text-white font-bold flex-shrink-0">
-                    RISK
-                  </div>
-                )}
-              </div>
+              {job.imageUrl ? (
+                <div className="w-6 h-6 rounded-sm flex-shrink-0 relative overflow-hidden">
+                  <Image
+                    src={job.imageUrl}
+                    alt={job.title}
+                    fill
+                    sizes="24px"
+                    quality={100}
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+              ) : (
+                <div className="w-6 h-6 bg-red-600 rounded-sm flex items-center justify-center text-[8px] text-white font-bold flex-shrink-0">
+                  RISK
+                </div>
+              )}
               <p className="text-[12px] sm:text-[14px] font-bold text-[#070415]">
                 <span className="text-gray-400 font-normal ml-1">
                   By {job.client?.name} {job.client?.surname}
@@ -148,7 +148,7 @@ export const ProjectDetailsModal = ({
                 />
               </div>
 
-              <div className="flex flex-col flex-1 justify-between py-2 gap-6">
+              <div className="flex flex-col flex-1 min-w-0 justify-between py-2 gap-6">
                 <div>
                   <h3 className="text-[24px] sm:text-[32px] md:text-[40px] font-bold text-[#070415] mb-4 sm:mb-8 leading-none">
                     From ${Number(job.budget).toLocaleString()}
@@ -170,7 +170,7 @@ export const ProjectDetailsModal = ({
                   <h4 className="text-[14px] sm:text-[16px] font-bold text-[#070415]">
                     About project
                   </h4>
-                  <p className="text-gray-500 text-[13px] sm:text-[15px] leading-[1.6] max-w-full lg:max-w-[320px]">
+                  <p className="text-gray-500 text-[13px] sm:text-[15px] leading-[1.6] w-full break-words whitespace-pre-wrap">
                     {job.description}
                   </p>
                 </div>
