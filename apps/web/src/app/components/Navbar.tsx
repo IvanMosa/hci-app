@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "./Button";
-import logo from "../../../public/freelancia.png";
+import { Logo } from "./Logo";
 import Image from "next/image";
 import expand from "../../../public/expand_more.png";
 import { useState, useEffect, useRef } from "react";
@@ -88,15 +88,8 @@ export const Navbar = () => {
   return (
     <>
       <nav className="text-black px-4 md:px-15 py-4 flex justify-between items-center bg-white h-[72px] fixed top-0 left-0 w-full z-50 shadow-sm">
-        <Link href="/">
-          <Image
-            src={logo}
-            alt="Freelancia Logo"
-            width={150}
-            height={40}
-            priority
-            className="mb-2 w-[110px] sm:w-[130px] md:w-[150px] h-auto"
-          />
+        <Link href="/" aria-label="Freelancia — home">
+          <Logo className="text-2xl sm:text-[28px] md:text-[32px]" />
         </Link>
 
         <button

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import socialMediaLogos from "../../../public/social-media-black.png";
-import logoBlack from "../../../public/freelancia-black.png";
+import { Logo } from "./Logo";
 
 export const FooterHome = () => {
   const [storedUserId, setStoredUserId] = useState<string | null>(null);
@@ -17,13 +17,7 @@ export const FooterHome = () => {
     <footer className="w-full bg-white text-[#070415] py-20 px-4 mt-auto border-t border-gray-100">
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-8">
         <div className="relative">
-          <Image
-            src={logoBlack}
-            alt="Freelancia Logo"
-            width={180}
-            height={40}
-            className="object-contain"
-          />
+          <Logo variant="black" className="text-[32px]" />
         </div>
         <div className="space-y-4">
           <h3
