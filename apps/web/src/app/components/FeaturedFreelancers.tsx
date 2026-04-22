@@ -1,15 +1,29 @@
 "use client";
 
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import freelancer1 from "../../../public/user-default.png";
-import skillsIcon from "../../../public/traits.png";
+import nodejsImg from "../../../public/nodejs-original.png";
+import reactImg from "../../../public/react-original.png";
+import javaImg from "../../../public/java-original.png";
+import pgadminImg from "../../../public/pgadmin-original.png";
+import html5Img from "../../../public/html5-original.png";
+import figmaImg from "../../../public/figma-original.png";
 import { useState, useEffect } from "react";
 import {
   FreelancerWithUser,
   useAllFreelancers,
 } from "@/api/freelancer/useAllFreelancers";
 import { FreelancerDetailsModal } from "./FreelancerDetailsModal";
+
+const SKILL_IMAGES: Record<string, StaticImageData> = {
+  "Node.js": nodejsImg,
+  React: reactImg,
+  Java: javaImg,
+  PostgreSQL: pgadminImg,
+  HTML5: html5Img,
+  Figma: figmaImg,
+};
 
 export const FeaturedFreelancers = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -117,8 +131,8 @@ export const FeaturedFreelancers = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-between items-start">
-                  <div className="max-w-[65%]">
+                <div className="flex justify-between items-start gap-3">
+                  <div className="min-w-0 flex-1">
                     <h3 className="text-white font-bold text-lg md:text-xl truncate">
                       {f.user?.name} {f.user?.surname}
                     </h3>
@@ -126,14 +140,27 @@ export const FeaturedFreelancers = () => {
                       {f.user?.type}
                     </p>
                   </div>
-                  <div className="shrink-0">
-                    <Image
-                      src={skillsIcon}
-                      alt="Skills"
-                      width={80}
-                      height={16}
-                      className="mt-1 md:w-[100px]"
-                    />
+                  <div className="flex pt-1 shrink-0">
+                    {f.skills
+                      ?.filter((s) => SKILL_IMAGES[s.skill?.name])
+                      .slice(0, 4)
+                      .map((s, index) => (
+                        <div
+                          key={s.skill.id}
+                          className="w-8 h-8 rounded-full border-2 border-white shadow-sm flex items-center justify-center p-1.5 bg-white"
+                          style={{ marginLeft: index === 0 ? 0 : "-5px" }}
+                          title={s.skill.name}
+                        >
+                          <div className="relative w-full h-full">
+                            <Image
+                              src={SKILL_IMAGES[s.skill.name]}
+                              alt={s.skill.name}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>
