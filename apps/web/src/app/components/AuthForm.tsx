@@ -8,7 +8,7 @@ export const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="w-full lg:w-1/2 bg-white flex flex-col justify-start items-center p-8 pt-10 lg:p-16 lg:pt-24 z-0">
+    <div className="w-full lg:w-1/2 bg-white flex flex-col justify-start lg:justify-center items-center p-8 pt-10 lg:p-16 z-0">
       <div className="w-full max-w-md space-y-8">
         <div className="flex justify-center items-center gap-4 mb-8 text-sm p-2 rounded-full w-fit mx-auto">
           <button
