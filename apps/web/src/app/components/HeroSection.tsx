@@ -1,4 +1,4 @@
-import bgImage from "../../../public/image 10.png";
+import bgImage from "../../../public/image 10.jpg";
 import Image from "next/image";
 
 export const HeroSection = () => {

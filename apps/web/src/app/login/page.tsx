@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { AuthForm } from "@/components/AuthForm";
-import { Footer } from "@/components/Footer";
+import { FooterHome } from "@/components/FooterHome";
 import { Loader2 } from "lucide-react";
 
 export default function Home() {
@@ -39,7 +39,7 @@ export default function Home() {
         <AuthForm />
       </div>
 
-      <Footer />
+      <FooterHome />
     </main>
   );
 }
